@@ -1,6 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.UI.Dispatching;
+using Microsoft.UI.Windowing;
+using Microsoft.UI.Xaml;
 using System;
 using System.Threading;
 
@@ -74,6 +76,55 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
     private void RefreshTime()
     {
         UpdateTime(DateTime.Now);
+    }
+
+    [RelayCommand]
+    private void ToggleFullScreen()
+    {
+        var window = App.MainWindow;
+        if (window != null)
+        {
+            var appWindow = window.AppWindow;
+            if (appWindow != null)
+            {
+                if (appWindow.Presenter.Kind == AppWindowPresenterKind.FullScreen)
+                {
+                    appWindow.SetPresenter(AppWindowPresenterKind.Overlapped);
+                }
+                else
+                {
+                    appWindow.SetPresenter(AppWindowPresenterKind.FullScreen);
+                }
+            }
+        }
+    }
+
+    [RelayCommand]
+    private void CloseApp()
+    {
+        var window = App.MainWindow;
+        window?.Close();
+    }
+
+    [RelayCommand]
+    private void ToggleCompactOverlay()
+    {
+        var window = App.MainWindow;
+        if (window != null)
+        {
+            var appWindow = window.AppWindow;
+            if (appWindow != null)
+            {
+                if (appWindow.Presenter.Kind == AppWindowPresenterKind.CompactOverlay)
+                {
+                    appWindow.SetPresenter(AppWindowPresenterKind.Overlapped);
+                }
+                else
+                {
+                    appWindow.SetPresenter(AppWindowPresenterKind.CompactOverlay);
+                }
+            }
+        }
     }
 
     public void Unload()

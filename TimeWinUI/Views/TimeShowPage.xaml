@@ -8,38 +8,51 @@
 
     <Grid x:Name="ContentArea">
         <Grid.RowDefinitions>
-            <RowDefinition Height="48" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <TextBlock
-            Grid.Row="0"
-            x:Uid="TimeShow_Title"
-            Style="{StaticResource PageTitleStyle}" />
+        <StackPanel 
+            HorizontalAlignment="Center" 
+            VerticalAlignment="Center"
+            Spacing="30">
 
-        <Grid Grid.Row="1">
-            <StackPanel 
-                HorizontalAlignment="Center" 
-                VerticalAlignment="Center"
-                Spacing="15">
-
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="12">
-                    <TextBlock 
-                        Text="{x:Bind ViewModel.DateText, Mode=OneWay}" 
-                        FontSize="28" 
-                        VerticalAlignment="Center"/>
-                    <TextBlock 
-                        Text="{x:Bind ViewModel.WeekText, Mode=OneWay}" 
-                        FontSize="28" 
-                        VerticalAlignment="Center"/>
-                </StackPanel>
-
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="12">
                 <TextBlock 
-                    Text="{x:Bind ViewModel.TimeText, Mode=OneWay}" 
-                    FontSize="72" 
-                    FontWeight="Bold"
-                    HorizontalAlignment="Center"/>
+                    Text="{x:Bind ViewModel.DateText, Mode=OneWay}" 
+                    FontSize="28" 
+                    VerticalAlignment="Center"/>
+                <TextBlock 
+                    Text="{x:Bind ViewModel.WeekText, Mode=OneWay}" 
+                    FontSize="28" 
+                    VerticalAlignment="Center"/>
             </StackPanel>
-        </Grid>
+
+            <TextBlock 
+                Text="{x:Bind ViewModel.TimeText, Mode=OneWay}" 
+                FontSize="72" 
+                FontWeight="Bold"
+                HorizontalAlignment="Center"/>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="20">
+                <Button 
+                    Command="{x:Bind ViewModel.ToggleFullScreenCommand}"
+                    Content="&#xE740;" 
+                    FontFamily="Segoe Fluent Icons" 
+                    Width="40" 
+                    Height="40"/>
+                <Button 
+                    Command="{x:Bind ViewModel.CloseAppCommand}"
+                    Content="&#xE8BB;" 
+                    FontFamily="Segoe Fluent Icons" 
+                    Width="40" 
+                    Height="40"/>
+                <Button 
+                    Command="{x:Bind ViewModel.ToggleCompactOverlayCommand}"
+                    Content="&#xE969;" 
+                    FontFamily="Segoe Fluent Icons" 
+                    Width="40" 
+                    Height="40"/>
+            </StackPanel>
+        </StackPanel>
     </Grid>
 </Page>
