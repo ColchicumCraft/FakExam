@@ -1,0 +1,10 @@
+﻿{
+    "profiles": {
+      "TimeWinUI (Package)": {
+        "commandName": "MsixPackage"
+      },
+      "TimeWinUI (Unpackaged)": {
+        "commandName": "Project"
+      }
+    }
+}
