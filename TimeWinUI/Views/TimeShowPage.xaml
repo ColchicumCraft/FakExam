@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Background="{ThemeResource SolidBackgroundFillColorBaseBrush}"
     mc:Ignorable="d">
 
     <Grid x:Name="ContentArea">
@@ -19,8 +18,28 @@
             Style="{StaticResource PageTitleStyle}" />
 
         <Grid Grid.Row="1">
-            
+            <StackPanel 
+                HorizontalAlignment="Center" 
+                VerticalAlignment="Center"
+                Spacing="15">
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="12">
+                    <TextBlock 
+                        Text="{x:Bind ViewModel.DateText, Mode=OneWay}" 
+                        FontSize="28" 
+                        VerticalAlignment="Center"/>
+                    <TextBlock 
+                        Text="{x:Bind ViewModel.WeekText, Mode=OneWay}" 
+                        FontSize="28" 
+                        VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <TextBlock 
+                    Text="{x:Bind ViewModel.TimeText, Mode=OneWay}" 
+                    FontSize="72" 
+                    FontWeight="Bold"
+                    HorizontalAlignment="Center"/>
+            </StackPanel>
         </Grid>
-        
     </Grid>
 </Page>
