@@ -11,15 +11,15 @@
   IgnorableNamespaces="uap rescap genTemplate">
 
   <Identity
-    Name="76344a0b-be77-4a3c-8761-6f9bd189107d"
-    Publisher="CN=KissL"
-    Version="1.0.0.0" />
+    Name="mstouk57g.TimeWinUI"
+    Publisher="CN=A6979DDB-FE8C-4832-BF7B-A73C7295422A"
+    Version="0.0.1.0" />
     
   <mp:PhoneIdentity PhoneProductId="76344a0b-be77-4a3c-8761-6f9bd189107d" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
     
   <Properties>
     <DisplayName>TimeWinUI</DisplayName>
-    <PublisherDisplayName>KissL</PublisherDisplayName>
+    <PublisherDisplayName>mstouk57g</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
