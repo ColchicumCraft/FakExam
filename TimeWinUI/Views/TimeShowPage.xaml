@@ -292,7 +292,7 @@
                                       Margin="0,8,0,0"/>
 
                             <Slider Header="字体大小"
-                                    Minimum="12" Maximum="72" 
+                                    Minimum="12" Maximum="200" 
                                     TickFrequency="4"
                                     Value="{x:Bind ViewModel.SelectedDateFontSize, Mode=TwoWay}"
                                     Margin="0,8,0,0"/>
