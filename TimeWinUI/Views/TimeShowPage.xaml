@@ -129,12 +129,14 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
 
-            <Grid VerticalAlignment="Bottom" Margin="10,10,10,10">
+            <Grid VerticalAlignment="Bottom" Margin="10,10,10,30">
                 <CommandBar 
                     HorizontalAlignment="Left" 
                     Background="Transparent" 
-                    IsOpen="False"
-                    DefaultLabelPosition="Right">
+                    IsOpen="True"
+                    IsSticky="True"
+                    OverflowButtonVisibility="Collapsed"
+                    DefaultLabelPosition="Bottom">
                     <AppBarButton Label="显示设置"
                                   Command="{x:Bind ViewModel.ShowSettingsCommand}">
                         <AppBarButton.Icon>
@@ -147,11 +149,13 @@
                                   Command="{x:Bind ViewModel.NavigateToSettingsCommand}"/>
                 </CommandBar>
 
-                <CommandBar 
+                <CommandBar  
                     HorizontalAlignment="Right" 
                     Background="Transparent" 
-                    IsOpen="False" 
-                    DefaultLabelPosition="Right">
+                    IsOpen="True" 
+                    IsSticky="True"
+                    OverflowButtonVisibility="Collapsed"
+                    DefaultLabelPosition="Bottom">
                     <AppBarButton 
                         Command="{x:Bind ViewModel.ToggleFullScreenCommand}"
                         Icon="FullScreen"
@@ -160,6 +164,13 @@
                         Command="{x:Bind ViewModel.CloseAppCommand}"
                         Icon="Cancel"
                         Label="关闭"/>
+                    <AppBarButton 
+                        Command="{x:Bind ViewModel.MinimizeWindowCommand}"
+                        Label="最小化">
+                        <AppBarButton.Icon>
+                            <FontIcon Glyph="&#xED1A;" />
+                        </AppBarButton.Icon>
+                    </AppBarButton>
                     <AppBarButton 
                         Command="{x:Bind ViewModel.ToggleCompactOverlayCommand}"
                         Icon="NewWindow"

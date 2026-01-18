@@ -733,6 +733,21 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
     }
 
     [RelayCommand]
+    private void MinimizeWindow()
+    {
+        var window = App.MainWindow;
+        if (window != null)
+        {
+            var appWindow = window.AppWindow;
+            if (appWindow != null)
+            {
+                var presenter = appWindow.Presenter as OverlappedPresenter;
+                presenter.Minimize();
+            }
+        }
+    }
+
+    [RelayCommand]
     private void NavigateToSettings()
     {
         var navigationService = App.GetService<INavigationService>();
