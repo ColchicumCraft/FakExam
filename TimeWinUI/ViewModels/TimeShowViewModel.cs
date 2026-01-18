@@ -265,8 +265,20 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
 
     private void UpdateTime(DateTime time)
     {
-        TimeText = _timeDisplayService.GetFormattedTime(time);
-        DateText = _timeDisplayService.GetFormattedDate(time);
+        string timeFormat = IsCustomTimeFormat ? CustomTimeFormat : SelectedTimeFormat;
+        string dateFormat = IsCustomDateFormat ? CustomDateFormat : SelectedDateFormat;
+
+        try
+        {
+            TimeText = time.ToString(timeFormat);
+            DateText = time.ToString(dateFormat);
+        }
+        catch (FormatException)
+        {
+            TimeText = time.ToString("HH:mm:ss");
+            DateText = time.ToString("yyyy年MM月dd日");
+        }
+
         WeekText = _timeDisplayService.GetFormattedWeek(time);
         UpdateTimeColor(time);
     }
