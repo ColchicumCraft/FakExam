@@ -1,4 +1,5 @@
 ﻿using Microsoft.UI.Text;
+using Microsoft.UI.Xaml;
 using TimeWinUI.Contracts.Services;
 using TimeWinUI.Core.Contracts.Services;
 using TimeWinUI.Core.Helpers;
@@ -72,5 +73,59 @@ public class TimeDisplayService : ITimeDisplayService
             DayOfWeek.Saturday => "星期六",
             _ => ""
         };
+    }
+
+    public HorizontalAlignment GetTimeHorizontalAlignment()
+    {
+        return _currentSettings.Alignment.TimeAlignment switch
+        {
+            TimeAlignment.Left => HorizontalAlignment.Left,
+            TimeAlignment.Center => HorizontalAlignment.Center,
+            TimeAlignment.Right => HorizontalAlignment.Right,
+            TimeAlignment.Hidden => HorizontalAlignment.Center,
+            _ => HorizontalAlignment.Center
+        };
+    }
+
+    public HorizontalAlignment GetDateHorizontalAlignment()
+    {
+        return _currentSettings.Alignment.DateAlignment switch
+        {
+            DateAlignment.Left => HorizontalAlignment.Left,
+            DateAlignment.Center => HorizontalAlignment.Center,
+            DateAlignment.Right => HorizontalAlignment.Right,
+            DateAlignment.Hidden => HorizontalAlignment.Center,
+            _ => HorizontalAlignment.Center
+        };
+    }
+
+    public HorizontalAlignment GetWeekHorizontalAlignment()
+    {
+        return _currentSettings.Alignment.WeekAlignment switch
+        {
+            WeekAlignment.Left => HorizontalAlignment.Left,
+            WeekAlignment.Center => HorizontalAlignment.Center,
+            WeekAlignment.Right => HorizontalAlignment.Right,
+            WeekAlignment.Hidden => HorizontalAlignment.Center,
+            _ => HorizontalAlignment.Center
+        };
+    }
+
+    public Visibility GetTimeVisibility()
+    {
+        return _currentSettings.Alignment.TimeAlignment == TimeAlignment.Hidden ?
+            Visibility.Collapsed : Visibility.Visible;
+    }
+
+    public Visibility GetDateVisibility()
+    {
+        return _currentSettings.Alignment.DateAlignment == DateAlignment.Hidden ?
+            Visibility.Collapsed : Visibility.Visible;
+    }
+
+    public Visibility GetWeekVisibility()
+    {
+        return _currentSettings.Alignment.WeekAlignment == WeekAlignment.Hidden ?
+            Visibility.Collapsed : Visibility.Visible;
     }
 }

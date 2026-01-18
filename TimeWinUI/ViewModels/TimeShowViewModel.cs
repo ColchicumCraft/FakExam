@@ -105,6 +105,47 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
     [ObservableProperty]
     private Windows.UI.Color _selectedDateColor = Windows.UI.Color.FromArgb(255, 204, 204, 204);
 
+    // 显示模式属性
+    [ObservableProperty]
+    private string _selectedTimeAlignment = "Center";
+
+    [ObservableProperty]
+    private string _selectedDateAlignment = "Center";
+
+    [ObservableProperty]
+    private string _selectedWeekAlignment = "Center";
+
+    // 对齐选项数据源
+    public ObservableCollection<AlignmentItem> AlignmentOptions
+    {
+        get;
+    } = new()
+    {
+        new AlignmentItem("居中", "Center"),
+        new AlignmentItem("靠左", "Left"),
+        new AlignmentItem("靠右", "Right"),
+        new AlignmentItem("隐藏", "Hidden")
+    };
+
+    // 用于绑定的对齐相关属性
+    [ObservableProperty]
+    private HorizontalAlignment _timeHorizontalAlignment = HorizontalAlignment.Center;
+
+    [ObservableProperty]
+    private HorizontalAlignment _dateHorizontalAlignment = HorizontalAlignment.Center;
+
+    [ObservableProperty]
+    private HorizontalAlignment _weekHorizontalAlignment = HorizontalAlignment.Center;
+
+    [ObservableProperty]
+    private Visibility _timeVisibility = Visibility.Visible;
+
+    [ObservableProperty]
+    private Visibility _dateVisibility = Visibility.Visible;
+
+    [ObservableProperty]
+    private Visibility _weekVisibility = Visibility.Visible;
+
     // 下拉列表数据源
     public ObservableCollection<string> FontFamilies
     {
@@ -205,6 +246,107 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
         // 解析颜色
         SelectedTimeColor = ParseColorFromHex(settings.TimeFont.FontColor);
         SelectedDateColor = ParseColorFromHex(settings.DateFont.FontColor);
+
+        // 应用对齐设置
+        SelectedTimeAlignment = GetAlignmentDisplayName(settings.Alignment.TimeAlignment);
+        SelectedDateAlignment = GetAlignmentDisplayName(settings.Alignment.DateAlignment);
+        SelectedWeekAlignment = GetAlignmentDisplayName(settings.Alignment.WeekAlignment);
+        UpdateAlignmentProperties();
+    }
+
+    private string GetAlignmentDisplayName(TimeAlignment alignment)
+    {
+        return alignment switch
+        {
+            TimeAlignment.Left => "Left",
+            TimeAlignment.Center => "Center",
+            TimeAlignment.Right => "Right",
+            TimeAlignment.Hidden => "Hidden",
+            _ => "Center"
+        };
+    }
+
+    private string GetAlignmentDisplayName(DateAlignment alignment)
+    {
+        return alignment switch
+        {
+            DateAlignment.Left => "Left",
+            DateAlignment.Center => "Center",
+            DateAlignment.Right => "Right",
+            DateAlignment.Hidden => "Hidden",
+            _ => "Center"
+        };
+    }
+
+    private string GetAlignmentDisplayName(WeekAlignment alignment)
+    {
+        return alignment switch
+        {
+            WeekAlignment.Left => "Left",
+            WeekAlignment.Center => "Center",
+            WeekAlignment.Right => "Right",
+            WeekAlignment.Hidden => "Hidden",
+            _ => "Center"
+        };
+    }
+
+    private TimeAlignment GetTimeAlignmentValue(string displayName)
+    {
+        return displayName switch
+        {
+            "Left" => TimeAlignment.Left,
+            "Center" => TimeAlignment.Center,
+            "Right" => TimeAlignment.Right,
+            "Hidden" => TimeAlignment.Hidden,
+            _ => TimeAlignment.Center
+        };
+    }
+
+    private DateAlignment GetDateAlignmentValue(string displayName)
+    {
+        return displayName switch
+        {
+            "Left" => DateAlignment.Left,
+            "Center" => DateAlignment.Center,
+            "Right" => DateAlignment.Right,
+            "Hidden" => DateAlignment.Hidden,
+            _ => DateAlignment.Center
+        };
+    }
+
+    private WeekAlignment GetWeekAlignmentValue(string displayName)
+    {
+        return displayName switch
+        {
+            "Left" => WeekAlignment.Left,
+            "Center" => WeekAlignment.Center,
+            "Right" => WeekAlignment.Right,
+            "Hidden" => WeekAlignment.Hidden,
+            _ => WeekAlignment.Center
+        };
+    }
+
+    private void UpdateAlignmentProperties()
+    {
+        TimeHorizontalAlignment = GetHorizontalAlignment(SelectedTimeAlignment);
+        DateHorizontalAlignment = GetHorizontalAlignment(SelectedDateAlignment);
+        WeekHorizontalAlignment = GetHorizontalAlignment(SelectedWeekAlignment);
+
+        TimeVisibility = SelectedTimeAlignment == "Hidden" ? Visibility.Collapsed : Visibility.Visible;
+        DateVisibility = SelectedDateAlignment == "Hidden" ? Visibility.Collapsed : Visibility.Visible;
+        WeekVisibility = SelectedWeekAlignment == "Hidden" ? Visibility.Collapsed : Visibility.Visible;
+    }
+
+    private HorizontalAlignment GetHorizontalAlignment(string alignment)
+    {
+        return alignment switch
+        {
+            "Left" => HorizontalAlignment.Left,
+            "Center" => HorizontalAlignment.Center,
+            "Right" => HorizontalAlignment.Right,
+            "Hidden" => HorizontalAlignment.Center,
+            _ => HorizontalAlignment.Center
+        };
     }
 
     private string GetFontWeightDisplayName(int weight)
@@ -359,6 +501,15 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
             TimeFontColor = newSettings.TimeFont.FontColor;
             DateFontColor = newSettings.DateFont.FontColor;
 
+            // 更新当前显示属性
+            UpdateAlignmentProperties();
+            TimeFontFamily = newSettings.TimeFont.FontFamily;
+            TimeFontSize = newSettings.TimeFont.FontSize;
+            DateFontFamily = newSettings.DateFont.FontFamily;
+            DateFontSize = newSettings.DateFont.FontSize;
+            TimeFontColor = newSettings.TimeFont.FontColor;
+            DateFontColor = newSettings.DateFont.FontColor;
+
             // 关闭设置面板
             IsSettingsMode = false;
         }
@@ -466,6 +617,21 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
         {
             SelectedDateColor = Windows.UI.Color.FromArgb(255, 204, 204, 204);
         }
+    }
+
+    partial void OnSelectedTimeAlignmentChanged(string value)
+    {
+        UpdateAlignmentProperties();
+    }
+
+    partial void OnSelectedDateAlignmentChanged(string value)
+    {
+        UpdateAlignmentProperties();
+    }
+
+    partial void OnSelectedWeekAlignmentChanged(string value)
+    {
+        UpdateAlignmentProperties();
     }
 
     public void Unload()

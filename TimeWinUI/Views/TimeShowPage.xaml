@@ -71,8 +71,9 @@
             <StackPanel VerticalAlignment="Center">
                 <StackPanel 
                     Orientation="Horizontal" 
-                    HorizontalAlignment="Center"
-                    Spacing="12">
+                    HorizontalAlignment="{x:Bind ViewModel.DateHorizontalAlignment, Mode=OneWay}"
+                    Spacing="12"
+                    Visibility="{x:Bind ViewModel.DateVisibility, Mode=OneWay}">
                     <TextBlock 
                         Text="{x:Bind ViewModel.DateText, Mode=OneWay}"
                         FontFamily="{x:Bind ViewModel.DateFontFamily, Mode=OneWay}"
@@ -93,7 +94,8 @@
                     FontSize="{x:Bind ViewModel.TimeFontSize, Mode=OneWay}"
                     FontWeight="Bold"
                     Foreground="{x:Bind ViewModel.TimeFontColor, Mode=OneWay}"
-                    HorizontalAlignment="Center"
+                    HorizontalAlignment="{x:Bind ViewModel.TimeHorizontalAlignment, Mode=OneWay}"
+                    Visibility="{x:Bind ViewModel.TimeVisibility, Mode=OneWay}"
                     Margin="0,20,0,0"/>
             </StackPanel>
 
@@ -196,6 +198,20 @@
                                      Margin="0,8,0,0"/>
                         </StackPanel>
 
+                        <!-- 时间对齐设置 -->
+                        <StackPanel>
+                            <TextBlock Text="时间对齐" 
+                               FontSize="16" 
+                               FontWeight="SemiBold"/>
+
+                            <ComboBox Header="时间对齐方式"
+                              ItemsSource="{x:Bind ViewModel.AlignmentOptions, Mode=OneWay}"
+                              DisplayMemberPath="DisplayName"
+                              SelectedValuePath="Value"
+                              SelectedValue="{x:Bind ViewModel.SelectedTimeAlignment, Mode=TwoWay}"
+                              Margin="0,8,0,0"/>
+                        </StackPanel>
+
                         <!-- 时间字体设置 -->
                         <StackPanel>
                             <TextBlock Text="时间字体" 
@@ -278,6 +294,27 @@
                                      Visibility="{x:Bind ViewModel.IsCustomDateFormat, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}"
                                      Text="{x:Bind ViewModel.CustomDateFormat, Mode=TwoWay}"
                                      Margin="0,8,0,0"/>
+                        </StackPanel>
+
+                        <!-- 日期对齐设置 -->
+                        <StackPanel>
+                            <TextBlock Text="日期对齐" 
+                               FontSize="16" 
+                               FontWeight="SemiBold"/>
+
+                            <ComboBox Header="日期对齐方式"
+                              ItemsSource="{x:Bind ViewModel.AlignmentOptions, Mode=OneWay}"
+                              DisplayMemberPath="DisplayName"
+                              SelectedValuePath="Value"
+                              SelectedValue="{x:Bind ViewModel.SelectedDateAlignment, Mode=TwoWay}"
+                              Margin="0,8,0,0"/>
+
+                            <ComboBox Header="星期对齐方式"
+                              ItemsSource="{x:Bind ViewModel.AlignmentOptions, Mode=OneWay}"
+                              DisplayMemberPath="DisplayName"
+                              SelectedValuePath="Value"
+                              SelectedValue="{x:Bind ViewModel.SelectedWeekAlignment, Mode=TwoWay}"
+                              Margin="0,8,0,0"/>
                         </StackPanel>
 
                         <!-- 日期字体设置 -->
@@ -364,8 +401,9 @@
                 <StackPanel VerticalAlignment="Center">
                     <StackPanel 
                         Orientation="Horizontal" 
-                        HorizontalAlignment="Center"
-                        Spacing="12">
+                        HorizontalAlignment="{x:Bind ViewModel.DateHorizontalAlignment, Mode=OneWay}"
+                        Spacing="12"
+                        Visibility="{x:Bind ViewModel.DateVisibility, Mode=OneWay}">
                         <TextBlock 
                             Text="{x:Bind ViewModel.DateText, Mode=OneWay}"
                             FontFamily="{x:Bind ViewModel.SelectedDateFontFamily, Mode=OneWay}"
@@ -386,7 +424,8 @@
                         FontSize="{x:Bind ViewModel.SelectedTimeFontSize, Mode=OneWay}"
                         FontWeight="Bold"
                         Foreground="{x:Bind ViewModel.TimeFontColorHex, Mode=OneWay}"
-                        HorizontalAlignment="Center"
+                        HorizontalAlignment="{x:Bind ViewModel.TimeHorizontalAlignment, Mode=OneWay}"
+                        Visibility="{x:Bind ViewModel.TimeVisibility, Mode=OneWay}"
                         Margin="0,20,0,0"/>
                 </StackPanel>
 

@@ -6,6 +6,8 @@ public class TimeDisplaySettings
     public DateFormatSettings DateFormat { get; set; } = new();
     public FontSettings TimeFont { get; set; } = new();
     public FontSettings DateFont { get; set; } = new();
+
+    public DisplayAlignmentSettings Alignment { get; set; } = new();
 }
 
 public class TimeFormatSettings
@@ -88,6 +90,55 @@ public class ColorItem
     }
 
     public ColorItem(string displayName, string value)
+    {
+        DisplayName = displayName;
+        Value = value;
+    }
+}
+
+public class DisplayAlignmentSettings
+{
+    public TimeAlignment TimeAlignment { get; set; } = TimeAlignment.Center;
+    public DateAlignment DateAlignment { get; set; } = DateAlignment.Center;
+    public WeekAlignment WeekAlignment { get; set; } = WeekAlignment.Center;
+}
+
+public enum TimeAlignment
+{
+    Left,
+    Center,
+    Right,
+    Hidden
+}
+
+public enum DateAlignment
+{
+    Left,
+    Center,
+    Right,
+    Hidden
+}
+
+public enum WeekAlignment
+{
+    Left,
+    Center,
+    Right,
+    Hidden
+}
+
+public class AlignmentItem
+{
+    public string DisplayName
+    {
+        get; set;
+    }
+    public string Value
+    {
+        get; set;
+    }
+
+    public AlignmentItem(string displayName, string value)
     {
         DisplayName = displayName;
         Value = value;

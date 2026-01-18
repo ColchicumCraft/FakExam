@@ -1,4 +1,5 @@
-﻿using TimeWinUI.Core.Models;
+﻿using Microsoft.UI.Xaml;
+using TimeWinUI.Core.Models;
 
 namespace TimeWinUI.Contracts.Services;
 
@@ -15,4 +16,11 @@ public interface ITimeDisplayService
     string GetFormattedTime(DateTime time);
     string GetFormattedDate(DateTime time);
     string GetFormattedWeek(DateTime time);
+
+    public HorizontalAlignment GetTimeHorizontalAlignment();
+    public HorizontalAlignment GetDateHorizontalAlignment();
+    public HorizontalAlignment GetWeekHorizontalAlignment();
+    public Visibility GetTimeVisibility();
+    public Visibility GetDateVisibility();
+    public Visibility GetWeekVisibility();
 }
