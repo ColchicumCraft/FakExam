@@ -7,16 +7,11 @@
     mc:Ignorable="d">
 
     <Grid x:Name="ContentArea">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-
-        <StackPanel 
-            HorizontalAlignment="Center" 
-            VerticalAlignment="Center"
-            Spacing="30">
-
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="12">
+        <StackPanel VerticalAlignment="Center">
+            <StackPanel 
+                Orientation="Horizontal" 
+                HorizontalAlignment="Center"
+                Spacing="12">
                 <TextBlock 
                     Text="{x:Bind ViewModel.DateText, Mode=OneWay}" 
                     FontSize="28" 
@@ -31,28 +26,46 @@
                 Text="{x:Bind ViewModel.TimeText, Mode=OneWay}" 
                 FontSize="72" 
                 FontWeight="Bold"
-                HorizontalAlignment="Center"/>
-
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="20">
-                <Button 
-                    Command="{x:Bind ViewModel.ToggleFullScreenCommand}"
-                    Content="&#xE740;" 
-                    FontFamily="Segoe Fluent Icons" 
-                    Width="40" 
-                    Height="40"/>
-                <Button 
-                    Command="{x:Bind ViewModel.CloseAppCommand}"
-                    Content="&#xE8BB;" 
-                    FontFamily="Segoe Fluent Icons" 
-                    Width="40" 
-                    Height="40"/>
-                <Button 
-                    Command="{x:Bind ViewModel.ToggleCompactOverlayCommand}"
-                    Content="&#xE969;" 
-                    FontFamily="Segoe Fluent Icons" 
-                    Width="40" 
-                    Height="40"/>
-            </StackPanel>
+                HorizontalAlignment="Center"
+                Margin="0,20,0,0"/>
         </StackPanel>
+
+        <Grid VerticalAlignment="Bottom" Margin="10,10,10,10">
+            <CommandBar 
+                HorizontalAlignment="Left" 
+                Background="Transparent" 
+                IsOpen="False"
+                DefaultLabelPosition="Right">
+                <AppBarButton Icon="Add" Label="Add"/>
+                <AppBarButton Icon="Edit" Label="Edit"/>
+                <AppBarButton Icon="Share" Label="Share"/>
+                <CommandBar.SecondaryCommands>
+                    <AppBarButton Icon="Setting" Label="Settings">
+                        <AppBarButton.KeyboardAccelerators>
+                            <KeyboardAccelerator Modifiers="Control" Key="I" />
+                        </AppBarButton.KeyboardAccelerators>
+                    </AppBarButton>
+                </CommandBar.SecondaryCommands>
+            </CommandBar>
+
+            <CommandBar 
+                HorizontalAlignment="Right" 
+                Background="Transparent" 
+                IsOpen="False" 
+                DefaultLabelPosition="Right">
+                <AppBarButton 
+                    Command="{x:Bind ViewModel.ToggleFullScreenCommand}"
+                    Icon="FullScreen"
+                    Label="全屏"/>
+                <AppBarButton 
+                    Command="{x:Bind ViewModel.CloseAppCommand}"
+                    Icon="Cancel"
+                    Label="关闭"/>
+                <AppBarButton 
+                    Command="{x:Bind ViewModel.ToggleCompactOverlayCommand}"
+                    Icon="NewWindow"
+                    Label="画中画"/>
+            </CommandBar>
+        </Grid>
     </Grid>
 </Page>
