@@ -1,4 +1,6 @@
-﻿using Microsoft.UI.Xaml.Controls;
+﻿using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using TimeWinUI.Contracts.Services;
 
 using TimeWinUI.ViewModels;
 
@@ -16,5 +18,18 @@ public sealed partial class SettingsPage : Page
     {
         ViewModel = App.GetService<SettingsViewModel>();
         InitializeComponent();
+    }
+
+    private void BackButton_Click(object sender, RoutedEventArgs e)
+    {
+        var navigationService = App.GetService<INavigationService>();
+        if (navigationService.CanGoBack)
+        {
+            navigationService.GoBack();
+        }
+        else
+        {
+            navigationService.NavigateTo(typeof(TimeShowViewModel).FullName!);
+        }
     }
 }

@@ -105,18 +105,16 @@
                     Background="Transparent" 
                     IsOpen="False"
                     DefaultLabelPosition="Right">
-                    <AppBarButton Icon="Setting" 
+                    <AppBarButton Label="显示设置"
+                                  Command="{x:Bind ViewModel.ShowSettingsCommand}">
+                        <AppBarButton.Icon>
+                            <FontIcon Glyph="&#xEF58;" />
+                        </AppBarButton.Icon>
+                    </AppBarButton>
+                    <AppBarButton 
+                                  Icon="Setting"
                                   Label="设置"
-                                  Command="{x:Bind ViewModel.ShowSettingsCommand}"/>
-                    <AppBarButton Icon="Edit" Label="Edit"/>
-                    <AppBarButton Icon="Share" Label="Share"/>
-                    <CommandBar.SecondaryCommands>
-                        <AppBarButton Icon="Setting" Label="设置">
-                            <AppBarButton.KeyboardAccelerators>
-                                <KeyboardAccelerator Modifiers="Control" Key="I" />
-                            </AppBarButton.KeyboardAccelerators>
-                        </AppBarButton>
-                    </CommandBar.SecondaryCommands>
+                                  Command="{x:Bind ViewModel.NavigateToSettingsCommand}"/>
                 </CommandBar>
 
                 <CommandBar 

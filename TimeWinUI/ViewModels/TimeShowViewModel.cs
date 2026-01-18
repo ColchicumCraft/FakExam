@@ -643,4 +643,11 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
     {
         _timer?.Dispose();
     }
+
+    [RelayCommand]
+    private void NavigateToSettings()
+    {
+        var navigationService = App.GetService<INavigationService>();
+        navigationService.NavigateTo(typeof(SettingsViewModel).FullName!);
+    }
 }

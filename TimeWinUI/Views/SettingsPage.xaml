@@ -16,10 +16,26 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <TextBlock
-            Grid.Row="0"
-            x:Uid="Settings_Title"
-            Style="{StaticResource PageTitleStyle}" />
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="0" 
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    Margin="12,0"
+                    Click="BackButton_Click"
+                    ToolTipService.ToolTip="返回">
+                <FontIcon Glyph="&#xE72B;" />
+            </Button>
+
+            <TextBlock Grid.Column="1"
+                       x:Uid="Settings_Title"
+                       Style="{StaticResource PageTitleStyle}" 
+                       VerticalAlignment="Center"/>
+        </Grid>
         <StackPanel
             Grid.Row="1" 
             x:Name="ContentArea">
