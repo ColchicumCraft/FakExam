@@ -8,6 +8,7 @@ public class TimeDisplaySettings
     public FontSettings DateFont { get; set; } = new();
 
     public DisplayAlignmentSettings Alignment { get; set; } = new();
+    public LayoutOrder LayoutOrder { get; set; } = LayoutOrder.DateOnTop;
 }
 
 public class TimeFormatSettings
@@ -111,6 +112,12 @@ public enum TimeAlignment
     Hidden
 }
 
+public enum LayoutOrder
+{
+    DateOnTop,   // 日期在上，时间在下（默认）
+    TimeOnTop    // 时间在上，日期在下
+}
+
 public enum DateAlignment
 {
     Left,
@@ -139,6 +146,24 @@ public class AlignmentItem
     }
 
     public AlignmentItem(string displayName, string value)
+    {
+        DisplayName = displayName;
+        Value = value;
+    }
+}
+
+public class LayoutOrderItem
+{
+    public string DisplayName
+    {
+        get; set;
+    }
+    public string Value
+    {
+        get; set;
+    }
+
+    public LayoutOrderItem(string displayName, string value)
     {
         DisplayName = displayName;
         Value = value;

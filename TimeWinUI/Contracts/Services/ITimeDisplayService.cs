@@ -23,4 +23,7 @@ public interface ITimeDisplayService
     public Visibility GetTimeVisibility();
     public Visibility GetDateVisibility();
     public Visibility GetWeekVisibility();
+
+    LayoutOrder GetLayoutOrder();
+    void SetLayoutOrder(LayoutOrder layoutOrder);
 }

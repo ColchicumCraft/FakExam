@@ -128,4 +128,14 @@ public class TimeDisplayService : ITimeDisplayService
         return _currentSettings.Alignment.WeekAlignment == WeekAlignment.Hidden ?
             Visibility.Collapsed : Visibility.Visible;
     }
+
+    public LayoutOrder GetLayoutOrder()
+    {
+        return _currentSettings.LayoutOrder;
+    }
+
+    public void SetLayoutOrder(LayoutOrder layoutOrder)
+    {
+        _currentSettings.LayoutOrder = layoutOrder;
+    }
 }

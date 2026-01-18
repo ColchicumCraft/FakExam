@@ -5,6 +5,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:converters="using:TimeWinUI.Helpers"
+    xmlns:local="using:TimeWinUI.Views"
+    xmlns:helpers="using:TimeWinUI.Helpers"
     mc:Ignorable="d">
 
     <Page.Resources>
@@ -14,6 +16,40 @@
         <converters:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter" 
                                                         TrueValue="Visible" 
                                                         FalseValue="Collapsed"/>
+
+        <!-- 时间显示项数据模板 -->
+        <DataTemplate x:Key="TimeDisplayTemplate">
+            <TextBlock 
+                Text="{Binding TimeText}"
+                FontFamily="{Binding TimeFontFamily}"
+                FontSize="{Binding TimeFontSize}"
+                FontWeight="Bold"
+                Foreground="{Binding TimeFontColor}"
+                HorizontalAlignment="{Binding TimeHorizontalAlignment}"/>
+        </DataTemplate>
+
+        <!-- 日期显示项数据模板 -->
+        <DataTemplate x:Key="DateDisplayTemplate">
+            <StackPanel Orientation="Horizontal" Spacing="12">
+                <TextBlock 
+                    Text="{Binding DateText}"
+                    FontFamily="{Binding DateFontFamily}"
+                    FontSize="{Binding DateFontSize}"
+                    Foreground="{Binding DateFontColor}"
+                    VerticalAlignment="Center"/>
+                <TextBlock 
+                    Text="{Binding WeekText}"
+                    FontFamily="{Binding DateFontFamily}"
+                    FontSize="{Binding DateFontSize}"
+                    Foreground="{Binding DateFontColor}"
+                    VerticalAlignment="Center"/>
+            </StackPanel>
+        </DataTemplate>
+
+        <!-- 模板选择器 -->
+        <helpers:LayoutItemTemplateSelector x:Key="LayoutItemTemplateSelector"
+                                          TimeTemplate="{StaticResource TimeDisplayTemplate}"
+                                          DateTemplate="{StaticResource DateDisplayTemplate}"/>
 
         <Flyout x:Name="TimeColorPickerFlyout" 
                 x:Key="TimeColorPickerFlyout"
@@ -68,36 +104,30 @@
         <Grid x:Name="TimeDisplayGrid" 
               Visibility="{x:Bind ViewModel.IsTimeDisplayVisible, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
 
-            <StackPanel VerticalAlignment="Center">
-                <StackPanel 
-                    Orientation="Horizontal" 
-                    HorizontalAlignment="{x:Bind ViewModel.DateHorizontalAlignment, Mode=OneWay}"
-                    Spacing="12"
-                    Visibility="{x:Bind ViewModel.DateVisibility, Mode=OneWay}">
-                    <TextBlock 
-                        Text="{x:Bind ViewModel.DateText, Mode=OneWay}"
-                        FontFamily="{x:Bind ViewModel.DateFontFamily, Mode=OneWay}"
-                        FontSize="{x:Bind ViewModel.DateFontSize, Mode=OneWay}"
-                        Foreground="{x:Bind ViewModel.DateFontColor, Mode=OneWay}"
-                        VerticalAlignment="Center"/>
-                    <TextBlock 
-                        Text="{x:Bind ViewModel.WeekText, Mode=OneWay}"
-                        FontFamily="{x:Bind ViewModel.DateFontFamily, Mode=OneWay}"
-                        FontSize="{x:Bind ViewModel.DateFontSize, Mode=OneWay}"
-                        Foreground="{x:Bind ViewModel.DateFontColor, Mode=OneWay}"
-                        VerticalAlignment="Center"/>
-                </StackPanel>
+            <!-- 动态布局容器 -->
+            <ItemsControl x:Name="LayoutItemsControl"
+                          ItemsSource="{x:Bind ViewModel.DisplayItems, Mode=OneWay}"
+                          VerticalAlignment="Center">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Vertical" Spacing="20"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
 
-                <TextBlock 
-                    Text="{x:Bind ViewModel.TimeText, Mode=OneWay}"
-                    FontFamily="{x:Bind ViewModel.TimeFontFamily, Mode=OneWay}"
-                    FontSize="{x:Bind ViewModel.TimeFontSize, Mode=OneWay}"
-                    FontWeight="Bold"
-                    Foreground="{x:Bind ViewModel.TimeFontColor, Mode=OneWay}"
-                    HorizontalAlignment="{x:Bind ViewModel.TimeHorizontalAlignment, Mode=OneWay}"
-                    Visibility="{x:Bind ViewModel.TimeVisibility, Mode=OneWay}"
-                    Margin="0,20,0,0"/>
-            </StackPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <ContentControl Content="{Binding}"
+                                        HorizontalAlignment="{Binding HorizontalAlignment}"
+                                        Visibility="{Binding Visibility}">
+                            <ContentControl.ContentTemplateSelector>
+                                <helpers:LayoutItemTemplateSelector
+                                    TimeTemplate="{StaticResource TimeDisplayTemplate}"
+                                    DateTemplate="{StaticResource DateDisplayTemplate}"/>
+                            </ContentControl.ContentTemplateSelector>
+                        </ContentControl>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
 
             <Grid VerticalAlignment="Bottom" Margin="10,10,10,10">
                 <CommandBar 
@@ -175,6 +205,25 @@
 
                 <ScrollViewer Grid.Row="1" Padding="16">
                     <StackPanel Spacing="24">
+
+                        <!-- 布局顺序设置 -->
+                        <StackPanel>
+                            <TextBlock Text="布局顺序" 
+                                       FontSize="16" 
+                                       FontWeight="SemiBold"/>
+
+                            <ComboBox Header="显示顺序"
+                                      ItemsSource="{x:Bind ViewModel.LayoutOrderOptions, Mode=OneWay}"
+                                      DisplayMemberPath="DisplayName"
+                                      SelectedValuePath="Value"
+                                      SelectedValue="{x:Bind ViewModel.SelectedLayoutOrder, Mode=TwoWay}"
+                                      Margin="0,8,0,0"/>
+                        </StackPanel>
+
+                        <!-- 分割线 -->
+                        <Border Height="1" 
+                                Background="{ThemeResource DividerStrokeColorDefaultBrush}"
+                                Margin="0,1,0,1"/>
 
                         <!-- 时间格式设置 -->
                         <StackPanel>
@@ -272,7 +321,7 @@
                         <!-- 分割线 -->
                         <Border Height="1" 
                                 Background="{ThemeResource DividerStrokeColorDefaultBrush}"
-                                Margin="0,16,0,16"/>
+                                Margin="0,1,0,1"/>
 
                         <!-- 日期格式设置 -->
                         <StackPanel>
@@ -395,37 +444,30 @@
             <Grid Grid.Column="1" 
                   Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-                <!-- 预览区域 -->
-                <StackPanel VerticalAlignment="Center">
-                    <StackPanel 
-                        Orientation="Horizontal" 
-                        HorizontalAlignment="{x:Bind ViewModel.DateHorizontalAlignment, Mode=OneWay}"
-                        Spacing="12"
-                        Visibility="{x:Bind ViewModel.DateVisibility, Mode=OneWay}">
-                        <TextBlock 
-                            Text="{x:Bind ViewModel.DateText, Mode=OneWay}"
-                            FontFamily="{x:Bind ViewModel.SelectedDateFontFamily, Mode=OneWay}"
-                            FontSize="{x:Bind ViewModel.SelectedDateFontSize, Mode=OneWay}"
-                            Foreground="{x:Bind ViewModel.DateFontColorHex, Mode=OneWay}"
-                            VerticalAlignment="Center"/>
-                        <TextBlock 
-                            Text="{x:Bind ViewModel.WeekText, Mode=OneWay}"
-                            FontFamily="{x:Bind ViewModel.SelectedDateFontFamily, Mode=OneWay}"
-                            FontSize="{x:Bind ViewModel.SelectedDateFontSize, Mode=OneWay}"
-                            Foreground="{x:Bind ViewModel.DateFontColorHex, Mode=OneWay}"
-                            VerticalAlignment="Center"/>
-                    </StackPanel>
+                <!-- 预览区域（使用相同的动态布局） -->
+                <ItemsControl x:Name="PreviewLayoutItemsControl"
+                              ItemsSource="{x:Bind ViewModel.PreviewDisplayItems, Mode=OneWay}"
+                              VerticalAlignment="Center">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Vertical" Spacing="20"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
 
-                    <TextBlock 
-                        Text="{x:Bind ViewModel.TimeText, Mode=OneWay}"
-                        FontFamily="{x:Bind ViewModel.SelectedTimeFontFamily, Mode=OneWay}"
-                        FontSize="{x:Bind ViewModel.SelectedTimeFontSize, Mode=OneWay}"
-                        FontWeight="Bold"
-                        Foreground="{x:Bind ViewModel.TimeFontColorHex, Mode=OneWay}"
-                        HorizontalAlignment="{x:Bind ViewModel.TimeHorizontalAlignment, Mode=OneWay}"
-                        Visibility="{x:Bind ViewModel.TimeVisibility, Mode=OneWay}"
-                        Margin="0,20,0,0"/>
-                </StackPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <ContentControl Content="{Binding}"
+                                            HorizontalAlignment="{Binding HorizontalAlignment}"
+                                            Visibility="{Binding Visibility}">
+                                <ContentControl.ContentTemplateSelector>
+                                    <helpers:LayoutItemTemplateSelector
+                                        TimeTemplate="{StaticResource TimeDisplayTemplate}"
+                                        DateTemplate="{StaticResource DateDisplayTemplate}"/>
+                                </ContentControl.ContentTemplateSelector>
+                            </ContentControl>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
 
                 <TextBlock Text="实时预览"
                            HorizontalAlignment="Right"
