@@ -34,29 +34,15 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
     private string _timeDisplayColor = "#0078D4";
 
     [ObservableProperty]
-    private string _timeFontFamily = "Segoe UI";
-
-    [ObservableProperty]
-    private double _timeFontSize = 72;
-
-    [ObservableProperty]
-    private string _dateFontFamily = "Segoe UI";
-
-    [ObservableProperty]
-    private double _dateFontSize = 28;
-
-    [ObservableProperty]
-    private string _timeFontColor = "#FFFFFF";
-
-    [ObservableProperty]
-    private string _dateFontColor = "#CCCCCC";
-
-    [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsTimeDisplayVisible))]
     [NotifyPropertyChangedFor(nameof(IsSettingsPanelVisible))]
     private bool _isSettingsMode = false;
+
     public bool IsTimeDisplayVisible => !IsSettingsMode;
     public bool IsSettingsPanelVisible => IsSettingsMode;
+
+    [ObservableProperty]
+    private ObservableCollection<DisplayItem> _activeDisplayItems = new();
 
     [ObservableProperty]
     private string _selectedTimeFormat = "HH:mm:ss";
@@ -120,29 +106,11 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
     [ObservableProperty]
     private string _selectedLayoutOrder = "DateOnTop";
 
-    // 用于绑定的对齐属性
-    [ObservableProperty]
-    private HorizontalAlignment _timeHorizontalAlignment = HorizontalAlignment.Center;
+    // 当前有效的显示设置（用于非预览模式）
+    private TimeDisplaySettings _currentSettings = new();
 
-    [ObservableProperty]
-    private HorizontalAlignment _dateHorizontalAlignment = HorizontalAlignment.Center;
-
-    [ObservableProperty]
-    private HorizontalAlignment _weekHorizontalAlignment = HorizontalAlignment.Center;
-
-    [ObservableProperty]
-    private Visibility _timeVisibility = Visibility.Visible;
-
-    [ObservableProperty]
-    private Visibility _dateVisibility = Visibility.Visible;
-
-    [ObservableProperty]
-    private Visibility _weekVisibility = Visibility.Visible;
-
-    // 显示项集合（用于动态布局）
-    public ObservableCollection<DisplayItem> DisplayItems { get; } = new();
-
-    public ObservableCollection<DisplayItem> PreviewDisplayItems { get; } = new();
+    // 预览模式的设置（编辑中的临时设置）
+    private TimeDisplaySettings _previewSettings = new();
 
     // 下拉列表数据源
     public ObservableCollection<string> FontFamilies
@@ -223,33 +191,23 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
         _dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         _timeDisplayService = timeDisplayService;
 
-        // 加载设置
+        // 初始化
         LoadDisplaySettings();
         UpdateTime(DateTime.Now);
-        UpdateDisplayItems(); // 初始化显示项
+        SwitchToDisplayMode(); // 初始切换到显示模式
         StartTimer();
     }
 
     private async void LoadDisplaySettings()
     {
         await _timeDisplayService.InitializeAsync();
-        var settings = _timeDisplayService.CurrentSettings;
-
-        // 应用设置到属性
-        ApplySettingsToViewModel(settings);
+        _currentSettings = _timeDisplayService.CurrentSettings;
+        ApplySettingsToViewModel(_currentSettings);
     }
 
     private void ApplySettingsToViewModel(TimeDisplaySettings settings)
     {
-        // 应用当前显示设置
-        TimeFontFamily = settings.TimeFont.FontFamily;
-        TimeFontSize = settings.TimeFont.FontSize;
-        DateFontFamily = settings.DateFont.FontFamily;
-        DateFontSize = settings.DateFont.FontSize;
-        TimeFontColor = settings.TimeFont.FontColor;
-        DateFontColor = settings.DateFont.FontColor;
-
-        // 应用设置面板的当前值
+        // 应用当前显示设置到ViewModel属性
         SelectedTimeFormat = settings.TimeFormat.Format;
         SelectedTimeFontFamily = settings.TimeFont.FontFamily;
         SelectedTimeFontSize = settings.TimeFont.FontSize;
@@ -274,9 +232,50 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
         // 应用布局顺序
         SelectedLayoutOrder = settings.LayoutOrder == LayoutOrder.DateOnTop ? "DateOnTop" : "TimeOnTop";
 
-        UpdateAlignmentProperties();
-        UpdateDisplayItems();
-        UpdatePreviewDisplayItems();
+        // 更新预览设置（初始与当前设置相同）
+        _previewSettings = DeepCloneSettings(settings);
+    }
+
+    private TimeDisplaySettings DeepCloneSettings(TimeDisplaySettings source)
+    {
+        return new TimeDisplaySettings
+        {
+            TimeFormat = new TimeFormatSettings
+            {
+                Format = source.TimeFormat.Format,
+                Use24Hour = source.TimeFormat.Use24Hour,
+                ShowSeconds = source.TimeFormat.ShowSeconds,
+                CustomFormat = source.TimeFormat.CustomFormat
+            },
+            DateFormat = new DateFormatSettings
+            {
+                Format = source.DateFormat.Format,
+                ShowWeek = source.DateFormat.ShowWeek,
+                ShowYear = source.DateFormat.ShowYear,
+                CustomFormat = source.DateFormat.CustomFormat
+            },
+            TimeFont = new FontSettings
+            {
+                FontFamily = source.TimeFont.FontFamily,
+                FontSize = source.TimeFont.FontSize,
+                FontWeight = source.TimeFont.FontWeight,
+                FontColor = source.TimeFont.FontColor
+            },
+            DateFont = new FontSettings
+            {
+                FontFamily = source.DateFont.FontFamily,
+                FontSize = source.DateFont.FontSize,
+                FontWeight = source.DateFont.FontWeight,
+                FontColor = source.DateFont.FontColor
+            },
+            Alignment = new DisplayAlignmentSettings
+            {
+                TimeAlignment = source.Alignment.TimeAlignment,
+                DateAlignment = source.Alignment.DateAlignment,
+                WeekAlignment = source.Alignment.WeekAlignment
+            },
+            LayoutOrder = source.LayoutOrder
+        };
     }
 
     private string GetAlignmentDisplayName(TimeAlignment alignment)
@@ -351,17 +350,6 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
         };
     }
 
-    private void UpdateAlignmentProperties()
-    {
-        TimeHorizontalAlignment = GetHorizontalAlignment(SelectedTimeAlignment);
-        DateHorizontalAlignment = GetHorizontalAlignment(SelectedDateAlignment);
-        WeekHorizontalAlignment = GetHorizontalAlignment(SelectedWeekAlignment);
-
-        TimeVisibility = SelectedTimeAlignment == "Hidden" ? Visibility.Collapsed : Visibility.Visible;
-        DateVisibility = SelectedDateAlignment == "Hidden" ? Visibility.Collapsed : Visibility.Visible;
-        WeekVisibility = SelectedWeekAlignment == "Hidden" ? Visibility.Collapsed : Visibility.Visible;
-    }
-
     private HorizontalAlignment GetHorizontalAlignment(string alignment)
     {
         return alignment switch
@@ -426,7 +414,7 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
             _dispatcherQueue.TryEnqueue(() =>
             {
                 UpdateTime(DateTime.Now);
-                UpdateDisplayItems(); // 更新时间时也更新显示项
+                UpdateActiveDisplayItems(); // 更新时间时也更新显示项
             });
         }, null, 0, 1000);
     }
@@ -457,152 +445,173 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
         TimeDisplayColor = hour >= 6 && hour < 18 ? "#0078D4" : "#4C0099";
     }
 
-    // 更新显示项集合
-    private void UpdateDisplayItems()
+    // 切换到预览模式
+    public void SwitchToPreviewMode()
     {
-        DisplayItems.Clear();
+        IsSettingsMode = true;
 
-        if (SelectedLayoutOrder == "DateOnTop")
+        // 更新预览设置
+        UpdatePreviewSettings();
+
+        // 使用预览设置更新显示
+        UpdateActiveDisplayItems();
+    }
+
+    // 切换到显示模式
+    public void SwitchToDisplayMode()
+    {
+        IsSettingsMode = false;
+
+        // 使用当前设置更新显示
+        UpdateActiveDisplayItems();
+    }
+
+    // 更新活动显示项
+    private void UpdateActiveDisplayItems()
+    {
+        ActiveDisplayItems.Clear();
+
+        var settings = IsSettingsMode ? _previewSettings : _currentSettings;
+        var timeText = TimeText;
+        var dateText = DateText;
+        var weekText = WeekText;
+
+        var timeAlignment = GetHorizontalAlignment(GetAlignmentDisplayName(settings.Alignment.TimeAlignment));
+        var dateAlignment = GetHorizontalAlignment(GetAlignmentDisplayName(settings.Alignment.DateAlignment));
+        var weekAlignment = GetHorizontalAlignment(GetAlignmentDisplayName(settings.Alignment.WeekAlignment));
+
+        var timeVisibility = settings.Alignment.TimeAlignment == TimeAlignment.Hidden ?
+            Visibility.Collapsed : Visibility.Visible;
+        var dateVisibility = settings.Alignment.DateAlignment == DateAlignment.Hidden ?
+            Visibility.Collapsed : Visibility.Visible;
+        var weekVisibility = settings.Alignment.WeekAlignment == WeekAlignment.Hidden ?
+            Visibility.Collapsed : Visibility.Visible;
+
+        if (settings.LayoutOrder == LayoutOrder.DateOnTop)
         {
             // 日期在上
-            DisplayItems.Add(new DisplayItem
+            ActiveDisplayItems.Add(new DisplayItem
             {
                 Type = DisplayItemType.Date,
-                DateText = DateText,
-                WeekText = WeekText,
-                DateFontFamily = DateFontFamily,
-                DateFontSize = DateFontSize,
-                DateFontColor = DateFontColor,
-                HorizontalAlignment = DateHorizontalAlignment,
-                Visibility = DateVisibility
+                DateText = dateText,
+                WeekText = weekText,
+                DateFontFamily = settings.DateFont.FontFamily,
+                DateFontSize = settings.DateFont.FontSize,
+                DateFontColor = settings.DateFont.FontColor,
+                HorizontalAlignment = dateAlignment,
+                Visibility = dateVisibility
             });
 
-            DisplayItems.Add(new DisplayItem
+            ActiveDisplayItems.Add(new DisplayItem
             {
                 Type = DisplayItemType.Time,
-                TimeText = TimeText,
-                TimeFontFamily = TimeFontFamily,
-                TimeFontSize = TimeFontSize,
-                TimeFontColor = TimeFontColor,
-                HorizontalAlignment = TimeHorizontalAlignment,
-                Visibility = TimeVisibility
+                TimeText = timeText,
+                TimeFontFamily = settings.TimeFont.FontFamily,
+                TimeFontSize = settings.TimeFont.FontSize,
+                TimeFontColor = settings.TimeFont.FontColor,
+                HorizontalAlignment = timeAlignment,
+                Visibility = timeVisibility
             });
         }
         else
         {
             // 时间在上
-            DisplayItems.Add(new DisplayItem
+            ActiveDisplayItems.Add(new DisplayItem
             {
                 Type = DisplayItemType.Time,
-                TimeText = TimeText,
-                TimeFontFamily = TimeFontFamily,
-                TimeFontSize = TimeFontSize,
-                TimeFontColor = TimeFontColor,
-                HorizontalAlignment = TimeHorizontalAlignment,
-                Visibility = TimeVisibility
+                TimeText = timeText,
+                TimeFontFamily = settings.TimeFont.FontFamily,
+                TimeFontSize = settings.TimeFont.FontSize,
+                TimeFontColor = settings.TimeFont.FontColor,
+                HorizontalAlignment = timeAlignment,
+                Visibility = timeVisibility
             });
 
-            DisplayItems.Add(new DisplayItem
+            ActiveDisplayItems.Add(new DisplayItem
             {
                 Type = DisplayItemType.Date,
-                DateText = DateText,
-                WeekText = WeekText,
-                DateFontFamily = DateFontFamily,
-                DateFontSize = DateFontSize,
-                DateFontColor = DateFontColor,
-                HorizontalAlignment = DateHorizontalAlignment,
-                Visibility = DateVisibility
+                DateText = dateText,
+                WeekText = weekText,
+                DateFontFamily = settings.DateFont.FontFamily,
+                DateFontSize = settings.DateFont.FontSize,
+                DateFontColor = settings.DateFont.FontColor,
+                HorizontalAlignment = dateAlignment,
+                Visibility = dateVisibility
             });
         }
     }
 
-    // 更新预览显示项集合
-    private void UpdatePreviewDisplayItems()
+    // 更新预览设置（基于当前的UI选择）
+    private void UpdatePreviewSettings()
     {
-        PreviewDisplayItems.Clear();
-
-        var timeAlignment = GetHorizontalAlignment(SelectedTimeAlignment);
-        var dateAlignment = GetHorizontalAlignment(SelectedDateAlignment);
-        var timeVisibility = SelectedTimeAlignment == "Hidden" ? Visibility.Collapsed : Visibility.Visible;
-        var dateVisibility = SelectedDateAlignment == "Hidden" ? Visibility.Collapsed : Visibility.Visible;
-
-        if (SelectedLayoutOrder == "DateOnTop")
+        _previewSettings = new TimeDisplaySettings
         {
-            PreviewDisplayItems.Add(new DisplayItem
+            TimeFormat = new TimeFormatSettings
             {
-                Type = DisplayItemType.Date,
-                DateText = DateText,
-                WeekText = WeekText,
-                DateFontFamily = SelectedDateFontFamily,
-                DateFontSize = SelectedDateFontSize,
-                DateFontColor = DateFontColorHex,
-                HorizontalAlignment = dateAlignment,
-                Visibility = dateVisibility
-            });
-
-            PreviewDisplayItems.Add(new DisplayItem
+                Format = IsCustomTimeFormat ? CustomTimeFormat : SelectedTimeFormat,
+                CustomFormat = CustomTimeFormat
+            },
+            DateFormat = new DateFormatSettings
             {
-                Type = DisplayItemType.Time,
-                TimeText = TimeText,
-                TimeFontFamily = SelectedTimeFontFamily,
-                TimeFontSize = SelectedTimeFontSize,
-                TimeFontColor = TimeFontColorHex,
-                HorizontalAlignment = timeAlignment,
-                Visibility = timeVisibility
-            });
-        }
-        else
-        {
-            PreviewDisplayItems.Add(new DisplayItem
+                Format = IsCustomDateFormat ? CustomDateFormat : SelectedDateFormat,
+                CustomFormat = CustomDateFormat
+            },
+            TimeFont = new FontSettings
             {
-                Type = DisplayItemType.Time,
-                TimeText = TimeText,
-                TimeFontFamily = SelectedTimeFontFamily,
-                TimeFontSize = SelectedTimeFontSize,
-                TimeFontColor = TimeFontColorHex,
-                HorizontalAlignment = timeAlignment,
-                Visibility = timeVisibility
-            });
-
-            PreviewDisplayItems.Add(new DisplayItem
+                FontFamily = SelectedTimeFontFamily,
+                FontSize = SelectedTimeFontSize,
+                FontWeight = GetFontWeightValue(SelectedTimeFontWeight),
+                FontColor = TimeFontColorHex
+            },
+            DateFont = new FontSettings
             {
-                Type = DisplayItemType.Date,
-                DateText = DateText,
-                WeekText = WeekText,
-                DateFontFamily = SelectedDateFontFamily,
-                DateFontSize = SelectedDateFontSize,
-                DateFontColor = DateFontColorHex,
-                HorizontalAlignment = dateAlignment,
-                Visibility = dateVisibility
-            });
-        }
+                FontFamily = SelectedDateFontFamily,
+                FontSize = SelectedDateFontSize,
+                FontWeight = GetFontWeightValue(SelectedDateFontWeight),
+                FontColor = DateFontColorHex
+            },
+            Alignment = new DisplayAlignmentSettings
+            {
+                TimeAlignment = GetTimeAlignmentValue(SelectedTimeAlignment),
+                DateAlignment = GetDateAlignmentValue(SelectedDateAlignment),
+                WeekAlignment = GetWeekAlignmentValue(SelectedWeekAlignment)
+            },
+            LayoutOrder = SelectedLayoutOrder == "DateOnTop" ? LayoutOrder.DateOnTop : LayoutOrder.TimeOnTop
+        };
     }
 
     [RelayCommand]
     private void ShowSettings()
     {
-        IsSettingsMode = true;
-        UpdatePreviewDisplayItems(); // 显示设置面板时更新预览
+        SwitchToPreviewMode();
     }
 
     [RelayCommand]
     private void HideSettings()
     {
-        IsSettingsMode = false;
+        SwitchToDisplayMode();
     }
 
     [RelayCommand]
     private void ConfirmTimeColor()
     {
         TimeFontColorHex = $"#{SelectedTimeColor.R:X2}{SelectedTimeColor.G:X2}{SelectedTimeColor.B:X2}";
-        UpdatePreviewDisplayItems();
+        if (IsSettingsMode)
+        {
+            UpdatePreviewSettings();
+            UpdateActiveDisplayItems();
+        }
     }
 
     [RelayCommand]
     private void ConfirmDateColor()
     {
         DateFontColorHex = $"#{SelectedDateColor.R:X2}{SelectedDateColor.G:X2}{SelectedDateColor.B:X2}";
-        UpdatePreviewDisplayItems();
+        if (IsSettingsMode)
+        {
+            UpdatePreviewSettings();
+            UpdateActiveDisplayItems();
+        }
     }
 
     [RelayCommand]
@@ -610,57 +619,14 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
     {
         try
         {
-            var newSettings = new TimeDisplaySettings
-            {
-                TimeFormat = new TimeFormatSettings
-                {
-                    Format = IsCustomTimeFormat ? CustomTimeFormat : SelectedTimeFormat,
-                    CustomFormat = CustomTimeFormat
-                },
-                DateFormat = new DateFormatSettings
-                {
-                    Format = IsCustomDateFormat ? CustomDateFormat : SelectedDateFormat,
-                    CustomFormat = CustomDateFormat
-                },
-                TimeFont = new FontSettings
-                {
-                    FontFamily = SelectedTimeFontFamily,
-                    FontSize = SelectedTimeFontSize,
-                    FontWeight = GetFontWeightValue(SelectedTimeFontWeight),
-                    FontColor = TimeFontColorHex
-                },
-                DateFont = new FontSettings
-                {
-                    FontFamily = SelectedDateFontFamily,
-                    FontSize = SelectedDateFontSize,
-                    FontWeight = GetFontWeightValue(SelectedDateFontWeight),
-                    FontColor = DateFontColorHex
-                },
-                Alignment = new DisplayAlignmentSettings
-                {
-                    TimeAlignment = GetTimeAlignmentValue(SelectedTimeAlignment),
-                    DateAlignment = GetDateAlignmentValue(SelectedDateAlignment),
-                    WeekAlignment = GetWeekAlignmentValue(SelectedWeekAlignment)
-                },
-                LayoutOrder = SelectedLayoutOrder == "DateOnTop" ? LayoutOrder.DateOnTop : LayoutOrder.TimeOnTop
-            };
+            // 保存预览设置到当前设置
+            _currentSettings = DeepCloneSettings(_previewSettings);
 
-            await _timeDisplayService.SaveSettingsAsync(newSettings);
+            // 保存到服务
+            await _timeDisplayService.SaveSettingsAsync(_currentSettings);
 
-            // 更新当前显示
-            TimeFontFamily = newSettings.TimeFont.FontFamily;
-            TimeFontSize = newSettings.TimeFont.FontSize;
-            DateFontFamily = newSettings.DateFont.FontFamily;
-            DateFontSize = newSettings.DateFont.FontSize;
-            TimeFontColor = newSettings.TimeFont.FontColor;
-            DateFontColor = newSettings.DateFont.FontColor;
-
-            // 更新对齐属性
-            UpdateAlignmentProperties();
-            UpdateDisplayItems();
-
-            // 关闭设置面板
-            IsSettingsMode = false;
+            // 切换到显示模式
+            SwitchToDisplayMode();
         }
         catch (Exception ex)
         {
@@ -671,17 +637,18 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
     [RelayCommand]
     private void CancelSettings()
     {
-        var settings = _timeDisplayService.CurrentSettings;
-        ApplySettingsToViewModel(settings);
+        // 恢复当前设置到ViewModel
+        ApplySettingsToViewModel(_currentSettings);
 
-        IsSettingsMode = false;
+        // 切换到显示模式
+        SwitchToDisplayMode();
     }
 
     [RelayCommand]
     private void RefreshTime()
     {
         UpdateTime(DateTime.Now);
-        UpdateDisplayItems();
+        UpdateActiveDisplayItems();
     }
 
     [RelayCommand]
@@ -760,21 +727,26 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
     {
         IsCustomTimeFormat = value == "Custom";
         UpdateTime(DateTime.Now);
-        UpdateDisplayItems();
-        UpdatePreviewDisplayItems();
+        if (IsSettingsMode)
+        {
+            UpdatePreviewSettings();
+            UpdateActiveDisplayItems();
+        }
     }
 
     partial void OnSelectedDateFormatChanged(string value)
     {
         IsCustomDateFormat = value == "Custom";
         UpdateTime(DateTime.Now);
-        UpdateDisplayItems();
-        UpdatePreviewDisplayItems();
+        if (IsSettingsMode)
+        {
+            UpdatePreviewSettings();
+            UpdateActiveDisplayItems();
+        }
     }
 
     partial void OnTimeFontColorHexChanged(string value)
     {
-        TimeFontColor = value;
         try
         {
             SelectedTimeColor = ParseColorFromHex(value);
@@ -783,12 +755,16 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
         {
             SelectedTimeColor = Windows.UI.Color.FromArgb(255, 255, 255, 255);
         }
-        UpdatePreviewDisplayItems();
+
+        if (IsSettingsMode)
+        {
+            UpdatePreviewSettings();
+            UpdateActiveDisplayItems();
+        }
     }
 
     partial void OnDateFontColorHexChanged(string value)
     {
-        DateFontColor = value;
         try
         {
             SelectedDateColor = ParseColorFromHex(value);
@@ -797,51 +773,102 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
         {
             SelectedDateColor = Windows.UI.Color.FromArgb(255, 204, 204, 204);
         }
-        UpdatePreviewDisplayItems();
+
+        if (IsSettingsMode)
+        {
+            UpdatePreviewSettings();
+            UpdateActiveDisplayItems();
+        }
     }
 
     partial void OnSelectedTimeAlignmentChanged(string value)
     {
-        UpdateAlignmentProperties();
-        UpdatePreviewDisplayItems();
+        if (IsSettingsMode)
+        {
+            UpdatePreviewSettings();
+            UpdateActiveDisplayItems();
+        }
     }
 
     partial void OnSelectedDateAlignmentChanged(string value)
     {
-        UpdateAlignmentProperties();
-        UpdatePreviewDisplayItems();
+        if (IsSettingsMode)
+        {
+            UpdatePreviewSettings();
+            UpdateActiveDisplayItems();
+        }
     }
 
     partial void OnSelectedWeekAlignmentChanged(string value)
     {
-        UpdateAlignmentProperties();
-        UpdatePreviewDisplayItems();
+        if (IsSettingsMode)
+        {
+            UpdatePreviewSettings();
+            UpdateActiveDisplayItems();
+        }
     }
 
     partial void OnSelectedLayoutOrderChanged(string value)
     {
-        UpdateDisplayItems();
-        UpdatePreviewDisplayItems();
+        if (IsSettingsMode)
+        {
+            UpdatePreviewSettings();
+            UpdateActiveDisplayItems();
+        }
     }
 
     partial void OnSelectedTimeFontFamilyChanged(string value)
     {
-        UpdatePreviewDisplayItems();
+        if (IsSettingsMode)
+        {
+            UpdatePreviewSettings();
+            UpdateActiveDisplayItems();
+        }
     }
 
     partial void OnSelectedTimeFontSizeChanged(double value)
     {
-        UpdatePreviewDisplayItems();
+        if (IsSettingsMode)
+        {
+            UpdatePreviewSettings();
+            UpdateActiveDisplayItems();
+        }
     }
 
     partial void OnSelectedDateFontFamilyChanged(string value)
     {
-        UpdatePreviewDisplayItems();
+        if (IsSettingsMode)
+        {
+            UpdatePreviewSettings();
+            UpdateActiveDisplayItems();
+        }
     }
 
     partial void OnSelectedDateFontSizeChanged(double value)
     {
-        UpdatePreviewDisplayItems();
+        if (IsSettingsMode)
+        {
+            UpdatePreviewSettings();
+            UpdateActiveDisplayItems();
+        }
+    }
+
+    partial void OnSelectedTimeFontWeightChanged(string value)
+    {
+        if (IsSettingsMode)
+        {
+            UpdatePreviewSettings();
+            UpdateActiveDisplayItems();
+        }
+    }
+
+    partial void OnSelectedDateFontWeightChanged(string value)
+    {
+        if (IsSettingsMode)
+        {
+            UpdatePreviewSettings();
+            UpdateActiveDisplayItems();
+        }
     }
 
     public void Unload()
@@ -854,5 +881,3 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
         _timer?.Dispose();
     }
 }
-
-
