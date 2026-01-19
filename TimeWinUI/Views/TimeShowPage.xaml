@@ -25,7 +25,7 @@
                 FontSize="{Binding TimeFontSize}"
                 FontWeight="Bold"
                 Foreground="{Binding TimeFontColor}"
-                HorizontalAlignment="{Binding TimeHorizontalAlignment}"/>
+                HorizontalAlignment="{Binding HorizontalAlignment}"/>
         </DataTemplate>
 
         <!-- 日期显示项数据模板 -->
