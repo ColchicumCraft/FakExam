@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using TimeWinUI.Contracts.Services;
 using TimeWinUI.Core.Models;
+using TimeWinUI.Models;
 
 namespace TimeWinUI.ViewModels;
 
@@ -854,86 +855,4 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
     }
 }
 
-// 显示项相关类（放在同一个文件中）
-public enum DisplayItemType
-{
-    Time,
-    Date
-}
 
-public class DisplayItem
-{
-    public DisplayItemType Type
-    {
-        get; set;
-    }
-
-    // 时间相关属性
-    public string TimeText
-    {
-        get; set;
-    }
-    public string TimeFontFamily
-    {
-        get; set;
-    }
-    public double TimeFontSize
-    {
-        get; set;
-    }
-    public string TimeFontColor
-    {
-        get; set;
-    }
-
-    // 日期相关属性
-    public string DateText
-    {
-        get; set;
-    }
-    public string WeekText
-    {
-        get; set;
-    }
-    public string DateFontFamily
-    {
-        get; set;
-    }
-    public double DateFontSize
-    {
-        get; set;
-    }
-    public string DateFontColor
-    {
-        get; set;
-    }
-
-    // 布局属性
-    public HorizontalAlignment HorizontalAlignment
-    {
-        get; set;
-    }
-    public Visibility Visibility
-    {
-        get; set;
-    }
-}
-
-// 布局顺序项类
-public class LayoutOrderItem
-{
-    public string DisplayName
-    {
-        get; set;
-    }
-    public string Value
-    {
-        get; set;
-    }
-
-    public LayoutOrderItem(string displayName, string value)
-    {
-        DisplayName = displayName;
-        Value = value;
-    }
-}

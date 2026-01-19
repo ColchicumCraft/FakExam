@@ -134,6 +134,12 @@ public enum WeekAlignment
     Hidden
 }
 
+public enum DisplayItemType
+{
+    Time,
+    Date
+}
+
 public class AlignmentItem
 {
     public string DisplayName
@@ -169,3 +175,4 @@ public class LayoutOrderItem
         Value = value;
     }
 }
+

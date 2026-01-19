@@ -1,6 +1,7 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using TimeWinUI.ViewModels;
+using TimeWinUI.Models;
+using TimeWinUI.Core.Models;
 
 namespace TimeWinUI.Helpers;
 
