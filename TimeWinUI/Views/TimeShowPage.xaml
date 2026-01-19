@@ -137,6 +137,7 @@
                 <!-- 底部操作栏 -->
                 <Grid VerticalAlignment="Bottom" Margin="10,10,10,30">
                     <CommandBar 
+                        Closing="CommandBar_Closing"
                         HorizontalAlignment="Left" 
                         Background="Transparent" 
                         IsOpen="True"
@@ -156,6 +157,7 @@
                     </CommandBar>
 
                     <CommandBar  
+                        Closing="CommandBar_Closing"
                         HorizontalAlignment="Right" 
                         Background="Transparent" 
                         IsOpen="True" 

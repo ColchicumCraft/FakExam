@@ -68,4 +68,14 @@ public sealed partial class TimeShowPage : Page
             flyout.Hide();
         }
     }
+    private void CommandBar_Closing(object sender, object e)
+    {
+        if (sender is CommandBar commandBar)
+        {
+            _ = DispatcherQueue.TryEnqueue(() =>
+            {
+                commandBar.IsOpen = true;
+            });
+        }
+    }
 }
