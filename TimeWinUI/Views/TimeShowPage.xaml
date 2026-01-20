@@ -173,9 +173,9 @@
                             Icon="FullScreen"
                             Label="全屏"/>
                         <AppBarButton 
-                            Command="{x:Bind ViewModel.CloseAppCommand}"
-                            Icon="Cancel"
-                            Label="关闭"/>
+                            Command="{x:Bind ViewModel.ToggleCompactOverlayCommand}"
+                            Icon="NewWindow"
+                            Label="画中画"/>
                         <AppBarButton 
                             Command="{x:Bind ViewModel.MinimizeWindowCommand}"
                             Label="最小化">
@@ -184,9 +184,9 @@
                             </AppBarButton.Icon>
                         </AppBarButton>
                         <AppBarButton 
-                            Command="{x:Bind ViewModel.ToggleCompactOverlayCommand}"
-                            Icon="NewWindow"
-                            Label="画中画"/>
+                            Command="{x:Bind ViewModel.CloseAppCommand}"
+                            Icon="Cancel"
+                            Label="关闭"/>
                     </StackPanel>
                 </Grid>
             </Grid>
