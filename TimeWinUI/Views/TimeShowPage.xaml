@@ -135,15 +135,17 @@
                 </ItemsControl>
 
                 <!-- 底部操作栏 -->
-                <Grid VerticalAlignment="Bottom" Margin="10,10,10,30">
-                    <CommandBar 
-                        Closing="CommandBar_Closing"
-                        HorizontalAlignment="Left" 
-                        Background="Transparent" 
-                        IsOpen="True"
-                        IsSticky="True"
-                        OverflowButtonVisibility="Collapsed"
-                        DefaultLabelPosition="Bottom">
+                <Grid VerticalAlignment="Bottom" Margin="10,10,10,10">
+                    <StackPanel  
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Left"
+                        CornerRadius="8"
+                        Padding="2"
+                        BorderThickness="1"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        VerticalAlignment="Bottom"
+                        Spacing="4">
                         <AppBarButton Label="显示设置"
                                       Command="{x:Bind ViewModel.ShowSettingsCommand}">
                             <AppBarButton.Icon>
@@ -154,16 +156,18 @@
                                       Icon="Setting"
                                       Label="设置"
                                       Command="{x:Bind ViewModel.NavigateToSettingsCommand}"/>
-                    </CommandBar>
+                    </StackPanel>
 
-                    <CommandBar  
-                        Closing="CommandBar_Closing"
-                        HorizontalAlignment="Right" 
-                        Background="Transparent" 
-                        IsOpen="True" 
-                        IsSticky="True"
-                        OverflowButtonVisibility="Collapsed"
-                        DefaultLabelPosition="Bottom">
+                    <StackPanel  
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Right"
+                        CornerRadius="8"
+                        Padding="2"
+                        BorderThickness="1"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        VerticalAlignment="Bottom"
+                        Spacing="4">
                         <AppBarButton 
                             Command="{x:Bind ViewModel.ToggleFullScreenCommand}"
                             Icon="FullScreen"
@@ -183,7 +187,7 @@
                             Command="{x:Bind ViewModel.ToggleCompactOverlayCommand}"
                             Icon="NewWindow"
                             Label="画中画"/>
-                    </CommandBar>
+                    </StackPanel>
                 </Grid>
             </Grid>
 
