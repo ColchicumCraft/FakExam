@@ -106,6 +106,14 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
     [ObservableProperty]
     private string _selectedLayoutOrder = "DateOnTop";
 
+    // 画中画模式下
+    [ObservableProperty]
+    private bool _isCompactOverlay = false;
+
+    // 全屏模式下
+    [ObservableProperty]
+    private bool _isFullScreen = false;
+
     // 当前有效的显示设置（用于非预览模式）
     private TimeDisplaySettings _currentSettings = new();
 
@@ -663,10 +671,12 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
                 if (appWindow.Presenter.Kind == AppWindowPresenterKind.FullScreen)
                 {
                     appWindow.SetPresenter(AppWindowPresenterKind.Overlapped);
+                    IsFullScreen = false;
                 }
                 else
                 {
                     appWindow.SetPresenter(AppWindowPresenterKind.FullScreen);
+                    IsFullScreen = true;
                 }
             }
         }
@@ -691,10 +701,12 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
                 if (appWindow.Presenter.Kind == AppWindowPresenterKind.CompactOverlay)
                 {
                     appWindow.SetPresenter(AppWindowPresenterKind.Overlapped);
+                    IsCompactOverlay = false;
                 }
                 else
                 {
                     appWindow.SetPresenter(AppWindowPresenterKind.CompactOverlay);
+                    IsCompactOverlay = true;
                 }
             }
         }

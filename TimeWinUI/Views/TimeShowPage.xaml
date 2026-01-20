@@ -10,6 +10,7 @@
     mc:Ignorable="d">
 
     <Page.Resources>
+        <converters:BoolToStringConverter x:Key="BoolToStringConverter"/>
         <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" 
                                                  TrueValue="Visible" 
                                                  FalseValue="Collapsed"/>
@@ -153,9 +154,10 @@
                             </AppBarButton.Icon>
                         </AppBarButton>
                         <AppBarButton 
-                                      Icon="Setting"
-                                      Label="设置"
-                                      Command="{x:Bind ViewModel.NavigateToSettingsCommand}"/>
+                             Icon="Setting"
+                             Label="设置"
+                             Visibility="{x:Bind ViewModel.IsCompactOverlay, Converter={StaticResource InverseBooleanToVisibilityConverter}, Mode=OneWay}"
+                             Command="{x:Bind ViewModel.NavigateToSettingsCommand}"/>
                     </StackPanel>
 
                     <StackPanel  
@@ -171,13 +173,15 @@
                         <AppBarButton 
                             Command="{x:Bind ViewModel.ToggleFullScreenCommand}"
                             Icon="FullScreen"
-                            Label="全屏"/>
+                            Visibility="{x:Bind ViewModel.IsCompactOverlay, Converter={StaticResource InverseBooleanToVisibilityConverter}, Mode=OneWay}"
+                            Label="{x:Bind ViewModel.IsFullScreen, Converter={StaticResource BoolToStringConverter}, ConverterParameter='全屏|还原', Mode=OneWay}"/>
                         <AppBarButton 
                             Command="{x:Bind ViewModel.ToggleCompactOverlayCommand}"
                             Icon="NewWindow"
-                            Label="画中画"/>
+                            Label="{x:Bind ViewModel.IsCompactOverlay, Converter={StaticResource BoolToStringConverter}, ConverterParameter='画中画|还原', Mode=OneWay}"/>
                         <AppBarButton 
                             Command="{x:Bind ViewModel.MinimizeWindowCommand}"
+                            Visibility="{x:Bind ViewModel.IsCompactOverlay, Converter={StaticResource InverseBooleanToVisibilityConverter}, Mode=OneWay}"
                             Label="最小化">
                             <AppBarButton.Icon>
                                 <FontIcon Glyph="&#xED1A;" />
@@ -185,6 +189,7 @@
                         </AppBarButton>
                         <AppBarButton 
                             Command="{x:Bind ViewModel.CloseAppCommand}"
+                            Visibility="{x:Bind ViewModel.IsCompactOverlay, Converter={StaticResource InverseBooleanToVisibilityConverter}, Mode=OneWay}"
                             Icon="Cancel"
                             Label="关闭"/>
                     </StackPanel>
