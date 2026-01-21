@@ -1,4 +1,6 @@
-﻿namespace TimeWinUI.Core.Models;
+﻿using System.Collections.ObjectModel;
+
+namespace TimeWinUI.Core.Models;
 
 public class TimeDisplaySettings
 {
@@ -32,14 +34,14 @@ public class FontSettings
     public string FontFamily { get; set; } = "Segoe UI";
     public double FontSize { get; set; } = 72;
     public int FontWeight { get; set; } = 700; // Bold = 700, Normal = 400
-    public string FontColor { get; set; } = "#FFFFFF";
+    public string FontColor { get; set; } = "#000000";
 }
 
 public class ColorSettings
 {
-    public string TimeColor { get; set; } = "#FFFFFF";
-    public string DateColor { get; set; } = "#CCCCCC";
-    public string WeekColor { get; set; } = "#AAAAAA";
+    public string TimeColor { get; set; } = "#000000";
+    public string DateColor { get; set; } = "#000000";
+    public string WeekColor { get; set; } = "#000000";
 }
 
 // 辅助类
@@ -176,3 +178,83 @@ public class LayoutOrderItem
     }
 }
 
+// 下拉列表数据源
+public static class DisplayDataSources
+{
+    public static ObservableCollection<string> FontFamilies
+    {
+        get;
+    } = new()
+    {
+        "Segoe UI",
+        "Microsoft YaHei UI",
+        "Microsoft YaHei",
+        "Arial",
+        "Calibri",
+        "Consolas",
+        "Times New Roman",
+        "SimSun",
+        "SimHei",
+        "KaiTi"
+    };
+
+    public static ObservableCollection<FormatItem> TimeFormats
+    {
+        get;
+    } = new()
+    {
+        new FormatItem("24小时制 (HH:mm:ss)", "HH:mm:ss"),
+        new FormatItem("24小时制 (HH:mm)", "HH:mm"),
+        new FormatItem("12小时制 (h:mm:ss tt)", "h:mm:ss tt"),
+        new FormatItem("12小时制 (h:mm tt)", "h:mm tt"),
+        new FormatItem("自定义", "Custom")
+    };
+
+    public static ObservableCollection<FormatItem> DateFormats
+    {
+        get;
+    } = new()
+    {
+        new FormatItem("yyyy年MM月dd日", "yyyy年MM月dd日"),
+        new FormatItem("yyyy-MM-dd", "yyyy-MM-dd"),
+        new FormatItem("MM/dd/yyyy", "MM/dd/yyyy"),
+        new FormatItem("yyyy年M月d日", "yyyy年M月d日"),
+        new FormatItem("自定义", "Custom")
+    };
+
+    public static ObservableCollection<FontWeightItem> FontWeights
+    {
+        get;
+    } = new()
+    {
+        new FontWeightItem("Thin", "Thin"),
+        new FontWeightItem("ExtraLight", "ExtraLight"),
+        new FontWeightItem("Light", "Light"),
+        new FontWeightItem("Normal", "Normal"),
+        new FontWeightItem("Medium", "Medium"),
+        new FontWeightItem("SemiBold", "SemiBold"),
+        new FontWeightItem("Bold", "Bold"),
+        new FontWeightItem("ExtraBold", "ExtraBold"),
+        new FontWeightItem("Black", "Black")
+    };
+
+    public static ObservableCollection<AlignmentItem> AlignmentOptions
+    {
+        get;
+    } = new()
+    {
+        new AlignmentItem("居中", "Center"),
+        new AlignmentItem("靠左", "Left"),
+        new AlignmentItem("靠右", "Right"),
+        new AlignmentItem("隐藏", "Hidden")
+    };
+
+    public static ObservableCollection<LayoutOrderItem> LayoutOrderOptions
+    {
+        get;
+    } = new()
+    {
+        new LayoutOrderItem("日期在上", "DateOnTop"),
+        new LayoutOrderItem("时间在上", "TimeOnTop")
+    };
+}

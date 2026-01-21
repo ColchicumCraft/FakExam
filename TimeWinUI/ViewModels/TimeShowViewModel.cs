@@ -121,82 +121,12 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
     private TimeDisplaySettings _previewSettings = new();
 
     // 下拉列表数据源
-    public ObservableCollection<string> FontFamilies
-    {
-        get;
-    } = new()
-    {
-        "Segoe UI",
-        "Microsoft YaHei UI",
-        "Microsoft YaHei",
-        "Arial",
-        "Calibri",
-        "Consolas",
-        "Times New Roman",
-        "SimSun",
-        "SimHei",
-        "KaiTi"
-    };
-
-    public ObservableCollection<FormatItem> TimeFormats
-    {
-        get;
-    } = new()
-    {
-        new FormatItem("24小时制 (HH:mm:ss)", "HH:mm:ss"),
-        new FormatItem("24小时制 (HH:mm)", "HH:mm"),
-        new FormatItem("12小时制 (h:mm:ss tt)", "h:mm:ss tt"),
-        new FormatItem("12小时制 (h:mm tt)", "h:mm tt"),
-        new FormatItem("自定义", "Custom")
-    };
-
-    public ObservableCollection<FormatItem> DateFormats
-    {
-        get;
-    } = new()
-    {
-        new FormatItem("yyyy年MM月dd日", "yyyy年MM月dd日"),
-        new FormatItem("yyyy-MM-dd", "yyyy-MM-dd"),
-        new FormatItem("MM/dd/yyyy", "MM/dd/yyyy"),
-        new FormatItem("yyyy年M月d日", "yyyy年M月d日"),
-        new FormatItem("自定义", "Custom")
-    };
-
-    public ObservableCollection<FontWeightItem> FontWeights
-    {
-        get;
-    } = new()
-    {
-        new FontWeightItem("Thin", "Thin"),
-        new FontWeightItem("ExtraLight", "ExtraLight"),
-        new FontWeightItem("Light", "Light"),
-        new FontWeightItem("Normal", "Normal"),
-        new FontWeightItem("Medium", "Medium"),
-        new FontWeightItem("SemiBold", "SemiBold"),
-        new FontWeightItem("Bold", "Bold"),
-        new FontWeightItem("ExtraBold", "ExtraBold"),
-        new FontWeightItem("Black", "Black")
-    };
-
-    public ObservableCollection<AlignmentItem> AlignmentOptions
-    {
-        get;
-    } = new()
-    {
-        new AlignmentItem("居中", "Center"),
-        new AlignmentItem("靠左", "Left"),
-        new AlignmentItem("靠右", "Right"),
-        new AlignmentItem("隐藏", "Hidden")
-    };
-
-    public ObservableCollection<LayoutOrderItem> LayoutOrderOptions
-    {
-        get;
-    } = new()
-    {
-        new LayoutOrderItem("日期在上", "DateOnTop"),
-        new LayoutOrderItem("时间在上", "TimeOnTop")
-    };
+    public ObservableCollection<string> FontFamilies => DisplayDataSources.FontFamilies;
+    public ObservableCollection<FormatItem> TimeFormats => DisplayDataSources.TimeFormats;
+    public ObservableCollection<FormatItem> DateFormats => DisplayDataSources.DateFormats;
+    public ObservableCollection<FontWeightItem> FontWeights => DisplayDataSources.FontWeights;
+    public ObservableCollection<AlignmentItem> AlignmentOptions => DisplayDataSources.AlignmentOptions;
+    public ObservableCollection<LayoutOrderItem> LayoutOrderOptions => DisplayDataSources.LayoutOrderOptions;
 
     public TimeShowViewModel(ITimeDisplayService timeDisplayService)
     {
@@ -511,61 +441,42 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
         var timeFontWeight = GetFontWeightDisplayName(settings.TimeFont.FontWeight);
         var dateFontWeight = GetFontWeightDisplayName(settings.DateFont.FontWeight);
 
+        var TimeDisplayItem = new DisplayItem
+        {
+            Type = DisplayItemType.Date,
+            DateText = dateText,
+            WeekText = weekText,
+            DateFontFamily = settings.DateFont.FontFamily,
+            DateFontSize = settings.DateFont.FontSize,
+            DateFontColor = settings.DateFont.FontColor,
+            DateFontWeight = dateFontWeight,
+            HorizontalAlignment = dateAlignment,
+            Visibility = dateVisibility
+        };
+
+        var DateDisplayItem = new DisplayItem
+        {
+            Type = DisplayItemType.Time,
+            TimeText = timeText,
+            TimeFontFamily = settings.TimeFont.FontFamily,
+            TimeFontSize = settings.TimeFont.FontSize,
+            TimeFontColor = settings.TimeFont.FontColor,
+            TimeFontWeight = timeFontWeight,
+            HorizontalAlignment = timeAlignment,
+            Visibility = timeVisibility
+        };
+
         if (settings.LayoutOrder == LayoutOrder.DateOnTop)
         {
             // 日期在上
-            ActiveDisplayItems.Add(new DisplayItem
-            {
-                Type = DisplayItemType.Date,
-                DateText = dateText,
-                WeekText = weekText,
-                DateFontFamily = settings.DateFont.FontFamily,
-                DateFontSize = settings.DateFont.FontSize,
-                DateFontColor = settings.DateFont.FontColor,
-                DateFontWeight = dateFontWeight,
-                HorizontalAlignment = dateAlignment,
-                Visibility = dateVisibility
-            });
-
-            ActiveDisplayItems.Add(new DisplayItem
-            {
-                Type = DisplayItemType.Time,
-                TimeText = timeText,
-                TimeFontFamily = settings.TimeFont.FontFamily,
-                TimeFontSize = settings.TimeFont.FontSize,
-                TimeFontColor = settings.TimeFont.FontColor,
-                TimeFontWeight = timeFontWeight,
-                HorizontalAlignment = timeAlignment,
-                Visibility = timeVisibility
-            });
+            ActiveDisplayItems.Add(TimeDisplayItem);
+            ActiveDisplayItems.Add(DateDisplayItem);
         }
         else
         {
             // 时间在上
-            ActiveDisplayItems.Add(new DisplayItem
-            {
-                Type = DisplayItemType.Time,
-                TimeText = timeText,
-                TimeFontFamily = settings.TimeFont.FontFamily,
-                TimeFontSize = settings.TimeFont.FontSize,
-                TimeFontColor = settings.TimeFont.FontColor,
-                TimeFontWeight = timeFontWeight,
-                HorizontalAlignment = timeAlignment,
-                Visibility = timeVisibility
-            });
-
-            ActiveDisplayItems.Add(new DisplayItem
-            {
-                Type = DisplayItemType.Date,
-                DateText = dateText,
-                WeekText = weekText,
-                DateFontFamily = settings.DateFont.FontFamily,
-                DateFontSize = settings.DateFont.FontSize,
-                DateFontColor = settings.DateFont.FontColor,
-                DateFontWeight = dateFontWeight,
-                HorizontalAlignment = dateAlignment,
-                Visibility = dateVisibility
-            });
+            ActiveDisplayItems.Add(DateDisplayItem);
+            ActiveDisplayItems.Add(TimeDisplayItem);
         }
     }
 
