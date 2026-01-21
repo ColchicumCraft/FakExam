@@ -24,7 +24,7 @@
                 Text="{Binding TimeText}"
                 FontFamily="{Binding TimeFontFamily}"
                 FontSize="{Binding TimeFontSize}"
-                FontWeight="Bold"
+                FontWeight="{Binding TimeFontWeight}"
                 Foreground="{Binding TimeFontColor}"
                 HorizontalAlignment="{Binding HorizontalAlignment}"
                 Visibility="{Binding Visibility}"/>
@@ -39,6 +39,7 @@
                     Text="{Binding DateText}"
                     FontFamily="{Binding DateFontFamily}"
                     FontSize="{Binding DateFontSize}"
+                    FontWeight="{Binding DateFontWeight}"
                     Foreground="{Binding DateFontColor}"
                     VerticalAlignment="Center"/>
                 <TextBlock 
@@ -46,6 +47,7 @@
                     FontFamily="{Binding DateFontFamily}"
                     FontSize="{Binding DateFontSize}"
                     Foreground="{Binding DateFontColor}"
+                    FontWeight="{Binding DateFontWeight}"
                     VerticalAlignment="Center"/>
             </StackPanel>
         </DataTemplate>

@@ -167,11 +167,15 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
         get;
     } = new()
     {
-        new FontWeightItem("细体", "Light"),
-        new FontWeightItem("普通", "Normal"),
-        new FontWeightItem("中等", "Medium"),
-        new FontWeightItem("半粗", "SemiBold"),
-        new FontWeightItem("粗体", "Bold")
+        new FontWeightItem("Thin", "Thin"),
+        new FontWeightItem("ExtraLight", "ExtraLight"),
+        new FontWeightItem("Light", "Light"),
+        new FontWeightItem("Normal", "Normal"),
+        new FontWeightItem("Medium", "Medium"),
+        new FontWeightItem("SemiBold", "SemiBold"),
+        new FontWeightItem("Bold", "Bold"),
+        new FontWeightItem("ExtraBold", "ExtraBold"),
+        new FontWeightItem("Black", "Black")
     };
 
     public ObservableCollection<AlignmentItem> AlignmentOptions
@@ -374,11 +378,16 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
     {
         return weight switch
         {
-            <= 300 => "Light",
-            <= 400 => "Normal",
-            <= 500 => "Medium",
-            <= 600 => "SemiBold",
-            _ => "Bold"
+            100 => "Thin",
+            200 => "ExtraLight",
+            300 => "Light",
+            400 => "Normal",
+            500 => "Medium",
+            600 => "SemiBold",
+            700 => "Bold",
+            800 => "ExtraBold",
+            900 => "Black",
+            _ => weight <= 400 ? "Normal" : weight <= 600 ? "Medium" : "Bold"
         };
     }
 
@@ -386,11 +395,15 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
     {
         return displayName switch
         {
+            "Thin" => 100,
+            "ExtraLight" => 200,
             "Light" => 300,
             "Normal" => 400,
             "Medium" => 500,
             "SemiBold" => 600,
             "Bold" => 700,
+            "ExtraBold" => 800,
+            "Black" => 900,
             _ => 400
         };
     }
@@ -495,6 +508,9 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
         var weekVisibility = settings.Alignment.WeekAlignment == WeekAlignment.Hidden ?
             Visibility.Collapsed : Visibility.Visible;
 
+        var timeFontWeight = GetFontWeightDisplayName(settings.TimeFont.FontWeight);
+        var dateFontWeight = GetFontWeightDisplayName(settings.DateFont.FontWeight);
+
         if (settings.LayoutOrder == LayoutOrder.DateOnTop)
         {
             // 日期在上
@@ -506,6 +522,7 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
                 DateFontFamily = settings.DateFont.FontFamily,
                 DateFontSize = settings.DateFont.FontSize,
                 DateFontColor = settings.DateFont.FontColor,
+                DateFontWeight = dateFontWeight,
                 HorizontalAlignment = dateAlignment,
                 Visibility = dateVisibility
             });
@@ -517,6 +534,7 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
                 TimeFontFamily = settings.TimeFont.FontFamily,
                 TimeFontSize = settings.TimeFont.FontSize,
                 TimeFontColor = settings.TimeFont.FontColor,
+                TimeFontWeight = timeFontWeight,
                 HorizontalAlignment = timeAlignment,
                 Visibility = timeVisibility
             });
@@ -531,6 +549,7 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
                 TimeFontFamily = settings.TimeFont.FontFamily,
                 TimeFontSize = settings.TimeFont.FontSize,
                 TimeFontColor = settings.TimeFont.FontColor,
+                TimeFontWeight = timeFontWeight,
                 HorizontalAlignment = timeAlignment,
                 Visibility = timeVisibility
             });
@@ -543,6 +562,7 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
                 DateFontFamily = settings.DateFont.FontFamily,
                 DateFontSize = settings.DateFont.FontSize,
                 DateFontColor = settings.DateFont.FontColor,
+                DateFontWeight = dateFontWeight,
                 HorizontalAlignment = dateAlignment,
                 Visibility = dateVisibility
             });

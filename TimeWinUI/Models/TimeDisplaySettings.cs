@@ -33,6 +33,10 @@ public class DisplayItem
     {
         get; set;
     }
+    public string TimeFontWeight
+    {
+        get; set;
+    }
 
     // 日期相关属性
     public string DateText
@@ -52,6 +56,10 @@ public class DisplayItem
         get; set;
     }
     public string DateFontColor
+    {
+        get; set;
+    }
+    public string DateFontWeight
     {
         get; set;
     }
