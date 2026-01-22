@@ -16,6 +16,7 @@ public class PageService : IPageService
     {
         Configure<TimeShowViewModel, TimeShowPage>();
         Configure<SettingsViewModel, SettingsPage>();
+        Configure<DashboardShowViewModel, DashboardShowPage>();
     }
 
     public Type GetPageType(string key)

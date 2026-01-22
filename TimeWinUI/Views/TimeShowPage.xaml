@@ -155,6 +155,12 @@
                                 <FontIcon Glyph="&#xEF58;" />
                             </AppBarButton.Icon>
                         </AppBarButton>
+                        <AppBarButton Label="面板"
+                                      Command="{x:Bind ViewModel.NavigateToDashboardShowPageCommand}">
+                            <AppBarButton.Icon>
+                                <FontIcon Glyph="&#xF246;" />
+                            </AppBarButton.Icon>
+                        </AppBarButton>
                         <AppBarButton 
                              Icon="Setting"
                              Label="设置"

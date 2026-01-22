@@ -665,6 +665,13 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
         navigationService.NavigateTo(typeof(SettingsViewModel).FullName!);
     }
 
+    [RelayCommand]
+    private void NavigateToDashboardShowPage()
+    {
+        var navigationService = App.GetService<INavigationService>();
+        navigationService.NavigateTo(typeof(DashboardShowViewModel).FullName!);
+    }
+
     // 属性变化处理
     partial void OnSelectedTimeFormatChanged(string value)
     {

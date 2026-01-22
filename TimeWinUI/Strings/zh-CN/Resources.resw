@@ -99,6 +99,10 @@
     <value>Settings</value>
     <comment>Page title for SettingsPage</comment>
   </data>
+  <data name="DashboardShow_Title.Text" xml:space="preserve">
+    <value>DashboardShow</value>
+    <comment>Page title for DashboardShowPage</comment>
+  </data>
   <data name="AppNotificationSamplePayload" xml:space="preserve">
     <value>&lt;toast launch="action=ToastClick"&gt;
   &lt;visual&gt;
