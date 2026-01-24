@@ -7,6 +7,7 @@
     xmlns:converters="using:TimeWinUI.Helpers"
     xmlns:local="using:TimeWinUI.Views"
     xmlns:helpers="using:TimeWinUI.Helpers"
+    x:Name="TimeShowPageRoot"
     mc:Ignorable="d">
 
     <Page.Resources>
@@ -52,10 +53,46 @@
             </StackPanel>
         </DataTemplate>
 
+
+        <DataTemplate x:Key="ExamDisplayTemplate">
+            <Border
+                Padding="12"
+                CornerRadius="8"
+                BorderThickness="1"
+                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                Visibility="{Binding DataContext.IsExamOverlayVisible, ElementName=TimeShowPageRoot, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <StackPanel Spacing="6">
+                    <TextBlock Text="当前科目" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                    <TextBlock Text="{Binding ViewModel.OverlayExamName, ElementName=TimeShowPageRoot}" FontSize="18" FontWeight="SemiBold"/>
+                    <StackPanel Orientation="Horizontal" Spacing="16">
+                        <StackPanel>
+                            <TextBlock Text="开始" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                            <TextBlock Text="{Binding ViewModel.OverlayStartTimeText, ElementName=TimeShowPageRoot}" FontSize="16"/>
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="结束" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                            <TextBlock Text="{Binding ViewModel.OverlayEndTimeText, ElementName=TimeShowPageRoot}" FontSize="16"/>
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="状态" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                            <TextBlock Text="{Binding ViewModel.OverlayStatusText, ElementName=TimeShowPageRoot}" FontSize="16" FontWeight="SemiBold"/>
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="剩余时间" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                            <TextBlock Text="{Binding ViewModel.OverlayRemainingText, ElementName=TimeShowPageRoot}" FontSize="16" FontWeight="SemiBold"/>
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </DataTemplate>
+
+
         <!-- 模板选择器 -->
         <helpers:LayoutItemTemplateSelector x:Key="LayoutItemTemplateSelector"
-                                          TimeTemplate="{StaticResource TimeDisplayTemplate}"
-                                          DateTemplate="{StaticResource DateDisplayTemplate}"/>
+                                            TimeTemplate="{StaticResource TimeDisplayTemplate}"
+                                            DateTemplate="{StaticResource DateDisplayTemplate}"
+                                            ExamTemplate="{StaticResource ExamDisplayTemplate}"/>
 
         <Flyout x:Name="TimeColorPickerFlyout" 
                 x:Key="TimeColorPickerFlyout"
@@ -125,12 +162,13 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <ContentControl Content="{Binding}"
-                HorizontalAlignment="{Binding HorizontalAlignment}"
-                Visibility="{Binding Visibility}">
+                                HorizontalAlignment="{Binding HorizontalAlignment}"
+                                Visibility="{Binding Visibility}">
                                 <ContentControl.ContentTemplateSelector>
                                     <helpers:LayoutItemTemplateSelector
                                         TimeTemplate="{StaticResource TimeDisplayTemplate}"
-                                        DateTemplate="{StaticResource DateDisplayTemplate}"/>
+                                        DateTemplate="{StaticResource DateDisplayTemplate}"
+                                        ExamTemplate="{StaticResource ExamDisplayTemplate}"/>
                                 </ContentControl.ContentTemplateSelector>
                             </ContentControl>
                         </DataTemplate>

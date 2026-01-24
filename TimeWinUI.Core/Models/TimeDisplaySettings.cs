@@ -139,7 +139,8 @@ public enum WeekAlignment
 public enum DisplayItemType
 {
     Time,
-    Date
+    Date,
+    Exam
 }
 
 public class AlignmentItem
