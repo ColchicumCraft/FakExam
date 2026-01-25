@@ -55,77 +55,98 @@
 
 
         <DataTemplate x:Key="ExamDisplayTemplate">
-            <Border
-                Padding="12"
-                CornerRadius="8"
-                BorderThickness="1"
-                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                Visibility="{Binding ViewModel.IsExamOverlayVisible, ElementName=TimeShowPageRoot, Converter={StaticResource BooleanToVisibilityConverter}}">
-
+            <StackPanel Visibility="{Binding ViewModel.IsExamOverlayVisible, ElementName=TimeShowPageRoot, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <StackPanel Orientation="Horizontal" Spacing="24" HorizontalAlignment="Center">
-                    <StackPanel HorizontalAlignment="Center">
-                        <TextBlock 
-                            Text="{Binding ViewModel.OverlayStartTimeText, ElementName=TimeShowPageRoot}" 
-                            FontSize="16"
-                            HorizontalAlignment="Center"/>
-                        <TextBlock 
-                            Text="开始" 
-                            FontSize="12" 
-                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                            HorizontalAlignment="Center"/>
+                    <!-- Status -->
+                    <StackPanel HorizontalAlignment="Center" Spacing="3">
+                        <TextBlock
+                          Text="{Binding ViewModel.OverlayStatusText, ElementName=TimeShowPageRoot}"
+                          FontFamily="{Binding ViewModel.ExamStatusFontFamily, ElementName=TimeShowPageRoot}"
+                          FontSize="{Binding ViewModel.ExamStatusFontSize, ElementName=TimeShowPageRoot}"
+                          FontWeight="{Binding ViewModel.ExamStatusFontWeight, ElementName=TimeShowPageRoot}"
+                          Foreground="{Binding ViewModel.ExamStatusFontColorHex, ElementName=TimeShowPageRoot}"
+                          HorizontalAlignment="Center"/>
+                        <TextBlock Text="状态"
+                          FontFamily="{Binding ViewModel.ExamLabelFontFamily, ElementName=TimeShowPageRoot}"
+                          FontSize="{Binding ViewModel.ExamLabelFontSize, ElementName=TimeShowPageRoot}"
+                          FontWeight="{Binding ViewModel.ExamLabelFontWeight, ElementName=TimeShowPageRoot}"
+                          Foreground="{Binding ViewModel.ExamLabelFontColorHex, ElementName=TimeShowPageRoot}"
+                          HorizontalAlignment="Center"/>
                     </StackPanel>
-                    <StackPanel HorizontalAlignment="Center">
-                        <TextBlock 
-                            Text="{Binding ViewModel.OverlayEndTimeText, ElementName=TimeShowPageRoot}" 
-                            FontSize="16"
-                            HorizontalAlignment="Center"/>
-                        <TextBlock 
-                            Text="结束" 
-                            FontSize="12" 
-                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                            HorizontalAlignment="Center"/>
+
+                    <!-- Start -->
+                    <StackPanel HorizontalAlignment="Center" Spacing="3">
+                        <TextBlock
+                          Text="{Binding ViewModel.OverlayStartTimeText, ElementName=TimeShowPageRoot}"
+                          FontFamily="{Binding ViewModel.ExamStartFontFamily, ElementName=TimeShowPageRoot}"
+                          FontSize="{Binding ViewModel.ExamStartFontSize, ElementName=TimeShowPageRoot}"
+                          FontWeight="{Binding ViewModel.ExamStartFontWeight, ElementName=TimeShowPageRoot}"
+                          Foreground="{Binding ViewModel.ExamStartFontColorHex, ElementName=TimeShowPageRoot}"
+                          HorizontalAlignment="Center"/>
+                        <TextBlock Text="开始"
+                          FontFamily="{Binding ViewModel.ExamLabelFontFamily, ElementName=TimeShowPageRoot}"
+                          FontSize="{Binding ViewModel.ExamLabelFontSize, ElementName=TimeShowPageRoot}"
+                          FontWeight="{Binding ViewModel.ExamLabelFontWeight, ElementName=TimeShowPageRoot}"
+                          Foreground="{Binding ViewModel.ExamLabelFontColorHex, ElementName=TimeShowPageRoot}"
+                          HorizontalAlignment="Center"/>
                     </StackPanel>
-                    <StackPanel HorizontalAlignment="Center">
-                        <TextBlock 
-                            Text="{Binding ViewModel.OverlayExamName, ElementName=TimeShowPageRoot}" 
-                            FontSize="18" 
-                            FontWeight="SemiBold"
-                            HorizontalAlignment="Center"
-                            TextWrapping="Wrap"
-                            TextAlignment="Center"/>
-                        <TextBlock 
-                            Text="当前科目" 
-                            FontSize="12" 
-                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                            HorizontalAlignment="Center"/>
+
+                    <!-- Name -->
+                    <StackPanel HorizontalAlignment="Center" Spacing="3">
+                        <TextBlock
+                          Text="{Binding ViewModel.OverlayExamName, ElementName=TimeShowPageRoot}"
+                          FontFamily="{Binding ViewModel.ExamNameFontFamily, ElementName=TimeShowPageRoot}"
+                          FontSize="{Binding ViewModel.ExamNameFontSize, ElementName=TimeShowPageRoot}"
+                          FontWeight="{Binding ViewModel.ExamNameFontWeight, ElementName=TimeShowPageRoot}"
+                          Foreground="{Binding ViewModel.ExamNameFontColorHex, ElementName=TimeShowPageRoot}"
+                          HorizontalAlignment="Center"
+                          TextWrapping="Wrap"
+                          TextAlignment="Center"/>
+                        <TextBlock Text="当前科目"
+                          FontFamily="{Binding ViewModel.ExamLabelFontFamily, ElementName=TimeShowPageRoot}"
+                          FontSize="{Binding ViewModel.ExamLabelFontSize, ElementName=TimeShowPageRoot}"
+                          FontWeight="{Binding ViewModel.ExamLabelFontWeight, ElementName=TimeShowPageRoot}"
+                          Foreground="{Binding ViewModel.ExamLabelFontColorHex, ElementName=TimeShowPageRoot}"
+                          HorizontalAlignment="Center"/>
                     </StackPanel>
-                    <StackPanel HorizontalAlignment="Center">
-                        <TextBlock 
-                            Text="{Binding ViewModel.OverlayStatusText, ElementName=TimeShowPageRoot}" 
-                            FontSize="16" 
-                            FontWeight="SemiBold"
-                            HorizontalAlignment="Center"/>
-                        <TextBlock 
-                            Text="状态" 
-                            FontSize="12" 
-                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                            HorizontalAlignment="Center"/>
+
+                    <!-- End -->
+                    <StackPanel HorizontalAlignment="Center" Spacing="3">
+                        <TextBlock
+                          Text="{Binding ViewModel.OverlayEndTimeText, ElementName=TimeShowPageRoot}"
+                          FontFamily="{Binding ViewModel.ExamEndFontFamily, ElementName=TimeShowPageRoot}"
+                          FontSize="{Binding ViewModel.ExamEndFontSize, ElementName=TimeShowPageRoot}"
+                          FontWeight="{Binding ViewModel.ExamEndFontWeight, ElementName=TimeShowPageRoot}"
+                          Foreground="{Binding ViewModel.ExamEndFontColorHex, ElementName=TimeShowPageRoot}"
+                          HorizontalAlignment="Center"/>
+                        <TextBlock Text="结束"
+                          FontFamily="{Binding ViewModel.ExamLabelFontFamily, ElementName=TimeShowPageRoot}"
+                          FontSize="{Binding ViewModel.ExamLabelFontSize, ElementName=TimeShowPageRoot}"
+                          FontWeight="{Binding ViewModel.ExamLabelFontWeight, ElementName=TimeShowPageRoot}"
+                          Foreground="{Binding ViewModel.ExamLabelFontColorHex, ElementName=TimeShowPageRoot}"
+                          HorizontalAlignment="Center"/>
                     </StackPanel>
-                    <StackPanel HorizontalAlignment="Center">
-                        <TextBlock 
-                            Text="{Binding ViewModel.OverlayRemainingText, ElementName=TimeShowPageRoot}" 
-                            FontSize="16" 
-                            FontWeight="SemiBold"
-                            HorizontalAlignment="Center"/>
-                        <TextBlock 
-                            Text="剩余时间" 
-                            FontSize="12" 
-                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                            HorizontalAlignment="Center"/>
+
+                    <!-- Remaining -->
+                    <StackPanel HorizontalAlignment="Center" Spacing="3">
+                        <TextBlock
+                          Text="{Binding ViewModel.OverlayRemainingText, ElementName=TimeShowPageRoot}"
+                          FontFamily="{Binding ViewModel.ExamRemainingFontFamily, ElementName=TimeShowPageRoot}"
+                          FontSize="{Binding ViewModel.ExamRemainingFontSize, ElementName=TimeShowPageRoot}"
+                          FontWeight="{Binding ViewModel.ExamRemainingFontWeight, ElementName=TimeShowPageRoot}"
+                          Foreground="{Binding ViewModel.ExamRemainingFontColorHex, ElementName=TimeShowPageRoot}"
+                          HorizontalAlignment="Center"/>
+                        <TextBlock Text="剩余时间"
+                          FontFamily="{Binding ViewModel.ExamLabelFontFamily, ElementName=TimeShowPageRoot}"
+                          FontSize="{Binding ViewModel.ExamLabelFontSize, ElementName=TimeShowPageRoot}"
+                          FontWeight="{Binding ViewModel.ExamLabelFontWeight, ElementName=TimeShowPageRoot}"
+                          Foreground="{Binding ViewModel.ExamLabelFontColorHex, ElementName=TimeShowPageRoot}"
+                          HorizontalAlignment="Center"/>
                     </StackPanel>
+
                 </StackPanel>
-            </Border>
+
+            </StackPanel>
         </DataTemplate>
 
 
@@ -180,6 +201,79 @@
                 </StackPanel>
             </StackPanel>
         </Flyout>
+
+        <Flyout x:Name="ExamLabelColorPickerFlyout" x:Key="ExamLabelColorPickerFlyout" Placement="Bottom">
+            <StackPanel Width="320" Padding="16" Spacing="12">
+                <ColorPicker Color="{x:Bind ViewModel.SelectedExamLabelColor, Mode=TwoWay}"
+                 IsAlphaEnabled="False" IsAlphaSliderVisible="False"
+                 IsColorPreviewVisible="True" IsColorChannelTextInputVisible="True" IsHexInputVisible="True"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
+                    <Button Content="取消" Click="ExamLabelColorCancelButton_Click"/>
+                    <Button Content="确定" Style="{StaticResource AccentButtonStyle}" Click="ExamLabelColorConfirmButton_Click"/>
+                </StackPanel>
+            </StackPanel>
+        </Flyout>
+
+        <Flyout x:Name="ExamStatusColorPickerFlyout" x:Key="ExamStatusColorPickerFlyout" Placement="Bottom">
+            <StackPanel Width="320" Padding="16" Spacing="12">
+                <ColorPicker Color="{x:Bind ViewModel.SelectedExamStatusColor, Mode=TwoWay}"
+                 IsAlphaEnabled="False" IsAlphaSliderVisible="False"
+                 IsColorPreviewVisible="True" IsColorChannelTextInputVisible="True" IsHexInputVisible="True"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
+                    <Button Content="取消" Click="ExamStatusColorCancelButton_Click"/>
+                    <Button Content="确定" Style="{StaticResource AccentButtonStyle}" Click="ExamStatusColorConfirmButton_Click"/>
+                </StackPanel>
+            </StackPanel>
+        </Flyout>
+
+        <Flyout x:Name="ExamStartColorPickerFlyout" x:Key="ExamStartColorPickerFlyout" Placement="Bottom">
+            <StackPanel Width="320" Padding="16" Spacing="12">
+                <ColorPicker Color="{x:Bind ViewModel.SelectedExamStartColor, Mode=TwoWay}"
+                 IsAlphaEnabled="False" IsAlphaSliderVisible="False"
+                 IsColorPreviewVisible="True" IsColorChannelTextInputVisible="True" IsHexInputVisible="True"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
+                    <Button Content="取消" Click="ExamStartColorCancelButton_Click"/>
+                    <Button Content="确定" Style="{StaticResource AccentButtonStyle}" Click="ExamStartColorConfirmButton_Click"/>
+                </StackPanel>
+            </StackPanel>
+        </Flyout>
+
+        <Flyout x:Name="ExamNameColorPickerFlyout" x:Key="ExamNameColorPickerFlyout" Placement="Bottom">
+            <StackPanel Width="320" Padding="16" Spacing="12">
+                <ColorPicker Color="{x:Bind ViewModel.SelectedExamNameColor, Mode=TwoWay}"
+                 IsAlphaEnabled="False" IsAlphaSliderVisible="False"
+                 IsColorPreviewVisible="True" IsColorChannelTextInputVisible="True" IsHexInputVisible="True"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
+                    <Button Content="取消" Click="ExamNameColorCancelButton_Click"/>
+                    <Button Content="确定" Style="{StaticResource AccentButtonStyle}" Click="ExamNameColorConfirmButton_Click"/>
+                </StackPanel>
+            </StackPanel>
+        </Flyout>
+
+        <Flyout x:Name="ExamEndColorPickerFlyout" x:Key="ExamEndColorPickerFlyout" Placement="Bottom">
+            <StackPanel Width="320" Padding="16" Spacing="12">
+                <ColorPicker Color="{x:Bind ViewModel.SelectedExamEndColor, Mode=TwoWay}"
+                 IsAlphaEnabled="False" IsAlphaSliderVisible="False"
+                 IsColorPreviewVisible="True" IsColorChannelTextInputVisible="True" IsHexInputVisible="True"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
+                    <Button Content="取消" Click="ExamEndColorCancelButton_Click"/>
+                    <Button Content="确定" Style="{StaticResource AccentButtonStyle}" Click="ExamEndColorConfirmButton_Click"/>
+                </StackPanel>
+            </StackPanel>
+        </Flyout>
+
+        <Flyout x:Name="ExamRemainingColorPickerFlyout" x:Key="ExamRemainingColorPickerFlyout" Placement="Bottom">
+            <StackPanel Width="320" Padding="16" Spacing="12">
+                <ColorPicker Color="{x:Bind ViewModel.SelectedExamRemainingColor, Mode=TwoWay}"
+                 IsAlphaEnabled="False" IsAlphaSliderVisible="False"
+                 IsColorPreviewVisible="True" IsColorChannelTextInputVisible="True" IsHexInputVisible="True"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8">
+                    <Button Content="取消" Click="ExamRemainingColorCancelButton_Click"/>
+                    <Button Content="确定" Style="{StaticResource AccentButtonStyle}" Click="ExamRemainingColorConfirmButton_Click"/>
+                </StackPanel>
+            </StackPanel>
+        </Flyout>
+
     </Page.Resources>
 
     <Grid x:Name="RootGrid">
@@ -315,228 +409,373 @@
                                        FontWeight="SemiBold"
                                        VerticalAlignment="Center"
                                        Margin="12,0,0,0"/>
+
+                            <Pivot x:Name="SettingsPivot"
+                                   Grid.Column="1"
+                                   HorizontalAlignment="Right"
+                                   VerticalAlignment="Center"
+                                   Margin="8,0,12,0"
+                                   SelectionChanged="SettingsPivot_SelectionChanged">
+                                <PivotItem Tag="time">
+                                    <PivotItem.Header>
+                                        <TextBlock Text="时间" FontSize="16"/>
+                                    </PivotItem.Header>
+                                </PivotItem>
+                                <PivotItem Tag="exam">
+                                    <PivotItem.Header>
+                                        <TextBlock Text="事件" FontSize="16"/>
+                                    </PivotItem.Header>
+                                </PivotItem>
+                            </Pivot>
+
                         </StackPanel>
                     </Grid>
 
                     <ScrollViewer Grid.Row="1" Padding="16">
-                        <StackPanel Spacing="24">
+                        <StackPanel>
+                            <StackPanel Spacing="24" x:Name="TimeDatePanel">
 
-                            <!-- 布局顺序设置 -->
-                            <StackPanel>
-                                <TextBlock Text="布局顺序" 
-                                           FontSize="16" 
-                                           FontWeight="SemiBold"/>
+                                <!-- 布局顺序设置 -->
+                                <StackPanel>
+                                    <TextBlock Text="布局顺序" 
+                                       FontSize="16" 
+                                       FontWeight="SemiBold"/>
 
-                                <ComboBox Header="显示顺序"
-                                          ItemsSource="{x:Bind ViewModel.LayoutOrderOptions, Mode=OneWay}"
-                                          DisplayMemberPath="DisplayName"
-                                          SelectedValuePath="Value"
-                                          SelectedValue="{x:Bind ViewModel.SelectedLayoutOrder, Mode=TwoWay}"
-                                          Margin="0,8,0,0"/>
-                            </StackPanel>
+                                    <ComboBox Header="显示顺序"
+                                      ItemsSource="{x:Bind ViewModel.LayoutOrderOptions, Mode=OneWay}"
+                                      DisplayMemberPath="DisplayName"
+                                      SelectedValuePath="Value"
+                                      SelectedValue="{x:Bind ViewModel.SelectedLayoutOrder, Mode=TwoWay}"
+                                      Margin="0,8,0,0"/>
+                                </StackPanel>
 
-                            <!-- 分割线 -->
-                            <Border Height="1" 
+                                <!-- 分割线 -->
+                                <Border Height="1" 
                                     Background="{ThemeResource DividerStrokeColorDefaultBrush}"
                                     Margin="0,1,0,1"/>
 
-                            <!-- 时间格式设置 -->
-                            <StackPanel>
-                                <TextBlock Text="时间格式" 
-                                           FontSize="16" 
-                                           FontWeight="SemiBold"/>
+                                <!-- 时间格式设置 -->
+                                <StackPanel>
+                                    <TextBlock Text="时间格式" 
+                                       FontSize="16" 
+                                       FontWeight="SemiBold"/>
 
-                                <ComboBox Header="时间格式"
-                                          ItemsSource="{x:Bind ViewModel.TimeFormats, Mode=OneWay}"
-                                          DisplayMemberPath="DisplayName"
-                                          SelectedValuePath="Value"
-                                          SelectedValue="{x:Bind ViewModel.SelectedTimeFormat, Mode=TwoWay}"
-                                          Margin="0,8,0,0"/>
+                                    <ComboBox Header="时间格式"
+                                      ItemsSource="{x:Bind ViewModel.TimeFormats, Mode=OneWay}"
+                                      DisplayMemberPath="DisplayName"
+                                      SelectedValuePath="Value"
+                                      SelectedValue="{x:Bind ViewModel.SelectedTimeFormat, Mode=TwoWay}"
+                                      Margin="0,8,0,0"/>
 
-                                <TextBox Header="自定义格式"
+                                    <TextBox Header="自定义格式"
                                          PlaceholderText="例如: HH:mm:ss"
                                          Visibility="{x:Bind ViewModel.IsCustomTimeFormat, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}"
                                          Text="{x:Bind ViewModel.CustomTimeFormat, Mode=TwoWay}"
                                          Margin="0,8,0,0"/>
-                            </StackPanel>
+                                </StackPanel>
 
-                            <!-- 时间对齐设置 -->
-                            <StackPanel>
-                                <TextBlock Text="时间对齐" 
-                                   FontSize="16" 
-                                   FontWeight="SemiBold"/>
+                                <!-- 时间对齐设置 -->
+                                <StackPanel>
+                                    <TextBlock Text="时间对齐" 
+                                       FontSize="16" 
+                                       FontWeight="SemiBold"/>
 
-                                <ComboBox Header="时间对齐方式"
-                                  ItemsSource="{x:Bind ViewModel.AlignmentOptions, Mode=OneWay}"
-                                  DisplayMemberPath="DisplayName"
-                                  SelectedValuePath="Value"
-                                  SelectedValue="{x:Bind ViewModel.SelectedTimeAlignment, Mode=TwoWay}"
-                                  Margin="0,8,0,0"/>
-                            </StackPanel>
+                                    <ComboBox Header="时间对齐方式"
+                                      ItemsSource="{x:Bind ViewModel.AlignmentOptions, Mode=OneWay}"
+                                      DisplayMemberPath="DisplayName"
+                                      SelectedValuePath="Value"
+                                      SelectedValue="{x:Bind ViewModel.SelectedTimeAlignment, Mode=TwoWay}"
+                                      Margin="0,8,0,0"/>
+                                </StackPanel>
 
-                            <!-- 时间字体设置 -->
-                            <StackPanel>
-                                <TextBlock Text="时间字体" 
-                                           FontSize="16" 
-                                           FontWeight="SemiBold"/>
+                                <!-- 时间字体设置 -->
+                                <StackPanel>
+                                    <TextBlock Text="时间字体" 
+                                       FontSize="16" 
+                                       FontWeight="SemiBold"/>
 
-                                <ComboBox Header="字体"
-                                          ItemsSource="{x:Bind ViewModel.FontFamilies, Mode=OneWay}"
-                                          SelectedItem="{x:Bind ViewModel.SelectedTimeFontFamily, Mode=TwoWay}"
-                                          Margin="0,8,0,0"/>
+                                    <ComboBox Header="字体"
+                                      ItemsSource="{x:Bind ViewModel.FontFamilies, Mode=OneWay}"
+                                      SelectedItem="{x:Bind ViewModel.SelectedTimeFontFamily, Mode=TwoWay}"
+                                      Margin="0,8,0,0"/>
 
-                                <Slider Header="字体大小"
+                                    <Slider Header="字体大小"
                                         Minimum="24" Maximum="200" 
                                         TickFrequency="8" 
                                         Value="{x:Bind ViewModel.SelectedTimeFontSize, Mode=TwoWay}"
                                         Margin="0,8,0,0"/>
 
-                                <TextBlock Text="{x:Bind ViewModel.SelectedTimeFontSize, Mode=OneWay}"
-                                           HorizontalAlignment="Center"
-                                           FontSize="12"
-                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                           Margin="0,-8,0,8"/>
+                                    <TextBlock Text="{x:Bind ViewModel.SelectedTimeFontSize, Mode=OneWay}"
+                                       HorizontalAlignment="Center"
+                                       FontSize="12"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                       Margin="0,-8,0,8"/>
 
-                                <ComboBox Header="字体粗细"
-                                          ItemsSource="{x:Bind ViewModel.FontWeights, Mode=OneWay}"
-                                          DisplayMemberPath="DisplayName"
-                                          SelectedValuePath="Value"
-                                          SelectedValue="{x:Bind ViewModel.SelectedTimeFontWeight, Mode=TwoWay}"
-                                          Margin="0,8,0,0"/>
+                                    <ComboBox Header="字体粗细"
+                                      ItemsSource="{x:Bind ViewModel.FontWeights, Mode=OneWay}"
+                                      DisplayMemberPath="DisplayName"
+                                      SelectedValuePath="Value"
+                                      SelectedValue="{x:Bind ViewModel.SelectedTimeFontWeight, Mode=TwoWay}"
+                                      Margin="0,8,0,0"/>
 
-                                <!-- 时间颜色设置 -->
-                                <Grid Margin="0,8,0,0">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="*"/>
-                                    </Grid.RowDefinitions>
+                                    <!-- 时间颜色设置 -->
+                                    <Grid Margin="0,8,0,0">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
 
-                                    <TextBlock Text="字体颜色" 
-                                               VerticalAlignment="Center"
-                                               Margin="0,0,12,0"/>
+                                        <TextBlock Text="字体颜色" 
+                                           VerticalAlignment="Center"
+                                           Margin="0,0,12,0"/>
 
-                                    <!-- 颜色预览和选择按钮 -->
-                                    <Button x:Name="TimeColorPickerButton"
+                                        <!-- 颜色预览和选择按钮 -->
+                                        <Button x:Name="TimeColorPickerButton"
                                             Grid.Row="1"
                                             HorizontalAlignment="Stretch"
                                             Click="TimeColorPickerButton_Click"
                                             Padding="8">
-                                        <StackPanel Orientation="Horizontal" Spacing="8">
-                                            <Rectangle Width="20" Height="20"
-                                                       Fill="{x:Bind ViewModel.TimeFontColorHex, Mode=OneWay}"
-                                                       Stroke="{ThemeResource TextControlBorderBrush}"
-                                                       StrokeThickness="1"/>
-                                            <TextBlock Text="{x:Bind ViewModel.TimeFontColorHex, Mode=TwoWay}" 
-                                                       VerticalAlignment="Center"/>
-                                        </StackPanel>
-                                    </Button>
-                                </Grid>
-                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <Rectangle Width="20" Height="20"
+                                                   Fill="{x:Bind ViewModel.TimeFontColorHex, Mode=OneWay}"
+                                                   Stroke="{ThemeResource TextControlBorderBrush}"
+                                                   StrokeThickness="1"/>
+                                                <TextBlock Text="{x:Bind ViewModel.TimeFontColorHex, Mode=TwoWay}" VerticalAlignment="Center"/>
+                                            </StackPanel>
+                                        </Button>
+                                    </Grid>
+                                </StackPanel>
 
-                            <!-- 分割线 -->
-                            <Border Height="1" 
+                                <!-- 分割线 -->
+                                <Border Height="1" 
                                     Background="{ThemeResource DividerStrokeColorDefaultBrush}"
                                     Margin="0,1,0,1"/>
 
-                            <!-- 日期格式设置 -->
-                            <StackPanel>
-                                <TextBlock Text="日期格式" 
-                                           FontSize="16" 
-                                           FontWeight="SemiBold"/>
+                                <!-- 日期格式设置 -->
+                                <StackPanel>
+                                    <TextBlock Text="日期格式" 
+                                       FontSize="16" 
+                                       FontWeight="SemiBold"/>
 
-                                <ComboBox Header="日期格式"
-                                          ItemsSource="{x:Bind ViewModel.DateFormats, Mode=OneWay}"
-                                          DisplayMemberPath="DisplayName"
-                                          SelectedValuePath="Value"
-                                          SelectedValue="{x:Bind ViewModel.SelectedDateFormat, Mode=TwoWay}"
-                                          Margin="0,8,0,0"/>
+                                    <ComboBox Header="日期格式"
+                                      ItemsSource="{x:Bind ViewModel.DateFormats, Mode=OneWay}"
+                                      DisplayMemberPath="DisplayName"
+                                      SelectedValuePath="Value"
+                                      SelectedValue="{x:Bind ViewModel.SelectedDateFormat, Mode=TwoWay}"
+                                      Margin="0,8,0,0"/>
 
-                                <TextBox Header="自定义格式"
+                                    <TextBox Header="自定义格式"
                                          PlaceholderText="例如: yyyy年MM月dd日"
                                          Visibility="{x:Bind ViewModel.IsCustomDateFormat, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}"
                                          Text="{x:Bind ViewModel.CustomDateFormat, Mode=TwoWay}"
                                          Margin="0,8,0,0"/>
-                            </StackPanel>
+                                </StackPanel>
 
-                            <!-- 日期对齐设置 -->
-                            <StackPanel>
-                                <TextBlock Text="日期对齐" 
-                                   FontSize="16" 
-                                   FontWeight="SemiBold"/>
+                                <!-- 日期对齐设置 -->
+                                <StackPanel>
+                                    <TextBlock Text="日期对齐" 
+                                       FontSize="16" 
+                                       FontWeight="SemiBold"/>
 
-                                <ComboBox Header="日期对齐方式"
-                                  ItemsSource="{x:Bind ViewModel.AlignmentOptions, Mode=OneWay}"
-                                  DisplayMemberPath="DisplayName"
-                                  SelectedValuePath="Value"
-                                  SelectedValue="{x:Bind ViewModel.SelectedDateAlignment, Mode=TwoWay}"
-                                  Margin="0,8,0,0"/>
+                                    <ComboBox Header="日期对齐方式"
+                                      ItemsSource="{x:Bind ViewModel.AlignmentOptions, Mode=OneWay}"
+                                      DisplayMemberPath="DisplayName"
+                                      SelectedValuePath="Value"
+                                      SelectedValue="{x:Bind ViewModel.SelectedDateAlignment, Mode=TwoWay}"
+                                      Margin="0,8,0,0"/>
 
-                                <ComboBox Header="星期对齐方式"
-                                  ItemsSource="{x:Bind ViewModel.AlignmentOptions, Mode=OneWay}"
-                                  DisplayMemberPath="DisplayName"
-                                  SelectedValuePath="Value"
-                                  SelectedValue="{x:Bind ViewModel.SelectedWeekAlignment, Mode=TwoWay}"
-                                  Margin="0,8,0,0"/>
-                            </StackPanel>
+                                    <ComboBox Header="星期对齐方式"
+                                      ItemsSource="{x:Bind ViewModel.AlignmentOptions, Mode=OneWay}"
+                                      DisplayMemberPath="DisplayName"
+                                      SelectedValuePath="Value"
+                                      SelectedValue="{x:Bind ViewModel.SelectedWeekAlignment, Mode=TwoWay}"
+                                      Margin="0,8,0,0"/>
+                                </StackPanel>
 
-                            <!-- 日期字体设置 -->
-                            <StackPanel>
-                                <TextBlock Text="日期字体" 
-                                           FontSize="16" 
-                                           FontWeight="SemiBold"/>
+                                <!-- 日期字体设置 -->
+                                <StackPanel>
+                                    <TextBlock Text="日期字体" 
+                                       FontSize="16" 
+                                       FontWeight="SemiBold"/>
 
-                                <ComboBox Header="字体"
-                                          ItemsSource="{x:Bind ViewModel.FontFamilies, Mode=OneWay}"
-                                          SelectedItem="{x:Bind ViewModel.SelectedDateFontFamily, Mode=TwoWay}"
-                                          Margin="0,8,0,0"/>
+                                    <ComboBox Header="字体"
+                                      ItemsSource="{x:Bind ViewModel.FontFamilies, Mode=OneWay}"
+                                      SelectedItem="{x:Bind ViewModel.SelectedDateFontFamily, Mode=TwoWay}"
+                                      Margin="0,8,0,0"/>
 
-                                <Slider Header="字体大小"
+                                    <Slider Header="字体大小"
                                         Minimum="12" Maximum="200" 
                                         TickFrequency="4"
                                         Value="{x:Bind ViewModel.SelectedDateFontSize, Mode=TwoWay}"
                                         Margin="0,8,0,0"/>
 
-                                <TextBlock Text="{x:Bind ViewModel.SelectedDateFontSize, Mode=OneWay}"
-                                           HorizontalAlignment="Center"
-                                           FontSize="12"
-                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                           Margin="0,-8,0,8"/>
+                                    <TextBlock Text="{x:Bind ViewModel.SelectedDateFontSize, Mode=OneWay}"
+                                       HorizontalAlignment="Center"
+                                       FontSize="12"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                       Margin="0,-8,0,8"/>
 
-                                <ComboBox Header="字体粗细"
-                                          ItemsSource="{x:Bind ViewModel.FontWeights, Mode=OneWay}"
-                                          DisplayMemberPath="DisplayName"
-                                          SelectedValuePath="Value"
-                                          SelectedValue="{x:Bind ViewModel.SelectedDateFontWeight, Mode=TwoWay}"
-                                          Margin="0,8,0,0"/>
+                                    <ComboBox Header="字体粗细"
+                                      ItemsSource="{x:Bind ViewModel.FontWeights, Mode=OneWay}"
+                                      DisplayMemberPath="DisplayName"
+                                      SelectedValuePath="Value"
+                                      SelectedValue="{x:Bind ViewModel.SelectedDateFontWeight, Mode=TwoWay}"
+                                      Margin="0,8,0,0"/>
 
-                                <!-- 日期颜色设置 -->
-                                <Grid Margin="0,8,0,0">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="*"/>
-                                    </Grid.RowDefinitions>
+                                    <!-- 日期颜色设置 -->
+                                    <Grid Margin="0,8,0,0">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
 
-                                    <TextBlock Text="字体颜色" 
-                                               VerticalAlignment="Center"
-                                               Margin="0,0,12,0"/>
+                                        <TextBlock Text="字体颜色" 
+                                           VerticalAlignment="Center"
+                                           Margin="0,0,12,0"/>
 
-                                    <Button x:Name="DateColorPickerButton"
+                                        <Button x:Name="DateColorPickerButton"
                                             Grid.Row="1"
                                             HorizontalAlignment="Stretch"
                                             Click="DateColorPickerButton_Click"
                                             Padding="8">
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <Rectangle Width="20" Height="20"
+                                                   Fill="{x:Bind ViewModel.DateFontColorHex, Mode=OneWay}"
+                                                   Stroke="{ThemeResource TextControlBorderBrush}"
+                                                   StrokeThickness="1"/>
+                                                <TextBlock Text="{x:Bind ViewModel.DateFontColorHex, Mode=TwoWay}" VerticalAlignment="Center"/>
+                                            </StackPanel>
+                                        </Button>
+                                    </Grid>
+                                </StackPanel>
+                            </StackPanel>
+                        
+                            <StackPanel Spacing="24" x:Name="ExamPanel">
+
+                                <!-- 标签统一样式 -->
+                                <StackPanel>
+                                    <TextBlock Text="提示文本样式" FontSize="16" FontWeight="SemiBold"/>
+                                    <ComboBox Header="字体" ItemsSource="{x:Bind ViewModel.FontFamilies}"
+                                        SelectedItem="{x:Bind ViewModel.ExamLabelFontFamily, Mode=TwoWay}" Margin="0,8,0,0"/>
+                                    <Slider Header="字体大小" Minimum="10" Maximum="40" TickFrequency="1"
+                                        Value="{x:Bind ViewModel.ExamLabelFontSize, Mode=TwoWay}" Margin="0,8,0,0"/>
+                                    <ComboBox Header="字体粗细" ItemsSource="{x:Bind ViewModel.FontWeights}"
+                                        DisplayMemberPath="DisplayName" SelectedValuePath="Value"
+                                        SelectedValue="{x:Bind ViewModel.ExamLabelFontWeight, Mode=TwoWay}" Margin="0,8,0,0"/>
+                                    <Button x:Name="ExamLabelColorPickerButton" Margin="0,8,0,0" Click="ExamLabelColorPickerButton_Click" Padding="8">
                                         <StackPanel Orientation="Horizontal" Spacing="8">
-                                            <Rectangle Width="20" Height="20"
-                                                       Fill="{x:Bind ViewModel.DateFontColorHex, Mode=OneWay}"
-                                                       Stroke="{ThemeResource TextControlBorderBrush}"
-                                                       StrokeThickness="1"/>
-                                            <TextBlock Text="{x:Bind ViewModel.DateFontColorHex, Mode=TwoWay}" 
-                                                       VerticalAlignment="Center"/>
+                                            <Rectangle Width="20" Height="20" Fill="{x:Bind ViewModel.ExamLabelFontColorHex}" Stroke="{ThemeResource TextControlBorderBrush}" StrokeThickness="1"/>
+                                            <TextBlock Text="{x:Bind ViewModel.ExamLabelFontColorHex}" VerticalAlignment="Center"/>
                                         </StackPanel>
                                     </Button>
-                                </Grid>
-                            </StackPanel>
+                                </StackPanel>
 
+                                <Border Height="1" 
+                                    Background="{ThemeResource DividerStrokeColorDefaultBrush}"
+                                    Margin="0,1,0,1"/>
+                                <!-- 状态值样式 -->
+                                <StackPanel>
+                                    <TextBlock Text="状态值样式" FontSize="16" FontWeight="SemiBold"/>
+                                    <ComboBox Header="字体" ItemsSource="{x:Bind ViewModel.FontFamilies}"
+                                        SelectedItem="{x:Bind ViewModel.ExamStatusFontFamily, Mode=TwoWay}" Margin="0,8,0,0"/>
+                                    <Slider Header="字体大小" Minimum="12" Maximum="40" TickFrequency="1"
+                                        Value="{x:Bind ViewModel.ExamStatusFontSize, Mode=TwoWay}" Margin="0,8,0,0"/>
+                                    <ComboBox Header="字体粗细" ItemsSource="{x:Bind ViewModel.FontWeights}"
+                                        DisplayMemberPath="DisplayName" SelectedValuePath="Value"
+                                        SelectedValue="{x:Bind ViewModel.ExamStatusFontWeight, Mode=TwoWay}" Margin="0,8,0,0"/>
+                                    <Button x:Name="ExamStatusColorPickerButton" Margin="0,8,0,0" Click="ExamStatusColorPickerButton_Click" Padding="8" HorizontalAlignment="Stretch">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <Rectangle Width="20" Height="20" Fill="{x:Bind ViewModel.ExamStatusFontColorHex}" Stroke="{ThemeResource TextControlBorderBrush}" StrokeThickness="1"/>
+                                            <TextBlock Text="{x:Bind ViewModel.ExamStatusFontColorHex}" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Button>
+                                </StackPanel>
+
+                                <Border Height="1" 
+                                    Background="{ThemeResource DividerStrokeColorDefaultBrush}"
+                                    Margin="0,1,0,1"/>
+                                <!-- 开始值样式 -->
+                                <StackPanel>
+                                    <TextBlock Text="开始值样式" FontSize="16" FontWeight="SemiBold"/>
+                                    <ComboBox Header="字体" ItemsSource="{x:Bind ViewModel.FontFamilies}"
+                                        SelectedItem="{x:Bind ViewModel.ExamStartFontFamily, Mode=TwoWay}" Margin="0,8,0,0"/>
+                                    <Slider Header="字体大小" Minimum="12" Maximum="40" TickFrequency="1"
+                                        Value="{x:Bind ViewModel.ExamStartFontSize, Mode=TwoWay}" Margin="0,8,0,0"/>
+                                    <ComboBox Header="字体粗细" ItemsSource="{x:Bind ViewModel.FontWeights}"
+                                        DisplayMemberPath="DisplayName" SelectedValuePath="Value"
+                                        SelectedValue="{x:Bind ViewModel.ExamStartFontWeight, Mode=TwoWay}" Margin="0,8,0,0"/>
+                                    <Button x:Name="ExamStartColorPickerButton" Margin="0,8,0,0" Click="ExamStartColorPickerButton_Click" Padding="8" HorizontalAlignment="Stretch">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <Rectangle Width="20" Height="20" Fill="{x:Bind ViewModel.ExamStartFontColorHex}" Stroke="{ThemeResource TextControlBorderBrush}" StrokeThickness="1"/>
+                                            <TextBlock Text="{x:Bind ViewModel.ExamStartFontColorHex}" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Button>
+                                </StackPanel>
+
+                                <Border Height="1" 
+                                    Background="{ThemeResource DividerStrokeColorDefaultBrush}"
+                                    Margin="0,1,0,1"/>
+                                <!-- 当前科目值样式 -->
+                                <StackPanel>
+                                    <TextBlock Text="当前科目值样式" FontSize="16" FontWeight="SemiBold"/>
+                                    <ComboBox Header="字体" ItemsSource="{x:Bind ViewModel.FontFamilies}"
+                                        SelectedItem="{x:Bind ViewModel.ExamNameFontFamily, Mode=TwoWay}" Margin="0,8,0,0"/>
+                                    <Slider Header="字体大小" Minimum="12" Maximum="40" TickFrequency="1"
+                                        Value="{x:Bind ViewModel.ExamNameFontSize, Mode=TwoWay}" Margin="0,8,0,0"/>
+                                    <ComboBox Header="字体粗细" ItemsSource="{x:Bind ViewModel.FontWeights}"
+                                        DisplayMemberPath="DisplayName" SelectedValuePath="Value"
+                                        SelectedValue="{x:Bind ViewModel.ExamNameFontWeight, Mode=TwoWay}" Margin="0,8,0,0"/>
+                                    <Button x:Name="ExamNameColorPickerButton" Margin="0,8,0,0" Click="ExamNameColorPickerButton_Click" Padding="8" HorizontalAlignment="Stretch">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <Rectangle Width="20" Height="20" Fill="{x:Bind ViewModel.ExamNameFontColorHex}" Stroke="{ThemeResource TextControlBorderBrush}" StrokeThickness="1"/>
+                                            <TextBlock Text="{x:Bind ViewModel.ExamNameFontColorHex}" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Button>
+                                </StackPanel>
+
+                                <Border Height="1" 
+                                    Background="{ThemeResource DividerStrokeColorDefaultBrush}"
+                                    Margin="0,1,0,1"/>
+                                <!-- 结束值样式 -->
+                                <StackPanel>
+                                    <TextBlock Text="结束值样式" FontSize="16" FontWeight="SemiBold"/>
+                                    <ComboBox Header="字体" ItemsSource="{x:Bind ViewModel.FontFamilies}"
+                                        SelectedItem="{x:Bind ViewModel.ExamEndFontFamily, Mode=TwoWay}" Margin="0,8,0,0"/>
+                                    <Slider Header="字体大小" Minimum="12" Maximum="40" TickFrequency="1"
+                                        Value="{x:Bind ViewModel.ExamEndFontSize, Mode=TwoWay}" Margin="0,8,0,0"/>
+                                    <ComboBox Header="字体粗细" ItemsSource="{x:Bind ViewModel.FontWeights}"
+                                        DisplayMemberPath="DisplayName" SelectedValuePath="Value"
+                                        SelectedValue="{x:Bind ViewModel.ExamEndFontWeight, Mode=TwoWay}" Margin="0,8,0,0"/>
+                                    <Button x:Name="ExamEndColorPickerButton" Margin="0,8,0,0" Click="ExamEndColorPickerButton_Click" Padding="8" HorizontalAlignment="Stretch">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <Rectangle Width="20" Height="20" Fill="{x:Bind ViewModel.ExamEndFontColorHex}" Stroke="{ThemeResource TextControlBorderBrush}" StrokeThickness="1"/>
+                                            <TextBlock Text="{x:Bind ViewModel.ExamEndFontColorHex}" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Button>
+                                </StackPanel>
+
+                                <Border Height="1" 
+                                    Background="{ThemeResource DividerStrokeColorDefaultBrush}"
+                                    Margin="0,1,0,1"/>
+                                <!-- 剩余时间值样式 -->
+                                <StackPanel>
+                                    <TextBlock Text="剩余时间值样式" FontSize="16" FontWeight="SemiBold"/>
+                                    <ComboBox Header="字体" ItemsSource="{x:Bind ViewModel.FontFamilies}"
+                                        SelectedItem="{x:Bind ViewModel.ExamRemainingFontFamily, Mode=TwoWay}" Margin="0,8,0,0"/>
+                                    <Slider Header="字体大小" Minimum="12" Maximum="40" TickFrequency="1"
+                                        Value="{x:Bind ViewModel.ExamRemainingFontSize, Mode=TwoWay}" Margin="0,8,0,0"/>
+                                    <ComboBox Header="字体粗细" ItemsSource="{x:Bind ViewModel.FontWeights}"
+                                        DisplayMemberPath="DisplayName" SelectedValuePath="Value"
+                                        SelectedValue="{x:Bind ViewModel.ExamRemainingFontWeight, Mode=TwoWay}" Margin="0,8,0,0"/>
+                                    <Button x:Name="ExamRemainingColorPickerButton" Margin="0,8,0,0" Click="ExamRemainingColorPickerButton_Click" Padding="8" HorizontalAlignment="Stretch">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <Rectangle Width="20" Height="20" Fill="{x:Bind ViewModel.ExamRemainingFontColorHex}" Stroke="{ThemeResource TextControlBorderBrush}" StrokeThickness="1"/>
+                                            <TextBlock Text="{x:Bind ViewModel.ExamRemainingFontColorHex}" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Button>
+                                </StackPanel>
+
+                            </StackPanel>
                         </StackPanel>
                     </ScrollViewer>
 

@@ -1,4 +1,4 @@
-﻿using System.Collections.ObjectModel;
+using System.Collections.ObjectModel;
 
 namespace TimeWinUI.Core.Models;
 
@@ -11,8 +11,9 @@ public class TimeDisplaySettings
 
     public DisplayAlignmentSettings Alignment { get; set; } = new();
     public LayoutOrder LayoutOrder { get; set; } = LayoutOrder.DateOnTop;
-}
 
+    public ExamOverlaySettings ExamOverlay { get; set; } = new();
+}
 public class TimeFormatSettings
 {
     public string Format { get; set; } = "HH:mm:ss";
@@ -177,6 +178,53 @@ public class LayoutOrderItem
         DisplayName = displayName;
         Value = value;
     }
+}
+
+public class ExamOverlaySettings
+{
+    public FontSettings LabelFont { get; set; } = new()
+    {
+        FontFamily = "Segoe UI",
+        FontSize = 12,
+        FontWeight = 400,
+        FontColor = "#8A8A8A"
+    };
+
+    public FontSettings StatusFont { get; set; } = new()
+    {
+        FontFamily = "Segoe UI",
+        FontSize = 24,
+        FontWeight = 600,
+        FontColor = "#000000"
+    };
+    public FontSettings StartTimeFont { get; set; } = new()
+    {
+        FontFamily = "Segoe UI",
+        FontSize = 24,
+        FontWeight = 400,
+        FontColor = "#000000"
+    };
+    public FontSettings NameFont { get; set; } = new()
+    {
+        FontFamily = "Segoe UI",
+        FontSize = 24,
+        FontWeight = 600,
+        FontColor = "#000000"
+    };
+    public FontSettings EndTimeFont { get; set; } = new()
+    {
+        FontFamily = "Segoe UI",
+        FontSize = 24,
+        FontWeight = 400,
+        FontColor = "#000000"
+    };
+    public FontSettings RemainingFont { get; set; } = new()
+    {
+        FontFamily = "Segoe UI",
+        FontSize = 24,
+        FontWeight = 600,
+        FontColor = "#000000"
+    };
 }
 
 // 下拉列表数据源

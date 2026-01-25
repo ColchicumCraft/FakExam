@@ -70,6 +70,42 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
     [ObservableProperty] private string _overlayStatusText = "—";
     [ObservableProperty] private string _overlayRemainingText = "—";
 
+    [ObservableProperty] private string _examLabelFontFamily = "Segoe UI";
+    [ObservableProperty] private double _examLabelFontSize = 12;
+    [ObservableProperty] private string _examLabelFontWeight = "Normal";
+    [ObservableProperty] private string _examLabelFontColorHex = "#8A8A8A";
+    [ObservableProperty] private Windows.UI.Color _selectedExamLabelColor = Windows.UI.Color.FromArgb(255,138,138,138);
+
+    [ObservableProperty] private string _examStatusFontFamily = "Segoe UI";
+    [ObservableProperty] private double _examStatusFontSize = 16;
+    [ObservableProperty] private string _examStatusFontWeight = "SemiBold";
+    [ObservableProperty] private string _examStatusFontColorHex = "#FFFFFF";
+    [ObservableProperty] private Windows.UI.Color _selectedExamStatusColor = Windows.UI.Color.FromArgb(255,255,255,255);
+
+    [ObservableProperty] private string _examStartFontFamily = "Segoe UI";
+    [ObservableProperty] private double _examStartFontSize = 16;
+    [ObservableProperty] private string _examStartFontWeight = "Normal";
+    [ObservableProperty] private string _examStartFontColorHex = "#FFFFFF";
+    [ObservableProperty] private Windows.UI.Color _selectedExamStartColor = Windows.UI.Color.FromArgb(255,255,255,255);
+
+    [ObservableProperty] private string _examNameFontFamily = "Segoe UI";
+    [ObservableProperty] private double _examNameFontSize = 18;
+    [ObservableProperty] private string _examNameFontWeight = "SemiBold";
+    [ObservableProperty] private string _examNameFontColorHex = "#FFFFFF";
+    [ObservableProperty] private Windows.UI.Color _selectedExamNameColor = Windows.UI.Color.FromArgb(255,255,255,255);
+
+    [ObservableProperty] private string _examEndFontFamily = "Segoe UI";
+    [ObservableProperty] private double _examEndFontSize = 16;
+    [ObservableProperty] private string _examEndFontWeight = "Normal";
+    [ObservableProperty] private string _examEndFontColorHex = "#FFFFFF";
+    [ObservableProperty] private Windows.UI.Color _selectedExamEndColor = Windows.UI.Color.FromArgb(255,255,255,255);
+
+    [ObservableProperty] private string _examRemainingFontFamily = "Segoe UI";
+    [ObservableProperty] private double _examRemainingFontSize = 16;
+    [ObservableProperty] private string _examRemainingFontWeight = "SemiBold";
+    [ObservableProperty] private string _examRemainingFontColorHex = "#FFFFFF";
+    [ObservableProperty] private Windows.UI.Color _selectedExamRemainingColor = Windows.UI.Color.FromArgb(255,255,255,255);
+
     public ObservableCollection<string> FontFamilies => DisplayDataSources.FontFamilies;
     public ObservableCollection<FormatItem> TimeFormats => DisplayDataSources.TimeFormats;
     public ObservableCollection<FormatItem> DateFormats => DisplayDataSources.DateFormats;
@@ -250,24 +286,101 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
                 DateAlignment = GetDateAlignmentValue(SelectedDateAlignment),
                 WeekAlignment = GetWeekAlignmentValue(SelectedWeekAlignment)
             },
-            LayoutOrder = SelectedLayoutOrder == "DateOnTop" ? LayoutOrder.DateOnTop : LayoutOrder.TimeOnTop
+            LayoutOrder = SelectedLayoutOrder == "DateOnTop" ? LayoutOrder.DateOnTop : LayoutOrder.TimeOnTop,
+
+            ExamOverlay = new ExamOverlaySettings
+            {
+                LabelFont = new FontSettings
+                {
+                    FontFamily = ExamLabelFontFamily,
+                    FontSize = ExamLabelFontSize,
+                    FontWeight = GetFontWeightValue(ExamLabelFontWeight),
+                    FontColor = ExamLabelFontColorHex
+                },
+                StatusFont = new FontSettings
+                {
+                    FontFamily = ExamStatusFontFamily,
+                    FontSize = ExamStatusFontSize,
+                    FontWeight = GetFontWeightValue(ExamStatusFontWeight),
+                    FontColor = ExamStatusFontColorHex
+                },
+                StartTimeFont = new FontSettings
+                {
+                    FontFamily = ExamStartFontFamily,
+                    FontSize = ExamStartFontSize,
+                    FontWeight = GetFontWeightValue(ExamStartFontWeight),
+                    FontColor = ExamStartFontColorHex
+                },
+                NameFont = new FontSettings
+                {
+                    FontFamily = ExamNameFontFamily,
+                    FontSize = ExamNameFontSize,
+                    FontWeight = GetFontWeightValue(ExamNameFontWeight),
+                    FontColor = ExamNameFontColorHex
+                },
+                EndTimeFont = new FontSettings
+                {
+                    FontFamily = ExamEndFontFamily,
+                    FontSize = ExamEndFontSize,
+                    FontWeight = GetFontWeightValue(ExamEndFontWeight),
+                    FontColor = ExamEndFontColorHex
+                },
+                RemainingFont = new FontSettings
+                {
+                    FontFamily = ExamRemainingFontFamily,
+                    FontSize = ExamRemainingFontSize,
+                    FontWeight = GetFontWeightValue(ExamRemainingFontWeight),
+                    FontColor = ExamRemainingFontColorHex
+                }
+            }
         };
     }
 
     [RelayCommand] private void ShowSettings() => SwitchToPreviewMode();
     [RelayCommand] private void HideSettings() => SwitchToDisplayMode();
 
-    [RelayCommand]
+    [RelayCommand] 
     private void ConfirmTimeColor()
     {
         TimeFontColorHex = $"#{SelectedTimeColor.R:X2}{SelectedTimeColor.G:X2}{SelectedTimeColor.B:X2}";
         if (IsSettingsMode) { UpdatePreviewSettings(); UpdateActiveDisplayItems(); }
     }
 
-    [RelayCommand]
+    [RelayCommand] 
     private void ConfirmDateColor()
     {
         DateFontColorHex = $"#{SelectedDateColor.R:X2}{SelectedDateColor.G:X2}{SelectedDateColor.B:X2}";
+        if (IsSettingsMode) { UpdatePreviewSettings(); UpdateActiveDisplayItems(); }
+    }
+
+    [RelayCommand] private void ConfirmExamLabelColor()
+    {
+        ExamLabelFontColorHex = $"#{SelectedExamLabelColor.R:X2}{SelectedExamLabelColor.G:X2}{SelectedExamLabelColor.B:X2}";
+        if (IsSettingsMode) { UpdatePreviewSettings(); UpdateActiveDisplayItems(); }
+    }
+    [RelayCommand] private void ConfirmExamStatusColor()
+    {
+        ExamStatusFontColorHex = $"#{SelectedExamStatusColor.R:X2}{SelectedExamStatusColor.G:X2}{SelectedExamStatusColor.B:X2}";
+        if (IsSettingsMode) { UpdatePreviewSettings(); UpdateActiveDisplayItems(); }
+    }
+    [RelayCommand] private void ConfirmExamStartColor()
+    {
+        ExamStartFontColorHex = $"#{SelectedExamStartColor.R:X2}{SelectedExamStartColor.G:X2}{SelectedExamStartColor.B:X2}";
+        if (IsSettingsMode) { UpdatePreviewSettings(); UpdateActiveDisplayItems(); }
+    }
+    [RelayCommand] private void ConfirmExamNameColor()
+    {
+        ExamNameFontColorHex = $"#{SelectedExamNameColor.R:X2}{SelectedExamNameColor.G:X2}{SelectedExamNameColor.B:X2}";
+        if (IsSettingsMode) { UpdatePreviewSettings(); UpdateActiveDisplayItems(); }
+    }
+    [RelayCommand] private void ConfirmExamEndColor()
+    {
+        ExamEndFontColorHex = $"#{SelectedExamEndColor.R:X2}{SelectedExamEndColor.G:X2}{SelectedExamEndColor.B:X2}";
+        if (IsSettingsMode) { UpdatePreviewSettings(); UpdateActiveDisplayItems(); }
+    }
+    [RelayCommand] private void ConfirmExamRemainingColor()
+    {
+        ExamRemainingFontColorHex = $"#{SelectedExamRemainingColor.R:X2}{SelectedExamRemainingColor.G:X2}{SelectedExamRemainingColor.B:X2}";
         if (IsSettingsMode) { UpdatePreviewSettings(); UpdateActiveDisplayItems(); }
     }
 
@@ -404,6 +517,45 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
         SelectedDateAlignment = GetAlignmentDisplayName(settings.Alignment.DateAlignment);
         SelectedWeekAlignment = GetAlignmentDisplayName(settings.Alignment.WeekAlignment);
         SelectedLayoutOrder = settings.LayoutOrder == LayoutOrder.DateOnTop ? "DateOnTop" : "TimeOnTop";
+
+        // 考试叠层
+        settings.ExamOverlay ??= new ExamOverlaySettings();
+        ExamLabelFontFamily   = settings.ExamOverlay.LabelFont.FontFamily;
+        ExamLabelFontSize     = settings.ExamOverlay.LabelFont.FontSize;
+        ExamLabelFontWeight   = GetFontWeightDisplayName(settings.ExamOverlay.LabelFont.FontWeight);
+        ExamLabelFontColorHex = settings.ExamOverlay.LabelFont.FontColor;
+        SelectedExamLabelColor = ParseColorFromHex(settings.ExamOverlay.LabelFont.FontColor);
+
+        ExamStatusFontFamily   = settings.ExamOverlay.StatusFont.FontFamily;
+        ExamStatusFontSize     = settings.ExamOverlay.StatusFont.FontSize;
+        ExamStatusFontWeight   = GetFontWeightDisplayName(settings.ExamOverlay.StatusFont.FontWeight);
+        ExamStatusFontColorHex = settings.ExamOverlay.StatusFont.FontColor;
+        SelectedExamStatusColor = ParseColorFromHex(settings.ExamOverlay.StatusFont.FontColor);
+
+        ExamStartFontFamily   = settings.ExamOverlay.StartTimeFont.FontFamily;
+        ExamStartFontSize     = settings.ExamOverlay.StartTimeFont.FontSize;
+        ExamStartFontWeight   = GetFontWeightDisplayName(settings.ExamOverlay.StartTimeFont.FontWeight);
+        ExamStartFontColorHex = settings.ExamOverlay.StartTimeFont.FontColor;
+        SelectedExamStartColor = ParseColorFromHex(settings.ExamOverlay.StartTimeFont.FontColor);
+
+        ExamNameFontFamily   = settings.ExamOverlay.NameFont.FontFamily;
+        ExamNameFontSize     = settings.ExamOverlay.NameFont.FontSize;
+        ExamNameFontWeight   = GetFontWeightDisplayName(settings.ExamOverlay.NameFont.FontWeight);
+        ExamNameFontColorHex = settings.ExamOverlay.NameFont.FontColor;
+        SelectedExamNameColor = ParseColorFromHex(settings.ExamOverlay.NameFont.FontColor);
+
+        ExamEndFontFamily   = settings.ExamOverlay.EndTimeFont.FontFamily;
+        ExamEndFontSize     = settings.ExamOverlay.EndTimeFont.FontSize;
+        ExamEndFontWeight   = GetFontWeightDisplayName(settings.ExamOverlay.EndTimeFont.FontWeight);
+        ExamEndFontColorHex = settings.ExamOverlay.EndTimeFont.FontColor;
+        SelectedExamEndColor = ParseColorFromHex(settings.ExamOverlay.EndTimeFont.FontColor);
+
+        ExamRemainingFontFamily   = settings.ExamOverlay.RemainingFont.FontFamily;
+        ExamRemainingFontSize     = settings.ExamOverlay.RemainingFont.FontSize;
+        ExamRemainingFontWeight   = GetFontWeightDisplayName(settings.ExamOverlay.RemainingFont.FontWeight);
+        ExamRemainingFontColorHex = settings.ExamOverlay.RemainingFont.FontColor;
+        SelectedExamRemainingColor = ParseColorFromHex(settings.ExamOverlay.RemainingFont.FontColor);
+
         _previewSettings = DeepCloneSettings(settings);
     }
 
@@ -445,7 +597,52 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
                 DateAlignment = source.Alignment.DateAlignment,
                 WeekAlignment = source.Alignment.WeekAlignment
             },
-            LayoutOrder = source.LayoutOrder
+            LayoutOrder = source.LayoutOrder,
+            ExamOverlay = new ExamOverlaySettings
+            {
+                LabelFont = new FontSettings
+                {
+                    FontFamily = source.ExamOverlay?.LabelFont.FontFamily ?? "Segoe UI",
+                    FontSize   = source.ExamOverlay?.LabelFont.FontSize   ?? 12,
+                    FontWeight = source.ExamOverlay?.LabelFont.FontWeight ?? 400,
+                    FontColor  = source.ExamOverlay?.LabelFont.FontColor  ?? "#8A8A8A"
+                },
+                StatusFont = new FontSettings
+                {
+                    FontFamily = source.ExamOverlay?.StatusFont.FontFamily ?? "Segoe UI",
+                    FontSize   = source.ExamOverlay?.StatusFont.FontSize   ?? 16,
+                    FontWeight = source.ExamOverlay?.StatusFont.FontWeight ?? 600,
+                    FontColor  = source.ExamOverlay?.StatusFont.FontColor  ?? "#FFFFFF"
+                },
+                StartTimeFont = new FontSettings
+                {
+                    FontFamily = source.ExamOverlay?.StartTimeFont.FontFamily ?? "Segoe UI",
+                    FontSize   = source.ExamOverlay?.StartTimeFont.FontSize   ?? 16,
+                    FontWeight = source.ExamOverlay?.StartTimeFont.FontWeight ?? 400,
+                    FontColor  = source.ExamOverlay?.StartTimeFont.FontColor  ?? "#FFFFFF"
+                },
+                NameFont = new FontSettings
+                {
+                    FontFamily = source.ExamOverlay?.NameFont.FontFamily ?? "Segoe UI",
+                    FontSize   = source.ExamOverlay?.NameFont.FontSize   ?? 18,
+                    FontWeight = source.ExamOverlay?.NameFont.FontWeight ?? 600,
+                    FontColor  = source.ExamOverlay?.NameFont.FontColor  ?? "#FFFFFF"
+                },
+                EndTimeFont = new FontSettings
+                {
+                    FontFamily = source.ExamOverlay?.EndTimeFont.FontFamily ?? "Segoe UI",
+                    FontSize   = source.ExamOverlay?.EndTimeFont.FontSize   ?? 16,
+                    FontWeight = source.ExamOverlay?.EndTimeFont.FontWeight ?? 400,
+                    FontColor  = source.ExamOverlay?.EndTimeFont.FontColor  ?? "#FFFFFF"
+                },
+                RemainingFont = new FontSettings
+                {
+                    FontFamily = source.ExamOverlay?.RemainingFont.FontFamily ?? "Segoe UI",
+                    FontSize   = source.ExamOverlay?.RemainingFont.FontSize   ?? 16,
+                    FontWeight = source.ExamOverlay?.RemainingFont.FontWeight ?? 600,
+                    FontColor  = source.ExamOverlay?.RemainingFont.FontColor  ?? "#FFFFFF"
+                }
+            }
         };
     }
 
@@ -624,44 +821,64 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
         catch { SelectedDateColor = Windows.UI.Color.FromArgb(255, 204, 204, 204); }
         if (IsSettingsMode) { UpdatePreviewSettings(); UpdateActiveDisplayItems(); }
     }
-    partial void OnSelectedTimeAlignmentChanged(string value)
+
+    partial void OnExamLabelFontFamilyChanged(string value) { if (IsSettingsMode) { UpdatePreviewSettings(); UpdateActiveDisplayItems(); } }
+    partial void OnExamLabelFontSizeChanged(double value)  { if (IsSettingsMode) { UpdatePreviewSettings(); UpdateActiveDisplayItems(); } }
+    partial void OnExamLabelFontWeightChanged(string value) { if (IsSettingsMode) { UpdatePreviewSettings(); UpdateActiveDisplayItems(); } }
+    partial void OnExamLabelFontColorHexChanged(string value)
     {
+        try { SelectedExamLabelColor = ParseColorFromHex(value); }
+        catch { SelectedExamLabelColor = Windows.UI.Color.FromArgb(255,138,138,138); }
         if (IsSettingsMode) { UpdatePreviewSettings(); UpdateActiveDisplayItems(); }
     }
-    partial void OnSelectedDateAlignmentChanged(string value)
+
+    partial void OnExamStatusFontFamilyChanged(string value) { if (IsSettingsMode) { UpdatePreviewSettings(); UpdateActiveDisplayItems(); } }
+    partial void OnExamStatusFontSizeChanged(double value)  { if (IsSettingsMode) { UpdatePreviewSettings(); UpdateActiveDisplayItems(); } }
+    partial void OnExamStatusFontWeightChanged(string value) { if (IsSettingsMode) { UpdatePreviewSettings(); UpdateActiveDisplayItems(); } }
+    partial void OnExamStatusFontColorHexChanged(string value)
     {
+        try { SelectedExamStatusColor = ParseColorFromHex(value); }
+        catch { SelectedExamStatusColor = Windows.UI.Color.FromArgb(255,255,255,255); }
         if (IsSettingsMode) { UpdatePreviewSettings(); UpdateActiveDisplayItems(); }
     }
-    partial void OnSelectedWeekAlignmentChanged(string value)
+
+    partial void OnExamStartFontFamilyChanged(string value) { if (IsSettingsMode) { UpdatePreviewSettings(); UpdateActiveDisplayItems(); } }
+    partial void OnExamStartFontSizeChanged(double value)  { if (IsSettingsMode) { UpdatePreviewSettings(); UpdateActiveDisplayItems(); } }
+    partial void OnExamStartFontWeightChanged(string value) { if (IsSettingsMode) { UpdatePreviewSettings(); UpdateActiveDisplayItems(); } }
+    partial void OnExamStartFontColorHexChanged(string value)
     {
+        try { SelectedExamStartColor = ParseColorFromHex(value); }
+        catch { SelectedExamStartColor = Windows.UI.Color.FromArgb(255,255,255,255); }
         if (IsSettingsMode) { UpdatePreviewSettings(); UpdateActiveDisplayItems(); }
     }
-    partial void OnSelectedLayoutOrderChanged(string value)
+
+    partial void OnExamNameFontFamilyChanged(string value) { if (IsSettingsMode) { UpdatePreviewSettings(); UpdateActiveDisplayItems(); } }
+    partial void OnExamNameFontSizeChanged(double value)  { if (IsSettingsMode) { UpdatePreviewSettings(); UpdateActiveDisplayItems(); } }
+    partial void OnExamNameFontWeightChanged(string value) { if (IsSettingsMode) { UpdatePreviewSettings(); UpdateActiveDisplayItems(); } }
+    partial void OnExamNameFontColorHexChanged(string value)
     {
+        try { SelectedExamNameColor = ParseColorFromHex(value); }
+        catch { SelectedExamNameColor = Windows.UI.Color.FromArgb(255,255,255,255); }
         if (IsSettingsMode) { UpdatePreviewSettings(); UpdateActiveDisplayItems(); }
     }
-    partial void OnSelectedTimeFontFamilyChanged(string value)
+
+    partial void OnExamEndFontFamilyChanged(string value) { if (IsSettingsMode) { UpdatePreviewSettings(); UpdateActiveDisplayItems(); } }
+    partial void OnExamEndFontSizeChanged(double value)  { if (IsSettingsMode) { UpdatePreviewSettings(); UpdateActiveDisplayItems(); } }
+    partial void OnExamEndFontWeightChanged(string value) { if (IsSettingsMode) { UpdatePreviewSettings(); UpdateActiveDisplayItems(); } }
+    partial void OnExamEndFontColorHexChanged(string value)
     {
+        try { SelectedExamEndColor = ParseColorFromHex(value); }
+        catch { SelectedExamEndColor = Windows.UI.Color.FromArgb(255,255,255,255); }
         if (IsSettingsMode) { UpdatePreviewSettings(); UpdateActiveDisplayItems(); }
     }
-    partial void OnSelectedTimeFontSizeChanged(double value)
+
+    partial void OnExamRemainingFontFamilyChanged(string value) { if (IsSettingsMode) { UpdatePreviewSettings(); UpdateActiveDisplayItems(); } }
+    partial void OnExamRemainingFontSizeChanged(double value)  { if (IsSettingsMode) { UpdatePreviewSettings(); UpdateActiveDisplayItems(); } }
+    partial void OnExamRemainingFontWeightChanged(string value) { if (IsSettingsMode) { UpdatePreviewSettings(); UpdateActiveDisplayItems(); } }
+    partial void OnExamRemainingFontColorHexChanged(string value)
     {
-        if (IsSettingsMode) { UpdatePreviewSettings(); UpdateActiveDisplayItems(); }
-    }
-    partial void OnSelectedDateFontFamilyChanged(string value)
-    {
-        if (IsSettingsMode) { UpdatePreviewSettings(); UpdateActiveDisplayItems(); }
-    }
-    partial void OnSelectedDateFontSizeChanged(double value)
-    {
-        if (IsSettingsMode) { UpdatePreviewSettings(); UpdateActiveDisplayItems(); }
-    }
-    partial void OnSelectedTimeFontWeightChanged(string value)
-    {
-        if (IsSettingsMode) { UpdatePreviewSettings(); UpdateActiveDisplayItems(); }
-    }
-    partial void OnSelectedDateFontWeightChanged(string value)
-    {
+        try { SelectedExamRemainingColor = ParseColorFromHex(value); }
+        catch { SelectedExamRemainingColor = Windows.UI.Color.FromArgb(255,255,255,255); }
         if (IsSettingsMode) { UpdatePreviewSettings(); UpdateActiveDisplayItems(); }
     }
 }
