@@ -1,39 +1,44 @@
-﻿
+
 using System;
 using System.Threading.Tasks;
 using TimeWinUI.Core.Models;
 
-namespace TimeWinUI.Core.Contracts.Services
+namespace TimeWinUI.Core.Contracts.Services;
+
+public interface IDashboardProfileService
 {
-    public interface IDashboardProfileService
+    DashboardProfile? CurrentProfile
     {
-        DashboardProfile? CurrentProfile
-        {
-            get;
-        }
-        string? CurrentFilePath
-        {
-            get;
-        }
-
-        /// <summary>当前“进行中”的考试；若无则为 null。</summary>
-        ExamInfo? CurrentInProgressExam
-        {
-            get;
-        }
-
-        /// <summary>最近的未开始考试（当没有进行中时），可能为 null。</summary>
-        ExamInfo? NextUpcomingExam
-        {
-            get;
-        }
-
-        Task LoadFromFileAsync(string filePath);
-        Task<bool> SaveAsync(string? filePath = null);
-
-        void Reset();
-
-        /// <summary>手动触发一次计算（服务内部也会每秒计算一次）。</summary>
-        void RefreshNow();
+        get;
     }
+    string? CurrentFilePath
+    {
+        get;
+    }
+
+    /// <summary>当前“进行中”的考试；若无则为 null。</summary>
+    ExamInfo? CurrentInProgressExam
+    {
+        get;
+    }
+
+    /// <summary>最近的未开始考试（当没有进行中时），可能为 null。</summary>
+    ExamInfo? NextUpcomingExam
+    {
+        get;
+    }
+
+    /// <summary>配置被载入/保存/重置后触发。</summary>
+    event EventHandler? ProfileChanged;
+
+    /// <summary>进行中/下一场快照发生变化时触发（指针变化才触发，避免事件风暴）。</summary>
+    event EventHandler? ExamStateChanged;
+
+    Task LoadFromFileAsync(string filePath);
+    Task<bool> SaveAsync(string? filePath = null);
+
+    void Reset();
+
+    /// <summary>手动触发一次计算。</summary>
+    void RefreshNow();
 }

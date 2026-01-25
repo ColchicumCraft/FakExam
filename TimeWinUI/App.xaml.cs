@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.UI.Xaml;
 
@@ -51,37 +51,39 @@ public partial class App : Application
         CreateDefaultBuilder().
         UseContentRoot(AppContext.BaseDirectory).
         ConfigureServices((context, services) =>
-        {
-            // Default Activation Handler
-            services.AddTransient<ActivationHandler<LaunchActivatedEventArgs>, DefaultActivationHandler>();
+            {
+                // Activation handlers
+                services.AddTransient<ActivationHandler<LaunchActivatedEventArgs>, DefaultActivationHandler>();
+                services.AddTransient<IActivationHandler, AppNotificationActivationHandler>();
 
-            // Other Activation Handlers
-            services.AddTransient<IActivationHandler, AppNotificationActivationHandler>();
+                // Services 
+                services.AddSingleton<IAppNotificationService, AppNotificationService>();
+                services.AddSingleton<ILocalSettingsService, LocalSettingsService>();
+                services.AddSingleton<IThemeSelectorService, ThemeSelectorService>();
+                services.AddSingleton<IActivationService, ActivationService>();
+                services.AddSingleton<IPageService, PageService>();
+                services.AddSingleton<INavigationService, NavigationService>();
+                services.AddSingleton<ITimeDisplayService, TimeDisplayService>();
 
-            // Services
-            services.AddSingleton<IAppNotificationService, AppNotificationService>();
-            services.AddSingleton<ILocalSettingsService, LocalSettingsService>();
-            services.AddSingleton<IThemeSelectorService, ThemeSelectorService>();
-            services.AddSingleton<IActivationService, ActivationService>();
-            services.AddSingleton<IPageService, PageService>();
-            services.AddSingleton<INavigationService, NavigationService>();
-            services.AddSingleton<ITimeDisplayService, TimeDisplayService>();
+                // Core Services
+                services.AddSingleton<IFileService, FileService>();
+                services.AddSingleton<IDashboardProfileService, DashboardProfileService>();
+                services.AddSingleton<IClockService, ClockService>();
 
-            // Core Services
-            services.AddSingleton<IFileService, FileService>();
-            services.AddSingleton<IDashboardProfileService, DashboardProfileService>();
-
+                // Cross-layer abstractions (impl in UI)
+                services.AddSingleton<IProfileLoaderService, ProfileLoaderService>();
+                services.AddSingleton<IExamNavigationOrchestrator, ExamNavigationOrchestrator>();
 
             // Views and ViewModels
-            services.AddSingleton<DashboardShowViewModel>();
-            services.AddTransient<DashboardShowPage>();
-            services.AddTransient<SettingsViewModel>();
-            services.AddTransient<SettingsPage>();
-            services.AddSingleton<TimeShowViewModel>();
-            services.AddTransient<TimeShowPage>();
+                services.AddSingleton<DashboardShowViewModel>();
+                services.AddTransient<DashboardShowPage>();
+                services.AddTransient<SettingsViewModel>();
+                services.AddTransient<SettingsPage>();
+                services.AddSingleton<TimeShowViewModel>();
+                services.AddTransient<TimeShowPage>();
 
             // Configuration
-            services.Configure<LocalSettingsOptions>(context.Configuration.GetSection(nameof(LocalSettingsOptions)));
+                services.Configure<LocalSettingsOptions>(context.Configuration.GetSection(nameof(LocalSettingsOptions)));
         }).
         Build();
 
@@ -103,5 +105,18 @@ public partial class App : Application
         // App.GetService<IAppNotificationService>().Show(string.Format("AppNotificationSamplePayload".GetLocalized(), AppContext.BaseDirectory));
 
         await App.GetService<IActivationService>().ActivateAsync(args);
+        App.GetService<IClockService>().Start();
+        App.GetService<IExamNavigationOrchestrator>().Initialize();
+
+        var profileSvc = App.GetService<IDashboardProfileService>();
+        bool noProfile = profileSvc.CurrentProfile == null
+                      || profileSvc.CurrentProfile.ExamInfos == null
+                      || profileSvc.CurrentProfile.ExamInfos.Count == 0;
+        if (noProfile)
+        {
+            var nav = App.GetService<INavigationService>();
+            nav.NavigateTo(typeof(TimeWinUI.ViewModels.TimeShowViewModel).FullName!);
+        }
+
     }
 }
