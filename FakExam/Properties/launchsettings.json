@@ -1,0 +1,10 @@
+﻿{
+    "profiles": {
+      "FakExam (Package)": {
+        "commandName": "MsixPackage"
+      },
+      "FakExam (Unpackaged)": {
+        "commandName": "Project"
+      }
+    }
+}
