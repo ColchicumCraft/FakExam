@@ -196,11 +196,9 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
 
         var timeAlignment = GetHorizontalAlignment(GetAlignmentDisplayName(settings.Alignment.TimeAlignment));
         var dateAlignment = GetHorizontalAlignment(GetAlignmentDisplayName(settings.Alignment.DateAlignment));
-        var weekAlignment = GetHorizontalAlignment(GetAlignmentDisplayName(settings.Alignment.WeekAlignment));
 
-        var timeVisibility = settings.Alignment.TimeAlignment == TimeAlignment.Hidden ? Visibility.Collapsed : Visibility.Visible;
-        var dateVisibility = settings.Alignment.DateAlignment == DateAlignment.Hidden ? Visibility.Collapsed : Visibility.Visible;
-        var weekVisibility = settings.Alignment.WeekAlignment == WeekAlignment.Hidden ? Visibility.Collapsed : Visibility.Visible;
+        var timeVisibility = settings.Alignment.TimeAlignment == Alignments.Hidden ? Visibility.Collapsed : Visibility.Visible;
+        var dateVisibility = settings.Alignment.DateAlignment == Alignments.Hidden ? Visibility.Collapsed : Visibility.Visible;
 
         var timeFontWeight = GetFontWeightDisplayName(settings.TimeFont.FontWeight);
         var dateFontWeight = GetFontWeightDisplayName(settings.DateFont.FontWeight);
@@ -281,8 +279,7 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
             },
             Alignment = new DisplayAlignmentSettings
             {
-                TimeAlignment = GetTimeAlignmentValue(SelectedTimeAlignment),
-                DateAlignment = GetDateAlignmentValue(SelectedDateAlignment)
+                TimeAlignment = GetAlignmentValue(SelectedTimeAlignment)
             },
             LayoutOrder = SelectedLayoutOrder == "DateOnTop" ? LayoutOrder.DateOnTop : LayoutOrder.TimeOnTop,
 
@@ -590,8 +587,7 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
             Alignment = new DisplayAlignmentSettings
             {
                 TimeAlignment = source.Alignment.TimeAlignment,
-                DateAlignment = source.Alignment.DateAlignment,
-                WeekAlignment = source.Alignment.WeekAlignment
+                DateAlignment = source.Alignment.DateAlignment
             },
             LayoutOrder = source.LayoutOrder,
             ExamOverlay = new ExamOverlaySettings
@@ -642,54 +638,22 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
         };
     }
 
-    private string GetAlignmentDisplayName(TimeAlignment alignment) => alignment switch
+    private string GetAlignmentDisplayName(Alignments alignment) => alignment switch
     {
-        TimeAlignment.Left => "Left",
-        TimeAlignment.Center => "Center",
-        TimeAlignment.Right => "Right",
-        TimeAlignment.Hidden => "Hidden",
-        _ => "Center"
-    };
-    private string GetAlignmentDisplayName(DateAlignment alignment) => alignment switch
-    {
-        DateAlignment.Left => "Left",
-        DateAlignment.Center => "Center",
-        DateAlignment.Right => "Right",
-        DateAlignment.Hidden => "Hidden",
-        _ => "Center"
-    };
-    private string GetAlignmentDisplayName(WeekAlignment alignment) => alignment switch
-    {
-        WeekAlignment.Left => "Left",
-        WeekAlignment.Center => "Center",
-        WeekAlignment.Right => "Right",
-        WeekAlignment.Hidden => "Hidden",
+        Alignments.Left => "Left",
+        Alignments.Center => "Center",
+        Alignments.Right => "Right",
+        Alignments.Hidden => "Hidden",
         _ => "Center"
     };
 
-    private TimeAlignment GetTimeAlignmentValue(string displayName) => displayName switch
+    private Alignments GetAlignmentValue(string displayName) => displayName switch
     {
-        "Left" => TimeAlignment.Left,
-        "Center" => TimeAlignment.Center,
-        "Right" => TimeAlignment.Right,
-        "Hidden" => TimeAlignment.Hidden,
-        _ => TimeAlignment.Center
-    };
-    private DateAlignment GetDateAlignmentValue(string displayName) => displayName switch
-    {
-        "Left" => DateAlignment.Left,
-        "Center" => DateAlignment.Center,
-        "Right" => DateAlignment.Right,
-        "Hidden" => DateAlignment.Hidden,
-        _ => DateAlignment.Center
-    };
-    private WeekAlignment GetWeekAlignmentValue(string displayName) => displayName switch
-    {
-        "Left" => WeekAlignment.Left,
-        "Center" => WeekAlignment.Center,
-        "Right" => WeekAlignment.Right,
-        "Hidden" => WeekAlignment.Hidden,
-        _ => WeekAlignment.Center
+        "Left" => Alignments.Left,
+        "Center" => Alignments.Center,
+        "Right" => Alignments.Right,
+        "Hidden" => Alignments.Hidden,
+        _ => Alignments.Center
     };
 
     private HorizontalAlignment GetHorizontalAlignment(string alignment) => alignment switch

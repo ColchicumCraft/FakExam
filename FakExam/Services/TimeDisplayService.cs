@@ -79,10 +79,10 @@ public class TimeDisplayService : ITimeDisplayService
     {
         return _currentSettings.Alignment.TimeAlignment switch
         {
-            TimeAlignment.Left => HorizontalAlignment.Left,
-            TimeAlignment.Center => HorizontalAlignment.Center,
-            TimeAlignment.Right => HorizontalAlignment.Right,
-            TimeAlignment.Hidden => HorizontalAlignment.Center,
+            Alignments.Left => HorizontalAlignment.Left,
+            Alignments.Center => HorizontalAlignment.Center,
+            Alignments.Right => HorizontalAlignment.Right,
+            Alignments.Hidden => HorizontalAlignment.Center,
             _ => HorizontalAlignment.Center
         };
     }
@@ -91,41 +91,23 @@ public class TimeDisplayService : ITimeDisplayService
     {
         return _currentSettings.Alignment.DateAlignment switch
         {
-            DateAlignment.Left => HorizontalAlignment.Left,
-            DateAlignment.Center => HorizontalAlignment.Center,
-            DateAlignment.Right => HorizontalAlignment.Right,
-            DateAlignment.Hidden => HorizontalAlignment.Center,
-            _ => HorizontalAlignment.Center
-        };
-    }
-
-    public HorizontalAlignment GetWeekHorizontalAlignment()
-    {
-        return _currentSettings.Alignment.WeekAlignment switch
-        {
-            WeekAlignment.Left => HorizontalAlignment.Left,
-            WeekAlignment.Center => HorizontalAlignment.Center,
-            WeekAlignment.Right => HorizontalAlignment.Right,
-            WeekAlignment.Hidden => HorizontalAlignment.Center,
+            Alignments.Left => HorizontalAlignment.Left,
+            Alignments.Center => HorizontalAlignment.Center,
+            Alignments.Right => HorizontalAlignment.Right,
+            Alignments.Hidden => HorizontalAlignment.Center,
             _ => HorizontalAlignment.Center
         };
     }
 
     public Visibility GetTimeVisibility()
     {
-        return _currentSettings.Alignment.TimeAlignment == TimeAlignment.Hidden ?
+        return _currentSettings.Alignment.TimeAlignment == Alignments.Hidden ?
             Visibility.Collapsed : Visibility.Visible;
     }
 
     public Visibility GetDateVisibility()
     {
-        return _currentSettings.Alignment.DateAlignment == DateAlignment.Hidden ?
-            Visibility.Collapsed : Visibility.Visible;
-    }
-
-    public Visibility GetWeekVisibility()
-    {
-        return _currentSettings.Alignment.WeekAlignment == WeekAlignment.Hidden ?
+        return _currentSettings.Alignment.DateAlignment == Alignments.Hidden ?
             Visibility.Collapsed : Visibility.Visible;
     }
 

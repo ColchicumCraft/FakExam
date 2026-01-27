@@ -19,10 +19,9 @@ public interface ITimeDisplayService
 
     public HorizontalAlignment GetTimeHorizontalAlignment();
     public HorizontalAlignment GetDateHorizontalAlignment();
-    public HorizontalAlignment GetWeekHorizontalAlignment();
+
     public Visibility GetTimeVisibility();
     public Visibility GetDateVisibility();
-    public Visibility GetWeekVisibility();
 
     LayoutOrder GetLayoutOrder();
     void SetLayoutOrder(LayoutOrder layoutOrder);

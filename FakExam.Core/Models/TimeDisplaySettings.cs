@@ -102,17 +102,8 @@ public class ColorItem
 
 public class DisplayAlignmentSettings
 {
-    public TimeAlignment TimeAlignment { get; set; } = TimeAlignment.Center;
-    public DateAlignment DateAlignment { get; set; } = DateAlignment.Center;
-    public WeekAlignment WeekAlignment { get; set; } = WeekAlignment.Center;
-}
-
-public enum TimeAlignment
-{
-    Left,
-    Center,
-    Right,
-    Hidden
+    public Alignments TimeAlignment { get; set; } = Alignments.Center;
+    public Alignments DateAlignment { get; set; } = Alignments.Center;
 }
 
 public enum LayoutOrder
@@ -121,15 +112,7 @@ public enum LayoutOrder
     TimeOnTop    // 时间在上，日期在下
 }
 
-public enum DateAlignment
-{
-    Left,
-    Center,
-    Right,
-    Hidden
-}
-
-public enum WeekAlignment
+public enum Alignments
 {
     Left,
     Center,
@@ -142,6 +125,13 @@ public enum DisplayItemType
     Time,
     Date,
     Exam
+}
+
+public enum ExamLayoutPosition
+{
+    Top,
+    Middle,
+    Bottom
 }
 
 public class AlignmentItem
