@@ -495,7 +495,6 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
         navigationService.NavigateTo(typeof(DashboardShowViewModel).FullName!);
     }
 
-    // ======= 辅助方法 =======
     private void ApplySettingsToViewModel(TimeDisplaySettings settings)
     {
         SelectedTimeFormat = settings.TimeFormat.Format;
@@ -879,6 +878,47 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
     {
         try { SelectedExamRemainingColor = ParseColorFromHex(value); }
         catch { SelectedExamRemainingColor = Windows.UI.Color.FromArgb(255,255,255,255); }
+        if (IsSettingsMode) { UpdatePreviewSettings(); UpdateActiveDisplayItems(); }
+    }
+
+    partial void OnSelectedTimeAlignmentChanged(string value)
+    {
+        if (IsSettingsMode) { UpdatePreviewSettings(); UpdateActiveDisplayItems(); }
+    }
+    partial void OnSelectedDateAlignmentChanged(string value)
+    {
+        if (IsSettingsMode) { UpdatePreviewSettings(); UpdateActiveDisplayItems(); }
+    }
+    partial void OnSelectedWeekAlignmentChanged(string value)
+    {
+        if (IsSettingsMode) { UpdatePreviewSettings(); UpdateActiveDisplayItems(); }
+    }
+    partial void OnSelectedLayoutOrderChanged(string value)
+    {
+        if (IsSettingsMode) { UpdatePreviewSettings(); UpdateActiveDisplayItems(); }
+    }
+    partial void OnSelectedTimeFontFamilyChanged(string value)
+    {
+        if (IsSettingsMode) { UpdatePreviewSettings(); UpdateActiveDisplayItems(); }
+    }
+    partial void OnSelectedTimeFontSizeChanged(double value)
+    {
+        if (IsSettingsMode) { UpdatePreviewSettings(); UpdateActiveDisplayItems(); }
+    }
+    partial void OnSelectedDateFontFamilyChanged(string value)
+    {
+        if (IsSettingsMode) { UpdatePreviewSettings(); UpdateActiveDisplayItems(); }
+    }
+    partial void OnSelectedDateFontSizeChanged(double value)
+    {
+        if (IsSettingsMode) { UpdatePreviewSettings(); UpdateActiveDisplayItems(); }
+    }
+    partial void OnSelectedTimeFontWeightChanged(string value)
+    {
+        if (IsSettingsMode) { UpdatePreviewSettings(); UpdateActiveDisplayItems(); }
+    }
+    partial void OnSelectedDateFontWeightChanged(string value)
+    {
         if (IsSettingsMode) { UpdatePreviewSettings(); UpdateActiveDisplayItems(); }
     }
 }
