@@ -583,13 +583,6 @@
                                       SelectedValuePath="Value"
                                       SelectedValue="{x:Bind ViewModel.SelectedDateAlignment, Mode=TwoWay}"
                                       Margin="0,8,0,0"/>
-
-                                    <ComboBox Header="星期对齐方式"
-                                      ItemsSource="{x:Bind ViewModel.AlignmentOptions, Mode=OneWay}"
-                                      DisplayMemberPath="DisplayName"
-                                      SelectedValuePath="Value"
-                                      SelectedValue="{x:Bind ViewModel.SelectedWeekAlignment, Mode=TwoWay}"
-                                      Margin="0,8,0,0"/>
                                 </StackPanel>
 
                                 <!-- 日期字体设置 -->

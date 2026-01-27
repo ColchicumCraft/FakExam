@@ -54,7 +54,6 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
     [ObservableProperty] private Windows.UI.Color _selectedDateColor = Windows.UI.Color.FromArgb(255, 204, 204, 204);
     [ObservableProperty] private string _selectedTimeAlignment = "Center";
     [ObservableProperty] private string _selectedDateAlignment = "Center";
-    [ObservableProperty] private string _selectedWeekAlignment = "Center";
     [ObservableProperty] private string _selectedLayoutOrder = "DateOnTop";
     [ObservableProperty] private bool _isCompactOverlay = false;
     [ObservableProperty] private bool _isFullScreen = false;
@@ -283,8 +282,7 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
             Alignment = new DisplayAlignmentSettings
             {
                 TimeAlignment = GetTimeAlignmentValue(SelectedTimeAlignment),
-                DateAlignment = GetDateAlignmentValue(SelectedDateAlignment),
-                WeekAlignment = GetWeekAlignmentValue(SelectedWeekAlignment)
+                DateAlignment = GetDateAlignmentValue(SelectedDateAlignment)
             },
             LayoutOrder = SelectedLayoutOrder == "DateOnTop" ? LayoutOrder.DateOnTop : LayoutOrder.TimeOnTop,
 
@@ -514,7 +512,6 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
 
         SelectedTimeAlignment = GetAlignmentDisplayName(settings.Alignment.TimeAlignment);
         SelectedDateAlignment = GetAlignmentDisplayName(settings.Alignment.DateAlignment);
-        SelectedWeekAlignment = GetAlignmentDisplayName(settings.Alignment.WeekAlignment);
         SelectedLayoutOrder = settings.LayoutOrder == LayoutOrder.DateOnTop ? "DateOnTop" : "TimeOnTop";
 
         // 考试叠层
@@ -886,10 +883,6 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
         if (IsSettingsMode) { UpdatePreviewSettings(); UpdateActiveDisplayItems(); }
     }
     partial void OnSelectedDateAlignmentChanged(string value)
-    {
-        if (IsSettingsMode) { UpdatePreviewSettings(); UpdateActiveDisplayItems(); }
-    }
-    partial void OnSelectedWeekAlignmentChanged(string value)
     {
         if (IsSettingsMode) { UpdatePreviewSettings(); UpdateActiveDisplayItems(); }
     }
