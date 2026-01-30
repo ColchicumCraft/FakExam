@@ -279,7 +279,8 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
             },
             Alignment = new DisplayAlignmentSettings
             {
-                TimeAlignment = GetAlignmentValue(SelectedTimeAlignment)
+                TimeAlignment = GetAlignmentValue(SelectedTimeAlignment),
+                DateAlignment = GetAlignmentValue(SelectedDateAlignment)
             },
             LayoutOrder = SelectedLayoutOrder == "DateOnTop" ? LayoutOrder.DateOnTop : LayoutOrder.TimeOnTop,
 
