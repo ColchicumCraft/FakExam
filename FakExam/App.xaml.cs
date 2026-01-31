@@ -64,6 +64,7 @@ public partial class App : Application
                 services.AddSingleton<IPageService, PageService>();
                 services.AddSingleton<INavigationService, NavigationService>();
                 services.AddSingleton<ITimeDisplayService, TimeDisplayService>();
+                services.AddSingleton<IDashboardDisplayService, DashboardDisplayService>();
 
                 // Core Services
                 services.AddSingleton<IFileService, FileService>();
@@ -74,7 +75,7 @@ public partial class App : Application
                 services.AddSingleton<IProfileLoaderService, ProfileLoaderService>();
                 services.AddSingleton<IExamNavigationOrchestrator, ExamNavigationOrchestrator>();
 
-            // Views and ViewModels
+                // Views and ViewModels
                 services.AddSingleton<DashboardShowViewModel>();
                 services.AddTransient<DashboardShowPage>();
                 services.AddTransient<SettingsViewModel>();
@@ -82,7 +83,7 @@ public partial class App : Application
                 services.AddSingleton<TimeShowViewModel>();
                 services.AddTransient<TimeShowPage>();
 
-            // Configuration
+                 // Configuration
                 services.Configure<LocalSettingsOptions>(context.Configuration.GetSection(nameof(LocalSettingsOptions)));
         }).
         Build();

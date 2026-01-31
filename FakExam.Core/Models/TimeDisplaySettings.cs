@@ -325,4 +325,13 @@ public static class DisplayDataSources
         new ExamPositionItem("在中间", ExamLayoutPosition.Middle),
         new ExamPositionItem("在下方", ExamLayoutPosition.Bottom)
     };
+
+    public static ObservableCollection<LayoutOrderItem> DashboardLayoutOrderOptions
+    {
+        get;
+    } = new()
+    {
+        new LayoutOrderItem("状态面板在左，表格在右", "StatusOnLeft"),
+        new LayoutOrderItem("表格在左，状态面板在右", "TableOnLeft")
+    };
 }
