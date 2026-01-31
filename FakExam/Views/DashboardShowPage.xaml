@@ -5,80 +5,153 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:converters="using:FakExam.Helpers"
     mc:Ignorable="d">
+    <Page.Resources>
+        <converters:BoolToStringConverter x:Key="BoolToStringConverter"/>
+        <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"
+                                                 TrueValue="Visible"
+                                                 FalseValue="Collapsed"/>
+        <converters:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter"
+                                                        TrueValue="Visible"
+                                                        FalseValue="Collapsed"/>
+    </Page.Resources>
+    <Grid>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="360"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-  <Grid>
-    <Grid.ColumnDefinitions>
-      <ColumnDefinition Width="360"/>
-      <ColumnDefinition Width="*"/>
-    </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0" Spacing="16" Padding="20" Margin="10">
+                <TextBlock Text="{x:Bind ViewModel.ExamName, Mode=OneWay}"
+                   FontSize="22"
+                   FontWeight="SemiBold"
+                   TextWrapping="WrapWholeWords"/>
+                <TextBlock Text="{x:Bind ViewModel.Message, Mode=OneWay}"
+                   FontSize="14"
+                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                   TextWrapping="WrapWholeWords"/>
+                <Border CornerRadius="8"
+                Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}"
+                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                BorderThickness="1"
+                Padding="12">
+                    <TextBlock Text="{x:Bind ViewModel.CurrentTime, Mode=OneWay}"
+                 FontSize="36"
+                 FontWeight="Bold"
+                 HorizontalAlignment="Center"/>
+                </Border>
 
-    <StackPanel Grid.Column="0" Spacing="16" Padding="20" Margin="10">
+                <StackPanel Spacing="8"
+                    Padding="12"
+                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="8">
+                    <TextBlock Text="当前科目" FontSize="14" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                    <TextBlock Text="{x:Bind ViewModel.CurrentExamName, Mode=OneWay}" FontSize="18" FontWeight="SemiBold"/>
 
-      <StackPanel Orientation="Horizontal" Spacing="8">
-        <Button Content="返回"
-                Command="{x:Bind ViewModel.GoBackCommand}"/>
-        <Button Content="加载 JSON"
-                Command="{x:Bind ViewModel.LoadJsonCommand}"/>
-      </StackPanel>
-      <TextBlock Text="{x:Bind ViewModel.ExamName, Mode=OneWay}"
-                 FontSize="22"
-                 FontWeight="SemiBold"
-                 TextWrapping="WrapWholeWords"/>
-      <TextBlock Text="{x:Bind ViewModel.Message, Mode=OneWay}"
-                 FontSize="14"
-                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                 TextWrapping="WrapWholeWords"/>
-      <Border CornerRadius="8"
-              Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}"
-              BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-              BorderThickness="1"
-              Padding="12">
-        <TextBlock Text="{x:Bind ViewModel.CurrentTime, Mode=OneWay}"
-                   FontSize="36"
-                   FontWeight="Bold"
-                   HorizontalAlignment="Center"/>
-      </Border>
+                    <TextBlock Text="起止时间" FontSize="14" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Margin="0,8,0,0"/>
+                    <TextBlock Text="{x:Bind ViewModel.CurrentExamTimeRange, Mode=OneWay}" FontSize="16"/>
 
-      <StackPanel Spacing="8"
-                  Padding="12"
-                  Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                  BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                  BorderThickness="1"
-                  CornerRadius="8">
-        <TextBlock Text="当前科目" FontSize="14" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-        <TextBlock Text="{x:Bind ViewModel.CurrentExamName, Mode=OneWay}" FontSize="18" FontWeight="SemiBold"/>
+                    <TextBlock Text="剩余时间" FontSize="14" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Margin="0,8,0,0"/>
+                    <TextBlock Text="{x:Bind ViewModel.RemainingTimeText, Mode=OneWay}" FontSize="16" FontWeight="SemiBold"/>
 
-        <TextBlock Text="起止时间" FontSize="14" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Margin="0,8,0,0"/>
-        <TextBlock Text="{x:Bind ViewModel.CurrentExamTimeRange, Mode=OneWay}" FontSize="16"/>
+                    <TextBlock Text="状态" FontSize="14" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Margin="0,8,0,0"/>
+                    <TextBlock Text="{x:Bind ViewModel.CurrentStatusText, Mode=OneWay}" FontSize="16" FontWeight="SemiBold"/>
+                </StackPanel>
+            </StackPanel>
 
-        <TextBlock Text="剩余时间" FontSize="14" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Margin="0,8,0,0"/>
-        <TextBlock Text="{x:Bind ViewModel.RemainingTimeText, Mode=OneWay}" FontSize="16" FontWeight="SemiBold"/>
+            <Grid Grid.Column="1" Padding="20" Margin="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
 
-        <TextBlock Text="状态" FontSize="14" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Margin="0,8,0,0"/>
-        <TextBlock Text="{x:Bind ViewModel.CurrentStatusText, Mode=OneWay}" FontSize="16" FontWeight="SemiBold"/>
-      </StackPanel>
-    </StackPanel>
+                <controls:DataGrid Grid.Row="1"
+                       ItemsSource="{x:Bind ViewModel.ExamRows, Mode=OneWay}"
+                       AutoGenerateColumns="False"
+                       HeadersVisibility="Column"
+                       Margin="0,12,0,0">
+                    <controls:DataGrid.Columns>
+                        <controls:DataGridTextColumn Header="时间" Binding="{Binding Date}"/>
+                        <controls:DataGridTextColumn Header="科目" Binding="{Binding Name}"/>
+                        <controls:DataGridTextColumn Header="开始" Binding="{Binding Start}"/>
+                        <controls:DataGridTextColumn Header="结束" Binding="{Binding End}"/>
+                        <controls:DataGridTextColumn Header="状态" Binding="{Binding Status}"/>
+                    </controls:DataGrid.Columns>
+                </controls:DataGrid>
+            </Grid>
+        </Grid>
 
-    <Grid Grid.Column="1" Padding="20" Margin="10">
-      <Grid.RowDefinitions>
-        <RowDefinition Height="Auto"/>
-        <RowDefinition Height="*"/>
-      </Grid.RowDefinitions>
 
-      <controls:DataGrid Grid.Row="1"
-                         ItemsSource="{x:Bind ViewModel.ExamRows, Mode=OneWay}"
-                         AutoGenerateColumns="False"
-                         HeadersVisibility="Column"
-                         Margin="0,12,0,0">
-        <controls:DataGrid.Columns>
-          <controls:DataGridTextColumn Header="时间" Binding="{Binding Date}"/>
-          <controls:DataGridTextColumn Header="科目" Binding="{Binding Name}"/>
-          <controls:DataGridTextColumn Header="开始" Binding="{Binding Start}"/>
-          <controls:DataGridTextColumn Header="结束" Binding="{Binding End}"/>
-          <controls:DataGridTextColumn Header="状态" Binding="{Binding Status}"/>
-        </controls:DataGrid.Columns>
-      </controls:DataGrid>
+        <Grid VerticalAlignment="Bottom" Padding="12,8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel
+                Orientation="Horizontal"
+                HorizontalAlignment="Left"
+                CornerRadius="8"
+                Padding="2"
+                BorderThickness="1"
+                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                VerticalAlignment="Bottom"
+                Spacing="4">
+                <AppBarButton Label="显示设置">
+                    <AppBarButton.Icon>
+                        <FontIcon Glyph="&#xEF58;" />
+                    </AppBarButton.Icon>
+                </AppBarButton>
+                <AppBarButton Label="时间显示" Command="{x:Bind ViewModel.GoTimeShowCommand}">
+                    <AppBarButton.Icon>
+                        <FontIcon Glyph="&#xE823;" />
+                    </AppBarButton.Icon>
+                </AppBarButton>
+                <AppBarButton Label="加载配置" Command="{x:Bind ViewModel.LoadJsonCommand}">
+                    <AppBarButton.Icon>
+                        <FontIcon Glyph="&#xE8DA;" />
+                    </AppBarButton.Icon>
+                </AppBarButton>
+            </StackPanel>
+
+            <StackPanel
+                Orientation="Horizontal"
+                HorizontalAlignment="Right"
+                CornerRadius="8"
+                Padding="2"
+                BorderThickness="1"
+                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                VerticalAlignment="Bottom"
+                Spacing="4">
+                <AppBarButton
+                    Command="{x:Bind ViewModel.ToggleFullScreenCommand}"
+                    Icon="FullScreen"
+                    Visibility="{x:Bind ViewModel.IsCompactOverlay, Converter={StaticResource InverseBooleanToVisibilityConverter}, Mode=OneWay}"
+                    Label="{x:Bind ViewModel.IsFullScreen, Converter={StaticResource BoolToStringConverter}, ConverterParameter='全屏|还原', Mode=OneWay}"/>
+                <AppBarButton
+                    Command="{x:Bind ViewModel.ToggleCompactOverlayCommand}"
+                    Icon="NewWindow"
+                    Label="{x:Bind ViewModel.IsCompactOverlay, Converter={StaticResource BoolToStringConverter}, ConverterParameter='画中画|还原', Mode=OneWay}"/>
+                <AppBarButton
+                    Command="{x:Bind ViewModel.MinimizeWindowCommand}"
+                    Visibility="{x:Bind ViewModel.IsCompactOverlay, Converter={StaticResource InverseBooleanToVisibilityConverter}, Mode=OneWay}"
+                    Label="最小化">
+                    <AppBarButton.Icon>
+                        <FontIcon Glyph="&#xED1A;" />
+                    </AppBarButton.Icon>
+                </AppBarButton>
+                <AppBarButton
+                    Command="{x:Bind ViewModel.CloseAppCommand}"
+                    Visibility="{x:Bind ViewModel.IsCompactOverlay, Converter={StaticResource InverseBooleanToVisibilityConverter}, Mode=OneWay}"
+                    Icon="Cancel"
+                    Label="关闭"/>
+            </StackPanel>
+        </Grid>
     </Grid>
-  </Grid>
 </Page>

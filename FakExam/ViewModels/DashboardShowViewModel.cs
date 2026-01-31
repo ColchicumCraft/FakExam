@@ -3,10 +3,11 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.UI.Dispatching;
 using FakExam.Contracts.Services;
 using FakExam.Core.Contracts.Services;
 using FakExam.Core.Models;
+using Microsoft.UI.Dispatching;
+using Microsoft.UI.Windowing;
 
 namespace FakExam.ViewModels;
 
@@ -18,11 +19,14 @@ public partial class DashboardShowViewModel : ObservableObject, IDisposable
     private readonly IClockService _clock;
     private readonly DispatcherQueue _dispatcherQueue;
 
+    [ObservableProperty] private bool _isCompactOverlay = false;
+    [ObservableProperty] private bool _isFullScreen = false;
+
     [ObservableProperty]
     private ObservableCollection<ExamRowView> _examRows = new();
 
-    [ObservableProperty] private string _examName = string.Empty;
-    [ObservableProperty] private string _message = string.Empty;
+    [ObservableProperty] private string _examName = "没有加载面板配置文件";
+    [ObservableProperty] private string _message = "请加载ExamSchedule格式的Json配置文件";
     [ObservableProperty] private string _currentTime = "--:--:--";
     [ObservableProperty] private string _currentExamName = "—";
     [ObservableProperty] private string _currentExamTimeRange = "—";
@@ -171,5 +175,80 @@ public partial class DashboardShowViewModel : ObservableObject, IDisposable
         [ObservableProperty] private string _start = string.Empty;
         [ObservableProperty] private string _end = string.Empty;
         [ObservableProperty] private string _status = "—";
+    }
+
+    [RelayCommand]
+    private void GoTimeShow()
+    {
+        var navigationService = App.GetService<INavigationService>();
+        navigationService.NavigateTo(typeof(TimeShowViewModel).FullName!);
+    }
+
+    [RelayCommand]
+    private void ToggleFullScreen()
+    {
+        var window = App.MainWindow;
+        if (window != null)
+        {
+            var appWindow = window.AppWindow;
+            if (appWindow != null)
+            {
+                if (appWindow.Presenter.Kind == AppWindowPresenterKind.FullScreen)
+                {
+                    appWindow.SetPresenter(AppWindowPresenterKind.Overlapped);
+                    IsFullScreen = false;
+                }
+                else
+                {
+                    appWindow.SetPresenter(AppWindowPresenterKind.FullScreen);
+                    IsFullScreen = true;
+                }
+            }
+        }
+    }
+
+    [RelayCommand]
+    private void CloseApp()
+    {
+        var window = App.MainWindow;
+        window?.Close();
+    }
+
+    [RelayCommand]
+    private void ToggleCompactOverlay()
+    {
+        var window = App.MainWindow;
+        if (window != null)
+        {
+            var appWindow = window.AppWindow;
+            if (appWindow != null)
+            {
+                if (appWindow.Presenter.Kind == AppWindowPresenterKind.CompactOverlay)
+                {
+                    appWindow.SetPresenter(AppWindowPresenterKind.Overlapped);
+                    IsCompactOverlay = false;
+                }
+                else
+                {
+                    appWindow.SetPresenter(AppWindowPresenterKind.CompactOverlay);
+                    IsCompactOverlay = true;
+                }
+            }
+        }
+    }
+
+    [RelayCommand]
+    private void MinimizeWindow()
+    {
+        var window = App.MainWindow;
+        if (window != null)
+        {
+            var appWindow = window.AppWindow;
+            if (appWindow != null)
+            {
+                var presenter = appWindow.Presenter as OverlappedPresenter;
+                presenter?.Minimize();
+            }
+        }
     }
 }
