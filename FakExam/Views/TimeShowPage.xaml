@@ -56,7 +56,7 @@
 
         <DataTemplate x:Key="ExamDisplayTemplate">
             <StackPanel Visibility="{Binding ViewModel.IsExamOverlayVisible, ElementName=TimeShowPageRoot, Converter={StaticResource BooleanToVisibilityConverter}}">
-                <StackPanel Orientation="Horizontal" Spacing="24" HorizontalAlignment="Center">
+                <StackPanel Orientation="Horizontal" Spacing="24" HorizontalAlignment="{Binding HorizontalAlignment}">
                     <!-- Status -->
                     <StackPanel HorizontalAlignment="Center" Spacing="3">
                         <TextBlock
@@ -644,7 +644,32 @@
                             </StackPanel>
 
                             <StackPanel Spacing="24" x:Name="ExamPanel">
+                                <!-- 考试对齐方式 -->
+                                <StackPanel>
+                                    <TextBlock Text="考试对齐方式" FontSize="16" FontWeight="SemiBold"/>
+                                    <ComboBox Header="考试对齐方式"
+                                              ItemsSource="{x:Bind ViewModel.AlignmentOptions, Mode=OneWay}"
+                                              DisplayMemberPath="DisplayName"
+                                              SelectedValuePath="Value"
+                                              SelectedValue="{x:Bind ViewModel.SelectedExamAlignment, Mode=TwoWay}"
+                                              Margin="0,8,0,0"/>
+                                </StackPanel>
 
+                                <!-- 考试布局位置 -->
+                                <StackPanel>
+                                    <TextBlock Text="考试布局位置" FontSize="16" FontWeight="SemiBold"/>
+                                    <ComboBox Header="考试布局位置"
+                                              ItemsSource="{x:Bind ViewModel.ExamPositionOptions, Mode=OneWay}"
+                                              DisplayMemberPath="DisplayName"
+                                              SelectedValuePath="Value"
+                                              SelectedValue="{x:Bind ViewModel.SelectedExamPosition, Mode=TwoWay}"
+                                              Margin="0,8,0,0"/>
+                                </StackPanel>
+
+
+                                <Border Height="1"
+                                    Background="{ThemeResource DividerStrokeColorDefaultBrush}"
+                                    Margin="0,1,0,1"/>
                                 <!-- 标签统一样式 -->
                                 <StackPanel>
                                     <TextBlock Text="提示文本样式" FontSize="16" FontWeight="SemiBold"/>

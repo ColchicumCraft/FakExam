@@ -13,6 +13,7 @@ public class TimeDisplaySettings
     public LayoutOrder LayoutOrder { get; set; } = LayoutOrder.DateOnTop;
 
     public ExamOverlaySettings ExamOverlay { get; set; } = new();
+    public ExamLayoutPosition ExamLayoutPosition { get; set; } = ExamLayoutPosition.Bottom;
 }
 public class TimeFormatSettings
 {
@@ -104,12 +105,19 @@ public class DisplayAlignmentSettings
 {
     public Alignments TimeAlignment { get; set; } = Alignments.Center;
     public Alignments DateAlignment { get; set; } = Alignments.Center;
+    public Alignments ExamAlignment { get; set; } = Alignments.Center;
 }
 
 public enum LayoutOrder
 {
     DateOnTop,   // 日期在上，时间在下（默认）
     TimeOnTop    // 时间在上，日期在下
+}
+public enum ExamLayoutPosition
+{
+    Top,     // 在时间和日期之上
+    Middle,  // 在时间和日期之间
+    Bottom   // 在时间和日期之下
 }
 
 public enum Alignments
@@ -125,13 +133,6 @@ public enum DisplayItemType
     Time,
     Date,
     Exam
-}
-
-public enum ExamLayoutPosition
-{
-    Top,
-    Middle,
-    Bottom
 }
 
 public class AlignmentItem
@@ -164,6 +165,24 @@ public class LayoutOrderItem
     }
 
     public LayoutOrderItem(string displayName, string value)
+    {
+        DisplayName = displayName;
+        Value = value;
+    }
+}
+
+public class ExamPositionItem
+{
+    public string DisplayName
+    {
+        get; set;
+    }
+    public ExamLayoutPosition Value
+    {
+        get; set;
+    }
+
+    public ExamPositionItem(string displayName, ExamLayoutPosition value)
     {
         DisplayName = displayName;
         Value = value;
@@ -295,5 +314,15 @@ public static class DisplayDataSources
     {
         new LayoutOrderItem("日期在上", "DateOnTop"),
         new LayoutOrderItem("时间在上", "TimeOnTop")
+    };
+
+    public static ObservableCollection<ExamPositionItem> ExamPositionOptions
+    {
+        get;
+    } = new()
+    {
+        new ExamPositionItem("在上方", ExamLayoutPosition.Top),
+        new ExamPositionItem("在中间", ExamLayoutPosition.Middle),
+        new ExamPositionItem("在下方", ExamLayoutPosition.Bottom)
     };
 }

@@ -49,12 +49,14 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
     [ObservableProperty] private double _selectedDateFontSize = 28;
     [ObservableProperty] private string _selectedDateFontWeight = "Normal";
     [ObservableProperty] private string _dateFontColorHex = "#CCCCCC";
+    [ObservableProperty] private string _selectedExamAlignment = "Center";
 
     [ObservableProperty] private Windows.UI.Color _selectedTimeColor = Windows.UI.Color.FromArgb(255, 255, 255, 255);
     [ObservableProperty] private Windows.UI.Color _selectedDateColor = Windows.UI.Color.FromArgb(255, 204, 204, 204);
     [ObservableProperty] private string _selectedTimeAlignment = "Center";
     [ObservableProperty] private string _selectedDateAlignment = "Center";
     [ObservableProperty] private string _selectedLayoutOrder = "DateOnTop";
+    [ObservableProperty] private ExamLayoutPosition _selectedExamPosition = ExamLayoutPosition.Bottom;
     [ObservableProperty] private bool _isCompactOverlay = false;
     [ObservableProperty] private bool _isFullScreen = false;
 
@@ -111,6 +113,7 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
     public ObservableCollection<FontWeightItem> FontWeights => DisplayDataSources.FontWeights;
     public ObservableCollection<AlignmentItem> AlignmentOptions => DisplayDataSources.AlignmentOptions;
     public ObservableCollection<LayoutOrderItem> LayoutOrderOptions => DisplayDataSources.LayoutOrderOptions;
+    public ObservableCollection<ExamPositionItem> ExamPositionOptions => DisplayDataSources.ExamPositionOptions;
 
     public TimeShowViewModel(ITimeDisplayService timeDisplayService,
                              IDashboardProfileService profileService,
@@ -196,14 +199,28 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
 
         var timeAlignment = GetHorizontalAlignment(GetAlignmentDisplayName(settings.Alignment.TimeAlignment));
         var dateAlignment = GetHorizontalAlignment(GetAlignmentDisplayName(settings.Alignment.DateAlignment));
+        var examAlignment = GetHorizontalAlignment(GetAlignmentDisplayName(settings.Alignment.ExamAlignment));
 
         var timeVisibility = settings.Alignment.TimeAlignment == Alignments.Hidden ? Visibility.Collapsed : Visibility.Visible;
         var dateVisibility = settings.Alignment.DateAlignment == Alignments.Hidden ? Visibility.Collapsed : Visibility.Visible;
+        var examVisibility = settings.Alignment.ExamAlignment == Alignments.Hidden ? Visibility.Collapsed : Visibility.Visible;
 
         var timeFontWeight = GetFontWeightDisplayName(settings.TimeFont.FontWeight);
         var dateFontWeight = GetFontWeightDisplayName(settings.DateFont.FontWeight);
 
-        var TimeDisplayItem = new DisplayItem
+        var timeDisplayItem = new DisplayItem
+        {
+            Type = DisplayItemType.Time,
+            TimeText = TimeText,
+            TimeFontFamily = settings.TimeFont.FontFamily,
+            TimeFontSize = settings.TimeFont.FontSize,
+            TimeFontColor = settings.TimeFont.FontColor,
+            TimeFontWeight = timeFontWeight,
+            HorizontalAlignment = timeAlignment,
+            Visibility = timeVisibility
+        };
+
+        var dateDisplayItem = new DisplayItem
         {
             Type = DisplayItemType.Date,
             DateText = DateText,
@@ -216,36 +233,65 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
             Visibility = dateVisibility
         };
 
-        var DateDisplayItem = new DisplayItem
-        {
-            Type = DisplayItemType.Time,
-            TimeText = TimeText,
-            TimeFontFamily = settings.TimeFont.FontFamily,
-            TimeFontSize = settings.TimeFont.FontSize,
-            TimeFontColor = settings.TimeFont.FontColor,
-            TimeFontWeight = timeFontWeight,
-            HorizontalAlignment = timeAlignment,
-            Visibility = timeVisibility
-        };
-
-        var ExamDisplayItem = new DisplayItem
+        var examDisplayItem = new DisplayItem
         {
             Type = DisplayItemType.Exam,
-            HorizontalAlignment = timeAlignment,
-            Visibility = timeVisibility
+            HorizontalAlignment = examAlignment,
+            Visibility = examVisibility
         };
 
-        if (settings.LayoutOrder == LayoutOrder.DateOnTop)
+        List<DisplayItem> orderedItems = new();
+
+        switch (settings.ExamLayoutPosition)
         {
-            ActiveDisplayItems.Add(TimeDisplayItem);
-            ActiveDisplayItems.Add(DateDisplayItem);
-            ActiveDisplayItems.Add(ExamDisplayItem);
+            case ExamLayoutPosition.Top:
+                orderedItems.Add(examDisplayItem);
+                if (settings.LayoutOrder == LayoutOrder.DateOnTop)
+                {
+                    orderedItems.Add(dateDisplayItem);
+                    orderedItems.Add(timeDisplayItem);
+                }
+                else
+                {
+                    orderedItems.Add(timeDisplayItem);
+                    orderedItems.Add(dateDisplayItem);
+                }
+                break;
+
+            case ExamLayoutPosition.Middle:
+                if (settings.LayoutOrder == LayoutOrder.DateOnTop)
+                {
+                    orderedItems.Add(dateDisplayItem);
+                    orderedItems.Add(examDisplayItem);
+                    orderedItems.Add(timeDisplayItem);
+                }
+                else
+                {
+                    orderedItems.Add(timeDisplayItem);
+                    orderedItems.Add(examDisplayItem);
+                    orderedItems.Add(dateDisplayItem);
+                }
+                break;
+
+            case ExamLayoutPosition.Bottom:
+                if (settings.LayoutOrder == LayoutOrder.DateOnTop)
+                {
+                    orderedItems.Add(dateDisplayItem);
+                    orderedItems.Add(timeDisplayItem);
+                    orderedItems.Add(examDisplayItem);
+                }
+                else
+                {
+                    orderedItems.Add(timeDisplayItem);
+                    orderedItems.Add(dateDisplayItem);
+                    orderedItems.Add(examDisplayItem);
+                }
+                break;
         }
-        else
+
+        foreach (var item in orderedItems)
         {
-            ActiveDisplayItems.Add(DateDisplayItem);
-            ActiveDisplayItems.Add(TimeDisplayItem);
-            ActiveDisplayItems.Add(ExamDisplayItem);
+            ActiveDisplayItems.Add(item);
         }
     }
 
@@ -280,9 +326,11 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
             Alignment = new DisplayAlignmentSettings
             {
                 TimeAlignment = GetAlignmentValue(SelectedTimeAlignment),
-                DateAlignment = GetAlignmentValue(SelectedDateAlignment)
+                DateAlignment = GetAlignmentValue(SelectedDateAlignment),
+                ExamAlignment = GetAlignmentValue(SelectedExamAlignment)
             },
             LayoutOrder = SelectedLayoutOrder == "DateOnTop" ? LayoutOrder.DateOnTop : LayoutOrder.TimeOnTop,
+            ExamLayoutPosition = SelectedExamPosition,
 
             ExamOverlay = new ExamOverlaySettings
             {
@@ -512,6 +560,8 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
         SelectedDateAlignment = GetAlignmentDisplayName(settings.Alignment.DateAlignment);
         SelectedLayoutOrder = settings.LayoutOrder == LayoutOrder.DateOnTop ? "DateOnTop" : "TimeOnTop";
 
+        SelectedExamAlignment = GetAlignmentDisplayName(settings.Alignment.ExamAlignment);
+        SelectedExamPosition = settings.ExamLayoutPosition;
         // 考试叠层
         settings.ExamOverlay ??= new ExamOverlaySettings();
         ExamLabelFontFamily   = settings.ExamOverlay.LabelFont.FontFamily;
@@ -588,9 +638,11 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
             Alignment = new DisplayAlignmentSettings
             {
                 TimeAlignment = source.Alignment.TimeAlignment,
-                DateAlignment = source.Alignment.DateAlignment
+                DateAlignment = source.Alignment.DateAlignment,
+                ExamAlignment = source.Alignment.ExamAlignment
             },
             LayoutOrder = source.LayoutOrder,
+            ExamLayoutPosition = source.ExamLayoutPosition,
             ExamOverlay = new ExamOverlaySettings
             {
                 LabelFont = new FontSettings
@@ -878,5 +930,22 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
     partial void OnSelectedDateFontWeightChanged(string value)
     {
         if (IsSettingsMode) { UpdatePreviewSettings(); UpdateActiveDisplayItems(); }
+    }
+    partial void OnSelectedExamAlignmentChanged(string value)
+    {
+        if (IsSettingsMode)
+        {
+            UpdatePreviewSettings();
+            UpdateActiveDisplayItems();
+        }
+    }
+
+    partial void OnSelectedExamPositionChanged(ExamLayoutPosition value)
+    {
+        if (IsSettingsMode)
+        {
+            UpdatePreviewSettings();
+            UpdateActiveDisplayItems();
+        }
     }
 }
