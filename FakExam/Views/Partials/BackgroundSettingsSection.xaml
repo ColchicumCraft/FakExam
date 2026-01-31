@@ -43,7 +43,7 @@
                                  Visibility="{Binding IsMaterial, Converter={StaticResource BoolToVisibility}}">
                     <ComboBox Width="140"
                                   SelectedValuePath="Tag"
-                                  Visibility="{Binding Material, Converter={StaticResource EqualsToVisibility}, ConverterParameter=Mica}"
+                                  Visibility="{Binding Material, Converter={StaticResource EqualsToVisibility}, ConverterParameter='Mica'}"
                                   SelectedValue="{Binding MicaKind, Mode=TwoWay,
                                                           Converter={StaticResource EnumConverter},
                                                           ConverterParameter='FakExam.Models.MicaSubKind'}">

@@ -682,8 +682,8 @@
                                         SelectedValue="{x:Bind ViewModel.ExamLabelFontWeight, Mode=TwoWay}" Margin="0,8,0,0"/>
                                     <Button x:Name="ExamLabelColorPickerButton" Margin="0,8,0,0" Click="ExamLabelColorPickerButton_Click" Padding="8">
                                         <StackPanel Orientation="Horizontal" Spacing="8">
-                                            <Rectangle Width="20" Height="20" Fill="{x:Bind ViewModel.ExamLabelFontColorHex}" Stroke="{ThemeResource TextControlBorderBrush}" StrokeThickness="1"/>
-                                            <TextBlock Text="{x:Bind ViewModel.ExamLabelFontColorHex}" VerticalAlignment="Center"/>
+                                            <Rectangle Width="20" Height="20" Fill="{x:Bind ViewModel.ExamLabelFontColorHex, Mode=OneWay}" Stroke="{ThemeResource TextControlBorderBrush}" StrokeThickness="1"/>
+                                            <TextBlock Text="{x:Bind ViewModel.ExamLabelFontColorHex, Mode=OneWay}" VerticalAlignment="Center"/>
                                         </StackPanel>
                                     </Button>
                                 </StackPanel>
@@ -703,8 +703,8 @@
                                         SelectedValue="{x:Bind ViewModel.ExamStatusFontWeight, Mode=TwoWay}" Margin="0,8,0,0"/>
                                     <Button x:Name="ExamStatusColorPickerButton" Margin="0,8,0,0" Click="ExamStatusColorPickerButton_Click" Padding="8" HorizontalAlignment="Stretch">
                                         <StackPanel Orientation="Horizontal" Spacing="8">
-                                            <Rectangle Width="20" Height="20" Fill="{x:Bind ViewModel.ExamStatusFontColorHex}" Stroke="{ThemeResource TextControlBorderBrush}" StrokeThickness="1"/>
-                                            <TextBlock Text="{x:Bind ViewModel.ExamStatusFontColorHex}" VerticalAlignment="Center"/>
+                                            <Rectangle Width="20" Height="20" Fill="{x:Bind ViewModel.ExamStatusFontColorHex, Mode=OneWay}" Stroke="{ThemeResource TextControlBorderBrush}" StrokeThickness="1"/>
+                                            <TextBlock Text="{x:Bind ViewModel.ExamStatusFontColorHex, Mode=OneWay}" VerticalAlignment="Center"/>
                                         </StackPanel>
                                     </Button>
                                 </StackPanel>
@@ -724,8 +724,8 @@
                                         SelectedValue="{x:Bind ViewModel.ExamStartFontWeight, Mode=TwoWay}" Margin="0,8,0,0"/>
                                     <Button x:Name="ExamStartColorPickerButton" Margin="0,8,0,0" Click="ExamStartColorPickerButton_Click" Padding="8" HorizontalAlignment="Stretch">
                                         <StackPanel Orientation="Horizontal" Spacing="8">
-                                            <Rectangle Width="20" Height="20" Fill="{x:Bind ViewModel.ExamStartFontColorHex}" Stroke="{ThemeResource TextControlBorderBrush}" StrokeThickness="1"/>
-                                            <TextBlock Text="{x:Bind ViewModel.ExamStartFontColorHex}" VerticalAlignment="Center"/>
+                                            <Rectangle Width="20" Height="20" Fill="{x:Bind ViewModel.ExamStartFontColorHex, Mode=OneWay}" Stroke="{ThemeResource TextControlBorderBrush}" StrokeThickness="1"/>
+                                            <TextBlock Text="{x:Bind ViewModel.ExamStartFontColorHex, Mode=OneWay}" VerticalAlignment="Center"/>
                                         </StackPanel>
                                     </Button>
                                 </StackPanel>
@@ -745,8 +745,8 @@
                                         SelectedValue="{x:Bind ViewModel.ExamNameFontWeight, Mode=TwoWay}" Margin="0,8,0,0"/>
                                     <Button x:Name="ExamNameColorPickerButton" Margin="0,8,0,0" Click="ExamNameColorPickerButton_Click" Padding="8" HorizontalAlignment="Stretch">
                                         <StackPanel Orientation="Horizontal" Spacing="8">
-                                            <Rectangle Width="20" Height="20" Fill="{x:Bind ViewModel.ExamNameFontColorHex}" Stroke="{ThemeResource TextControlBorderBrush}" StrokeThickness="1"/>
-                                            <TextBlock Text="{x:Bind ViewModel.ExamNameFontColorHex}" VerticalAlignment="Center"/>
+                                            <Rectangle Width="20" Height="20" Fill="{x:Bind ViewModel.ExamNameFontColorHex, Mode=OneWay}" Stroke="{ThemeResource TextControlBorderBrush}" StrokeThickness="1"/>
+                                            <TextBlock Text="{x:Bind ViewModel.ExamNameFontColorHex, Mode=OneWay}" VerticalAlignment="Center"/>
                                         </StackPanel>
                                     </Button>
                                 </StackPanel>
@@ -766,8 +766,8 @@
                                         SelectedValue="{x:Bind ViewModel.ExamEndFontWeight, Mode=TwoWay}" Margin="0,8,0,0"/>
                                     <Button x:Name="ExamEndColorPickerButton" Margin="0,8,0,0" Click="ExamEndColorPickerButton_Click" Padding="8" HorizontalAlignment="Stretch">
                                         <StackPanel Orientation="Horizontal" Spacing="8">
-                                            <Rectangle Width="20" Height="20" Fill="{x:Bind ViewModel.ExamEndFontColorHex}" Stroke="{ThemeResource TextControlBorderBrush}" StrokeThickness="1"/>
-                                            <TextBlock Text="{x:Bind ViewModel.ExamEndFontColorHex}" VerticalAlignment="Center"/>
+                                            <Rectangle Width="20" Height="20" Fill="{x:Bind ViewModel.ExamEndFontColorHex, Mode=OneWay}" Stroke="{ThemeResource TextControlBorderBrush}" StrokeThickness="1"/>
+                                            <TextBlock Text="{x:Bind ViewModel.ExamEndFontColorHex, Mode=OneWay}" VerticalAlignment="Center"/>
                                         </StackPanel>
                                     </Button>
                                 </StackPanel>
@@ -787,8 +787,8 @@
                                         SelectedValue="{x:Bind ViewModel.ExamRemainingFontWeight, Mode=TwoWay}" Margin="0,8,0,0"/>
                                     <Button x:Name="ExamRemainingColorPickerButton" Margin="0,8,0,0" Click="ExamRemainingColorPickerButton_Click" Padding="8" HorizontalAlignment="Stretch">
                                         <StackPanel Orientation="Horizontal" Spacing="8">
-                                            <Rectangle Width="20" Height="20" Fill="{x:Bind ViewModel.ExamRemainingFontColorHex}" Stroke="{ThemeResource TextControlBorderBrush}" StrokeThickness="1"/>
-                                            <TextBlock Text="{x:Bind ViewModel.ExamRemainingFontColorHex}" VerticalAlignment="Center"/>
+                                            <Rectangle Width="20" Height="20" Fill="{x:Bind ViewModel.ExamRemainingFontColorHex, Mode=OneWay}" Stroke="{ThemeResource TextControlBorderBrush}" StrokeThickness="1"/>
+                                            <TextBlock Text="{x:Bind ViewModel.ExamRemainingFontColorHex, Mode=OneWay}" VerticalAlignment="Center"/>
                                         </StackPanel>
                                     </Button>
                                 </StackPanel>
