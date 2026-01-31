@@ -1,7 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.UI.Xaml;
-
 using FakExam.Activation;
 using FakExam.Contracts.Services;
 using FakExam.Core.Contracts.Services;
@@ -15,18 +14,9 @@ using FakExam.Views;
 
 namespace FakExam;
 
-// To learn more about WinUI 3, see https://docs.microsoft.com/windows/apps/winui/winui3/.
 public partial class App : Application
 {
-    // The .NET Generic Host provides dependency injection, configuration, logging, and other services.
-    // https://docs.microsoft.com/dotnet/core/extensions/generic-host
-    // https://docs.microsoft.com/dotnet/core/extensions/dependency-injection
-    // https://docs.microsoft.com/dotnet/core/extensions/configuration
-    // https://docs.microsoft.com/dotnet/core/extensions/logging
-    public IHost Host
-    {
-        get;
-    }
+    public IHost Host { get; }
 
     public static T GetService<T>()
         where T : class
@@ -35,12 +25,10 @@ public partial class App : Application
         {
             throw new ArgumentException($"{typeof(T)} needs to be registered in ConfigureServices within App.xaml.cs.");
         }
-
         return service;
     }
 
     public static WindowEx MainWindow { get; } = new MainWindow();
-
     public static UIElement? AppTitlebar { get; set; }
 
     public App()
@@ -48,9 +36,9 @@ public partial class App : Application
         InitializeComponent();
 
         Host = Microsoft.Extensions.Hosting.Host.
-        CreateDefaultBuilder().
-        UseContentRoot(AppContext.BaseDirectory).
-        ConfigureServices((context, services) =>
+            CreateDefaultBuilder().
+            UseContentRoot(AppContext.BaseDirectory).
+            ConfigureServices((context, services) =>
             {
                 // Activation handlers
                 services.AddTransient<ActivationHandler<LaunchActivatedEventArgs>, DefaultActivationHandler>();
@@ -65,6 +53,9 @@ public partial class App : Application
                 services.AddSingleton<INavigationService, NavigationService>();
                 services.AddSingleton<ITimeDisplayService, TimeDisplayService>();
                 services.AddSingleton<IDashboardDisplayService, DashboardDisplayService>();
+
+                // 新增：背景服务
+                services.AddSingleton<IBackgroundService, FakExam.Services.BackgroundService>();
 
                 // Core Services
                 services.AddSingleton<IFileService, FileService>();
@@ -83,41 +74,35 @@ public partial class App : Application
                 services.AddSingleton<TimeShowViewModel>();
                 services.AddTransient<TimeShowPage>();
 
-                 // Configuration
+                // Configuration
                 services.Configure<LocalSettingsOptions>(context.Configuration.GetSection(nameof(LocalSettingsOptions)));
-        }).
-        Build();
+            }).
+            Build();
 
         App.GetService<IAppNotificationService>().Initialize();
-
         UnhandledException += App_UnhandledException;
     }
 
     private void App_UnhandledException(object sender, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
     {
-        // TODO: Log and handle exceptions as appropriate.
-        // https://docs.microsoft.com/windows/windows-app-sdk/api/winrt/microsoft.ui.xaml.application.unhandledexception.
+        // TODO: log
     }
 
     protected async override void OnLaunched(LaunchActivatedEventArgs args)
     {
         base.OnLaunched(args);
-
-        // App.GetService<IAppNotificationService>().Show(string.Format("AppNotificationSamplePayload".GetLocalized(), AppContext.BaseDirectory));
-
         await App.GetService<IActivationService>().ActivateAsync(args);
         App.GetService<IClockService>().Start();
         App.GetService<IExamNavigationOrchestrator>().Initialize();
 
         var profileSvc = App.GetService<IDashboardProfileService>();
         bool noProfile = profileSvc.CurrentProfile == null
-                      || profileSvc.CurrentProfile.ExamInfos == null
-                      || profileSvc.CurrentProfile.ExamInfos.Count == 0;
+            || profileSvc.CurrentProfile.ExamInfos == null
+            || profileSvc.CurrentProfile.ExamInfos.Count == 0;
         if (noProfile)
         {
             var nav = App.GetService<INavigationService>();
             nav.NavigateTo(typeof(FakExam.ViewModels.TimeShowViewModel).FullName!);
         }
-
     }
 }

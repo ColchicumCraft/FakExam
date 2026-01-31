@@ -8,6 +8,7 @@
     xmlns:xaml="using:Microsoft.UI.Xaml"
     xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:parts="using:FakExam.Views.Partials"
     mc:Ignorable="d">
     <Page.Resources>
         <helpers:EnumToBooleanConverter x:Key="EnumToBooleanConverter" />
@@ -41,7 +42,7 @@
         <StackPanel
             Grid.Row="1"
             x:Name="ContentArea">
-            <StackPanel Margin="{StaticResource SmallTopBottomMargin}">
+            <StackPanel Margin="{StaticResource SmallTopBottomMargin}" Spacing="10">
                 <TextBlock x:Uid="Settings_Personalization" Style="{ThemeResource SubtitleTextBlockStyle}" 
                         Margin="{StaticResource XSmallTopMargin}"/>
                 <controls:SettingsCard
@@ -59,6 +60,7 @@
                         <ComboBoxItem Content="系统默认" Tag="Default" />
                     </ComboBox>
                 </controls:SettingsCard>
+                <parts:BackgroundSettingsSection />
             </StackPanel>
 
             <TextBlock x:Uid="Settings_About" Style="{ThemeResource SubtitleTextBlockStyle}" />
