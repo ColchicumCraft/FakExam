@@ -14,6 +14,8 @@ public class TimeDisplaySettings
 
     public ExamOverlaySettings ExamOverlay { get; set; } = new();
     public ExamLayoutPosition ExamLayoutPosition { get; set; } = ExamLayoutPosition.Bottom;
+
+    public double ItemsSpacing { get; set; } = 20; // 垂直间距
 }
 public class TimeFormatSettings
 {

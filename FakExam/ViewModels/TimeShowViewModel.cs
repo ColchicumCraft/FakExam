@@ -59,6 +59,7 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
     [ObservableProperty] private ExamLayoutPosition _selectedExamPosition = ExamLayoutPosition.Bottom;
     [ObservableProperty] private bool _isCompactOverlay = false;
     [ObservableProperty] private bool _isFullScreen = false;
+    [ObservableProperty] private double itemsSpacing = 20;
 
     private TimeDisplaySettings _currentSettings = new();
     private TimeDisplaySettings _previewSettings = new();
@@ -299,6 +300,7 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
     {
         _previewSettings = new TimeDisplaySettings
         {
+            ItemsSpacing = ItemsSpacing,
             TimeFormat = new TimeFormatSettings
             {
                 Format = IsCustomTimeFormat ? CustomTimeFormat : SelectedTimeFormat,
@@ -541,6 +543,8 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
 
     private void ApplySettingsToViewModel(TimeDisplaySettings settings)
     {
+        ItemsSpacing = settings.ItemsSpacing;
+
         SelectedTimeFormat = settings.TimeFormat.Format;
         SelectedTimeFontFamily = settings.TimeFont.FontFamily;
         SelectedTimeFontSize = settings.TimeFont.FontSize;
@@ -607,6 +611,7 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
     {
         return new TimeDisplaySettings
         {
+            ItemsSpacing = source.ItemsSpacing,
             TimeFormat = new TimeFormatSettings
             {
                 Format = source.TimeFormat.Format,
@@ -941,6 +946,14 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
     }
 
     partial void OnSelectedExamPositionChanged(ExamLayoutPosition value)
+    {
+        if (IsSettingsMode)
+        {
+            UpdatePreviewSettings();
+            UpdateActiveDisplayItems();
+        }
+    }
+    partial void OnItemsSpacingChanged(double value)
     {
         if (IsSettingsMode)
         {

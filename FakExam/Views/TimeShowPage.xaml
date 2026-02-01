@@ -290,7 +290,7 @@
                               VerticalAlignment="Center">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <StackPanel Orientation="Vertical" Spacing="20"/>
+                            <StackPanel Orientation="Vertical" Spacing="{Binding ViewModel.ItemsSpacing, ElementName=TimeShowPageRoot, Mode=OneWay}"/>
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
 
@@ -447,6 +447,13 @@
                                       SelectedValuePath="Value"
                                       SelectedValue="{x:Bind ViewModel.SelectedLayoutOrder, Mode=TwoWay}"
                                       Margin="0,8,0,0"/>
+
+                                    <NumberBox
+                                        Margin="0,8,0,0"
+                                        Header="块间距（px）"
+                                        SpinButtonPlacementMode="Inline"
+                                        SmallChange="1" LargeChange="5"
+                                        Value="{x:Bind ViewModel.ItemsSpacing, Mode=TwoWay}" />
                                 </StackPanel>
 
                                 <!-- 分割线 -->
