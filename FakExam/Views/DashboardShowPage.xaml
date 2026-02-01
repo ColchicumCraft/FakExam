@@ -513,7 +513,7 @@
                                           SelectedItem="{x:Bind ViewModel.TitleFontFamily, Mode=TwoWay}"
                                           Margin="0,8,0,0"/>
 
-                                <Slider Header="字体大小" Minimum="12" Maximum="48" TickFrequency="2"
+                                <NumberBox Header="字体大小" Minimum="1" SpinButtonPlacementMode="Inline" SmallChange="10"
                                         Value="{x:Bind ViewModel.TitleFontSize, Mode=TwoWay}"
                                         Margin="0,8,0,0"/>
 
@@ -551,7 +551,7 @@
                                           SelectedItem="{x:Bind ViewModel.MessageFontFamily, Mode=TwoWay}"
                                           Margin="0,8,0,0"/>
 
-                                <Slider Header="字体大小" Minimum="10" Maximum="24" TickFrequency="1"
+                                <NumberBox Header="字体大小" Minimum="1" SpinButtonPlacementMode="Inline" SmallChange="10"
                                         Value="{x:Bind ViewModel.MessageFontSize, Mode=TwoWay}"
                                         Margin="0,8,0,0"/>
 
@@ -589,7 +589,7 @@
                                           SelectedItem="{x:Bind ViewModel.StatusLabelFontFamily, Mode=TwoWay}"
                                           Margin="0,8,0,0"/>
 
-                                <Slider Header="字体大小" Minimum="10" Maximum="20" TickFrequency="1"
+                                <NumberBox Header="字体大小" Minimum="1" SpinButtonPlacementMode="Inline" SmallChange="10"
                                         Value="{x:Bind ViewModel.StatusLabelFontSize, Mode=TwoWay}"
                                         Margin="0,8,0,0"/>
 
@@ -627,7 +627,7 @@
                                           SelectedItem="{x:Bind ViewModel.CurrentExamNameFontFamily, Mode=TwoWay}"
                                           Margin="0,8,0,0"/>
 
-                                <Slider Header="字体大小" Minimum="14" Maximum="28" TickFrequency="1"
+                                <NumberBox Header="字体大小" Minimum="1" SpinButtonPlacementMode="Inline" SmallChange="10"
                                         Value="{x:Bind ViewModel.CurrentExamNameFontSize, Mode=TwoWay}"
                                         Margin="0,8,0,0"/>
 
@@ -665,7 +665,7 @@
                                           SelectedItem="{x:Bind ViewModel.CurrentExamTimeRangeFontFamily, Mode=TwoWay}"
                                           Margin="0,8,0,0"/>
 
-                                <Slider Header="字体大小" Minimum="12" Maximum="24" TickFrequency="1"
+                                <NumberBox Header="字体大小" Minimum="1" SpinButtonPlacementMode="Inline" SmallChange="10"
                                         Value="{x:Bind ViewModel.CurrentExamTimeRangeFontSize, Mode=TwoWay}"
                                         Margin="0,8,0,0"/>
 
@@ -703,7 +703,7 @@
                                           SelectedItem="{x:Bind ViewModel.RemainingTimeTextFontFamily, Mode=TwoWay}"
                                           Margin="0,8,0,0"/>
 
-                                <Slider Header="字体大小" Minimum="12" Maximum="24" TickFrequency="1"
+                                <NumberBox Header="字体大小" Minimum="1" SpinButtonPlacementMode="Inline" SmallChange="10"
                                         Value="{x:Bind ViewModel.RemainingTimeTextFontSize, Mode=TwoWay}"
                                         Margin="0,8,0,0"/>
 
@@ -741,7 +741,7 @@
                                           SelectedItem="{x:Bind ViewModel.CurrentStatusTextFontFamily, Mode=TwoWay}"
                                           Margin="0,8,0,0"/>
 
-                                <Slider Header="字体大小" Minimum="12" Maximum="24" TickFrequency="1"
+                                <NumberBox Header="字体大小" Minimum="1" SpinButtonPlacementMode="Inline" SmallChange="10"
                                         Value="{x:Bind ViewModel.CurrentStatusTextFontSize, Mode=TwoWay}"
                                         Margin="0,8,0,0"/>
 
@@ -792,7 +792,7 @@
                                           SelectedItem="{x:Bind ViewModel.CurrentTimeFontFamily, Mode=TwoWay}"
                                           Margin="0,8,0,0"/>
 
-                                <Slider Header="字体大小" Minimum="24" Maximum="72" TickFrequency="4"
+                                <NumberBox Header="字体大小" Minimum="1" SpinButtonPlacementMode="Inline" SmallChange="10"
                                         Value="{x:Bind ViewModel.CurrentTimeFontSize, Mode=TwoWay}"
                                         Margin="0,8,0,0"/>
 
@@ -830,7 +830,7 @@
                                           SelectedItem="{x:Bind ViewModel.TableHeaderFontFamily, Mode=TwoWay}"
                                           Margin="0,8,0,0"/>
 
-                                <Slider Header="字体大小" Minimum="10" Maximum="24" TickFrequency="1"
+                                <NumberBox Header="字体大小" Minimum="1" SpinButtonPlacementMode="Inline" SmallChange="10"
                                         Value="{x:Bind ViewModel.TableHeaderFontSize, Mode=TwoWay}"
                                         Margin="0,8,0,0"/>
 
@@ -868,7 +868,7 @@
                                           SelectedItem="{x:Bind ViewModel.TableContentFontFamily, Mode=TwoWay}"
                                           Margin="0,8,0,0"/>
 
-                                <Slider Header="字体大小" Minimum="10" Maximum="500" TickFrequency="1"
+                                <NumberBox Header="字体大小" Minimum="1" SpinButtonPlacementMode="Inline" SmallChange="10"
                                         Value="{x:Bind ViewModel.TableContentFontSize, Mode=TwoWay}"
                                         Margin="0,8,0,0"/>
 

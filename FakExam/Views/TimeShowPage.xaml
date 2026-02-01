@@ -499,17 +499,10 @@
                                       SelectedItem="{x:Bind ViewModel.SelectedTimeFontFamily, Mode=TwoWay}"
                                       Margin="0,8,0,0"/>
 
-                                    <Slider Header="字体大小"
-                                        Minimum="24" Maximum="200"
-                                        TickFrequency="8"
+                                    <NumberBox Header="字体大小" SpinButtonPlacementMode="Inline" SmallChange="10"
+                                        Minimum="1" 
                                         Value="{x:Bind ViewModel.SelectedTimeFontSize, Mode=TwoWay}"
                                         Margin="0,8,0,0"/>
-
-                                    <TextBlock Text="{x:Bind ViewModel.SelectedTimeFontSize, Mode=OneWay}"
-                                       HorizontalAlignment="Center"
-                                       FontSize="12"
-                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                       Margin="0,-8,0,8"/>
 
                                     <ComboBox Header="字体粗细"
                                       ItemsSource="{x:Bind ViewModel.FontWeights, Mode=OneWay}"
@@ -596,17 +589,10 @@
                                       SelectedItem="{x:Bind ViewModel.SelectedDateFontFamily, Mode=TwoWay}"
                                       Margin="0,8,0,0"/>
 
-                                    <Slider Header="字体大小"
-                                        Minimum="12" Maximum="200"
-                                        TickFrequency="4"
+                                    <NumberBox Header="字体大小" SpinButtonPlacementMode="Inline" SmallChange="10"
+                                        Minimum="1" 
                                         Value="{x:Bind ViewModel.SelectedDateFontSize, Mode=TwoWay}"
                                         Margin="0,8,0,0"/>
-
-                                    <TextBlock Text="{x:Bind ViewModel.SelectedDateFontSize, Mode=OneWay}"
-                                       HorizontalAlignment="Center"
-                                       FontSize="12"
-                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                       Margin="0,-8,0,8"/>
 
                                     <ComboBox Header="字体粗细"
                                       ItemsSource="{x:Bind ViewModel.FontWeights, Mode=OneWay}"
@@ -675,7 +661,7 @@
                                     <TextBlock Text="提示文本样式" FontSize="16" FontWeight="SemiBold"/>
                                     <ComboBox Header="字体" ItemsSource="{x:Bind ViewModel.FontFamilies}"
                                         SelectedItem="{x:Bind ViewModel.ExamLabelFontFamily, Mode=TwoWay}" Margin="0,8,0,0"/>
-                                    <Slider Header="字体大小" Minimum="10" Maximum="40" TickFrequency="1"
+                                    <NumberBox Header="字体大小" Minimum="1"  SpinButtonPlacementMode="Inline" SmallChange="10"
                                         Value="{x:Bind ViewModel.ExamLabelFontSize, Mode=TwoWay}" Margin="0,8,0,0"/>
                                     <ComboBox Header="字体粗细" ItemsSource="{x:Bind ViewModel.FontWeights}"
                                         DisplayMemberPath="DisplayName" SelectedValuePath="Value"
@@ -696,7 +682,7 @@
                                     <TextBlock Text="状态值样式" FontSize="16" FontWeight="SemiBold"/>
                                     <ComboBox Header="字体" ItemsSource="{x:Bind ViewModel.FontFamilies}"
                                         SelectedItem="{x:Bind ViewModel.ExamStatusFontFamily, Mode=TwoWay}" Margin="0,8,0,0"/>
-                                    <Slider Header="字体大小" Minimum="12" Maximum="40" TickFrequency="1"
+                                    <NumberBox Header="字体大小" Minimum="1" SpinButtonPlacementMode="Inline" SmallChange="10"
                                         Value="{x:Bind ViewModel.ExamStatusFontSize, Mode=TwoWay}" Margin="0,8,0,0"/>
                                     <ComboBox Header="字体粗细" ItemsSource="{x:Bind ViewModel.FontWeights}"
                                         DisplayMemberPath="DisplayName" SelectedValuePath="Value"
@@ -717,7 +703,7 @@
                                     <TextBlock Text="开始值样式" FontSize="16" FontWeight="SemiBold"/>
                                     <ComboBox Header="字体" ItemsSource="{x:Bind ViewModel.FontFamilies}"
                                         SelectedItem="{x:Bind ViewModel.ExamStartFontFamily, Mode=TwoWay}" Margin="0,8,0,0"/>
-                                    <Slider Header="字体大小" Minimum="12" Maximum="40" TickFrequency="1"
+                                    <NumberBox Header="字体大小" Minimum="1" SpinButtonPlacementMode="Inline" SmallChange="10"
                                         Value="{x:Bind ViewModel.ExamStartFontSize, Mode=TwoWay}" Margin="0,8,0,0"/>
                                     <ComboBox Header="字体粗细" ItemsSource="{x:Bind ViewModel.FontWeights}"
                                         DisplayMemberPath="DisplayName" SelectedValuePath="Value"
@@ -738,7 +724,7 @@
                                     <TextBlock Text="当前科目值样式" FontSize="16" FontWeight="SemiBold"/>
                                     <ComboBox Header="字体" ItemsSource="{x:Bind ViewModel.FontFamilies}"
                                         SelectedItem="{x:Bind ViewModel.ExamNameFontFamily, Mode=TwoWay}" Margin="0,8,0,0"/>
-                                    <Slider Header="字体大小" Minimum="12" Maximum="40" TickFrequency="1"
+                                    <NumberBox Header="字体大小" Minimum="1"  SpinButtonPlacementMode="Inline" SmallChange="10"
                                         Value="{x:Bind ViewModel.ExamNameFontSize, Mode=TwoWay}" Margin="0,8,0,0"/>
                                     <ComboBox Header="字体粗细" ItemsSource="{x:Bind ViewModel.FontWeights}"
                                         DisplayMemberPath="DisplayName" SelectedValuePath="Value"
@@ -759,7 +745,7 @@
                                     <TextBlock Text="结束值样式" FontSize="16" FontWeight="SemiBold"/>
                                     <ComboBox Header="字体" ItemsSource="{x:Bind ViewModel.FontFamilies}"
                                         SelectedItem="{x:Bind ViewModel.ExamEndFontFamily, Mode=TwoWay}" Margin="0,8,0,0"/>
-                                    <Slider Header="字体大小" Minimum="12" Maximum="40" TickFrequency="1"
+                                    <NumberBox Header="字体大小" Minimum="1" SpinButtonPlacementMode="Inline" SmallChange="10"
                                         Value="{x:Bind ViewModel.ExamEndFontSize, Mode=TwoWay}" Margin="0,8,0,0"/>
                                     <ComboBox Header="字体粗细" ItemsSource="{x:Bind ViewModel.FontWeights}"
                                         DisplayMemberPath="DisplayName" SelectedValuePath="Value"
@@ -780,7 +766,7 @@
                                     <TextBlock Text="剩余时间值样式" FontSize="16" FontWeight="SemiBold"/>
                                     <ComboBox Header="字体" ItemsSource="{x:Bind ViewModel.FontFamilies}"
                                         SelectedItem="{x:Bind ViewModel.ExamRemainingFontFamily, Mode=TwoWay}" Margin="0,8,0,0"/>
-                                    <Slider Header="字体大小" Minimum="12" Maximum="40" TickFrequency="1"
+                                    <NumberBox Header="字体大小" Minimum="1" SpinButtonPlacementMode="Inline" SmallChange="10"
                                         Value="{x:Bind ViewModel.ExamRemainingFontSize, Mode=TwoWay}" Margin="0,8,0,0"/>
                                     <ComboBox Header="字体粗细" ItemsSource="{x:Bind ViewModel.FontWeights}"
                                         DisplayMemberPath="DisplayName" SelectedValuePath="Value"
