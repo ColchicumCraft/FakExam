@@ -287,6 +287,7 @@
                 <!-- 统一的布局容器 -->
                 <ItemsControl x:Name="MainLayoutItemsControl"
                               ItemsSource="{x:Bind ViewModel.ActiveDisplayItems, Mode=OneWay}"
+                              Margin="{x:Bind ViewModel.MakeThickness(ViewModel.MainLayoutMarginLeft, ViewModel.MainLayoutMarginTop, ViewModel.MainLayoutMarginRight, ViewModel.MainLayoutMarginBottom), Mode=OneWay}"
                               VerticalAlignment="Center">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
@@ -454,6 +455,18 @@
                                         SpinButtonPlacementMode="Inline"
                                         SmallChange="1" LargeChange="5"
                                         Value="{x:Bind ViewModel.ItemsSpacing, Mode=TwoWay}" />
+
+                                    <StackPanel Orientation="Horizontal" Spacing="12">
+                                        <NumberBox Header="Left"   Minimum="0" Maximum="2000" SmallChange="1"
+                                             Value="{x:Bind ViewModel.MainLayoutMarginLeft,   Mode=TwoWay}" />
+                                        <NumberBox Header="Top"    Minimum="0" Maximum="2000" SmallChange="1"
+                                             Value="{x:Bind ViewModel.MainLayoutMarginTop,    Mode=TwoWay}" />
+                                        <NumberBox Header="Right"  Minimum="0" Maximum="2000" SmallChange="1"
+                                             Value="{x:Bind ViewModel.MainLayoutMarginRight,  Mode=TwoWay}" />
+                                        <NumberBox Header="Bottom" Minimum="0" Maximum="2000" SmallChange="1"
+                                             Value="{x:Bind ViewModel.MainLayoutMarginBottom, Mode=TwoWay}" />
+                                    </StackPanel>
+
                                 </StackPanel>
 
                                 <!-- 分割线 -->

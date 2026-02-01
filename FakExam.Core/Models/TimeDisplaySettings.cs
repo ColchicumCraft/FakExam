@@ -16,7 +16,12 @@ public class TimeDisplaySettings
     public ExamLayoutPosition ExamLayoutPosition { get; set; } = ExamLayoutPosition.Bottom;
 
     public double ItemsSpacing { get; set; } = 20; // 垂直间距
+    public int MainLayoutMarginLeft { get; set; } = 20;
+    public int MainLayoutMarginTop { get; set; } = 20;
+    public int MainLayoutMarginRight { get; set; } = 20;
+    public int MainLayoutMarginBottom { get; set; } = 20;
 }
+
 public class TimeFormatSettings
 {
     public string Format { get; set; } = "HH:mm:ss";

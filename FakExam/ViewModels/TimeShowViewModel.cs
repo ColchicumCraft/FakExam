@@ -59,7 +59,14 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
     [ObservableProperty] private ExamLayoutPosition _selectedExamPosition = ExamLayoutPosition.Bottom;
     [ObservableProperty] private bool _isCompactOverlay = false;
     [ObservableProperty] private bool _isFullScreen = false;
+
     [ObservableProperty] private double itemsSpacing = 20;
+    [ObservableProperty] private int mainLayoutMarginLeft = 0;
+    [ObservableProperty] private int mainLayoutMarginTop = 0;
+    [ObservableProperty] private int mainLayoutMarginRight = 200;
+    [ObservableProperty] private int mainLayoutMarginBottom = 0;
+    public Thickness MakeThickness(int l, int t, int r, int b)
+        => new Thickness(l, t, r, b);
 
     private TimeDisplaySettings _currentSettings = new();
     private TimeDisplaySettings _previewSettings = new();
@@ -301,6 +308,11 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
         _previewSettings = new TimeDisplaySettings
         {
             ItemsSpacing = ItemsSpacing,
+            MainLayoutMarginLeft = MainLayoutMarginLeft,
+            MainLayoutMarginTop = MainLayoutMarginTop,
+            MainLayoutMarginRight = MainLayoutMarginRight,
+            MainLayoutMarginBottom = MainLayoutMarginBottom,
+
             TimeFormat = new TimeFormatSettings
             {
                 Format = IsCustomTimeFormat ? CustomTimeFormat : SelectedTimeFormat,
@@ -544,6 +556,10 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
     private void ApplySettingsToViewModel(TimeDisplaySettings settings)
     {
         ItemsSpacing = settings.ItemsSpacing;
+        MainLayoutMarginLeft = settings.MainLayoutMarginLeft;
+        MainLayoutMarginTop = settings.MainLayoutMarginTop;
+        MainLayoutMarginRight = settings.MainLayoutMarginRight;
+        MainLayoutMarginBottom = settings.MainLayoutMarginBottom;
 
         SelectedTimeFormat = settings.TimeFormat.Format;
         SelectedTimeFontFamily = settings.TimeFont.FontFamily;
@@ -612,6 +628,11 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
         return new TimeDisplaySettings
         {
             ItemsSpacing = source.ItemsSpacing,
+            MainLayoutMarginLeft = source.MainLayoutMarginLeft,
+            MainLayoutMarginTop = source.MainLayoutMarginTop,
+            MainLayoutMarginRight = source.MainLayoutMarginRight,
+            MainLayoutMarginBottom = source.MainLayoutMarginBottom,
+
             TimeFormat = new TimeFormatSettings
             {
                 Format = source.TimeFormat.Format,
@@ -959,6 +980,37 @@ public partial class TimeShowViewModel : ObservableObject, IDisposable
         {
             UpdatePreviewSettings();
             UpdateActiveDisplayItems();
+        }
+    }
+    partial void OnMainLayoutMarginLeftChanged(int value)
+    {
+        if (IsSettingsMode)
+        {
+            UpdatePreviewSettings();
+        }
+    }
+
+    partial void OnMainLayoutMarginTopChanged(int value)
+    {
+        if (IsSettingsMode)
+        {
+            UpdatePreviewSettings();
+        }
+    }
+
+    partial void OnMainLayoutMarginRightChanged(int value)
+    {
+        if (IsSettingsMode)
+        {
+            UpdatePreviewSettings();
+        }
+    }
+
+    partial void OnMainLayoutMarginBottomChanged(int value)
+    {
+        if (IsSettingsMode)
+        {
+            UpdatePreviewSettings();
         }
     }
 }
