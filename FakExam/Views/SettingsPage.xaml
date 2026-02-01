@@ -12,6 +12,12 @@
     mc:Ignorable="d">
     <Page.Resources>
         <helpers:EnumToBooleanConverter x:Key="EnumToBooleanConverter" />
+        <helpers:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"
+                                                 TrueValue="Visible"
+                                                 FalseValue="Collapsed"/>
+        <helpers:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter"
+                                                        TrueValue="Visible"
+                                                        FalseValue="Collapsed"/>
     </Page.Resources>
     <Grid Margin="20">
         <Grid.RowDefinitions>
@@ -61,6 +67,30 @@
                     </ComboBox>
                 </controls:SettingsCard>
                 <parts:BackgroundSettingsSection />
+                <controls:SettingsExpander Header="自动加载配置文件"
+                           Description="启动应用时，自动加载指定的 ExamSchedule JSON 配置文件（此处仅保存与验证，不会立即加载）。"
+                           IsExpanded="True">
+
+                    <ToggleSwitch IsOn="{x:Bind ViewModel.AutoLoadEnabled, Mode=TwoWay}"/>
+                    <controls:SettingsExpander.Items>
+                        <controls:SettingsCard Header="配置文件路径"
+                               Description="选择一个 .json 文件（仅校验格式，不立即加载）"
+                               Visibility="{x:Bind ViewModel.AutoLoadEnabled, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <TextBox Width="360"
+                         Text="{x:Bind ViewModel.AutoLoadFilePath, Mode=TwoWay}"
+                         PlaceholderText="请选择 JSON 配置文件…" />
+                                <Button Content="浏览..."
+                        Command="{x:Bind ViewModel.BrowseAutoLoadFileCommand}" />
+                            </StackPanel>
+                        </controls:SettingsCard>
+                        <controls:SettingsCard Header="状态">
+                            <TextBlock
+                                Text="{x:Bind ViewModel.AutoLoadValidationMessage, Mode=OneWay}"
+                                Foreground="{x:Bind ViewModel.AutoLoadStatusColor, Mode=OneWay}" />
+                        </controls:SettingsCard>
+                    </controls:SettingsExpander.Items>
+                </controls:SettingsExpander>
             </StackPanel>
 
             <TextBlock x:Uid="Settings_About" Style="{ThemeResource SubtitleTextBlockStyle}" />

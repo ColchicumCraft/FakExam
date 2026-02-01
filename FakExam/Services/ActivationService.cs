@@ -25,21 +25,12 @@ public class ActivationService : IActivationService
     {
         await InitializeAsync();
 
-        // 1) 让背景服务确保“根包装层(BackgroundLayer + Frame)”已经建立，
-        //    并拿到内部的 Frame
         var bg = App.GetService<IBackgroundService>();
         Frame frame;
-        bg.EnsureRootHost(App.MainWindow, out frame);   // ★ 关键 1
-
-        // 2) 把这个 Frame 显式交给 NavigationService，
-        //    避免它从 App.MainWindow.Content 里再去 as Frame（已经是 Grid 了）
+        bg.EnsureRootHost(App.MainWindow, out frame);   
         var nav = App.GetService<INavigationService>();
-        nav.Frame = frame;                               // ★ 关键 2
-
-        // 3) 应用背景（若已经有包装层，ApplyAsync 内部不会重复包）
-        await bg.ApplyAsync(App.MainWindow);             // ★ 关键 3
-
-        // 4) 正常走激活与导航
+        nav.Frame = frame;       
+        await bg.ApplyAsync(App.MainWindow);            
         await HandleActivationAsync(activationArgs);
 
         App.MainWindow.Activate();

@@ -21,7 +21,7 @@ namespace FakExam.ViewModels
         [ObservableProperty] private BackgroundCategory category;
         [ObservableProperty] private MaterialType material;
         [ObservableProperty] private MicaSubKind micaKind;
-        [ObservableProperty] private string colorHex = "#202020";
+        [ObservableProperty] private string colorHex = "#14201b";
         [ObservableProperty] private string? imagePath;
         [ObservableProperty] private bool maskEnabled;
         [ObservableProperty] private string maskColorHex = "#000000";

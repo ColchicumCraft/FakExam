@@ -1,9 +1,7 @@
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.UI.Xaml;
 using FakExam.Activation;
 using FakExam.Contracts.Services;
 using FakExam.Core.Contracts.Services;
+using FakExam.Core.Models;
 using FakExam.Core.Services;
 using FakExam.Helpers;
 using FakExam.Models;
@@ -11,6 +9,9 @@ using FakExam.Notifications;
 using FakExam.Services;
 using FakExam.ViewModels;
 using FakExam.Views;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.UI.Xaml;
 
 namespace FakExam;
 
@@ -88,6 +89,34 @@ public partial class App : Application
         // TODO: log
     }
 
+    private static async Task TryAutoLoadProfileAsync()
+    {
+        try
+        {
+            var local = App.GetService<ILocalSettingsService>();
+            var saved = await local.ReadSettingAsync<AutoLoadProfileSettings>("AutoLoadProfileSettings");
+
+            if (saved is null || !saved.Enabled || string.IsNullOrWhiteSpace(saved.FilePath))
+                return;
+
+            if (!File.Exists(saved.FilePath))
+            {
+                await App.MainWindow.ShowMessageDialogAsync(
+                    "自动加载失败：配置文件不存在。请在设置中重新选择路径。",
+                    "自动加载");
+                return;
+            }
+
+            var profileSvc = App.GetService<IDashboardProfileService>();
+            await profileSvc.LoadFromFileAsync(saved.FilePath);
+        }
+        catch (Exception ex)
+        {
+            await App.MainWindow.ShowMessageDialogAsync(
+                $"自动加载失败：{ex.Message}", "自动加载");
+        }
+    }
+
     protected async override void OnLaunched(LaunchActivatedEventArgs args)
     {
         base.OnLaunched(args);
@@ -95,14 +124,31 @@ public partial class App : Application
         App.GetService<IClockService>().Start();
         App.GetService<IExamNavigationOrchestrator>().Initialize();
 
+        await TryAutoLoadProfileAsync();
+
         var profileSvc = App.GetService<IDashboardProfileService>();
-        bool noProfile = profileSvc.CurrentProfile == null
-            || profileSvc.CurrentProfile.ExamInfos == null
-            || profileSvc.CurrentProfile.ExamInfos.Count == 0;
-        if (noProfile)
+
+        bool hasProfile = profileSvc.CurrentProfile != null
+                          && profileSvc.CurrentProfile.ExamInfos != null
+                          && profileSvc.CurrentProfile.ExamInfos.Count > 0;
+
+        var nav = App.GetService<INavigationService>();
+
+        if (!hasProfile)
         {
-            var nav = App.GetService<INavigationService>();
+            // 无任何可用配置 ⇒ 回退到 TimeShow
             nav.NavigateTo(typeof(FakExam.ViewModels.TimeShowViewModel).FullName!);
+            return;
+        }
+
+        // 有配置：已开始 = TimeShow；未开始 = DashboardShow
+        if (profileSvc.CurrentInProgressExam != null)
+        {
+            nav.NavigateTo(typeof(FakExam.ViewModels.TimeShowViewModel).FullName!);
+        }
+        else
+        {
+            nav.NavigateTo(typeof(FakExam.ViewModels.DashboardShowViewModel).FullName!);
         }
     }
 }
