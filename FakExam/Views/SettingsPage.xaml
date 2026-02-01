@@ -19,91 +19,93 @@
                                                         TrueValue="Visible"
                                                         FalseValue="Collapsed"/>
     </Page.Resources>
-    <Grid Margin="20">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="48" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+        <Grid Margin="20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="48" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+        
+                <Button Grid.Column="0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        Margin="12,0"
+                        Click="BackButton_Click"
+                        ToolTipService.ToolTip="返回">
+                    <FontIcon Glyph="&#xE72B;" />
+                </Button>
 
-        <Grid Grid.Row="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="1"
+                           x:Uid="Settings_Title"
+                           Style="{StaticResource PageTitleStyle}"
+                           VerticalAlignment="Center"/>
+            </Grid>
+        
+            <StackPanel
+                Grid.Row="1"
+                x:Name="ContentArea">
+                <StackPanel Margin="{StaticResource SmallTopBottomMargin}" Spacing="10">
+                    <TextBlock x:Uid="Settings_Personalization" Style="{ThemeResource SubtitleTextBlockStyle}" 
+                            Margin="{StaticResource XSmallTopMargin}"/>
+                    <controls:SettingsCard
+                           Description="颜色模式选择，选择浅色，深色，或跟随系统"
+                           Header="颜色模式选择"
+                           HeaderIcon="{ui:FontIcon Glyph=&#xE793;}"
+                           Margin="{StaticResource XSmallTopMargin}">
+                        <ComboBox
+                            x:Name="ThemeComboBox"
+                            Margin="{StaticResource XSmallTopMargin}"
+                            SelectionChanged="ThemeComboBox_SelectionChanged"
+                            FontSize="15">
+                            <ComboBoxItem Content="浅色" Tag="Light" />
+                            <ComboBoxItem Content="深色" Tag="Dark" />
+                            <ComboBoxItem Content="系统默认" Tag="Default" />
+                        </ComboBox>
+                    </controls:SettingsCard>
+                    <parts:BackgroundSettingsSection />
+                    <controls:SettingsExpander Header="自动加载配置文件"
+                               Description="启动应用时，自动加载指定的 ExamSchedule JSON 配置文件（此处仅保存与验证，不会立即加载）。"
+                               IsExpanded="True">
 
-            <Button Grid.Column="0"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Center"
-                    Margin="12,0"
-                    Click="BackButton_Click"
-                    ToolTipService.ToolTip="返回">
-                <FontIcon Glyph="&#xE72B;" />
-            </Button>
+                        <ToggleSwitch IsOn="{x:Bind ViewModel.AutoLoadEnabled, Mode=TwoWay}"/>
+                        <controls:SettingsExpander.Items>
+                            <controls:SettingsCard Header="配置文件路径"
+                                   Description="选择一个 .json 文件（仅校验格式，不立即加载）"
+                                   Visibility="{x:Bind ViewModel.AutoLoadEnabled, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <TextBox Width="360"
+                             Text="{x:Bind ViewModel.AutoLoadFilePath, Mode=TwoWay}"
+                             PlaceholderText="请选择 JSON 配置文件…" />
+                                    <Button Content="浏览..."
+                            Command="{x:Bind ViewModel.BrowseAutoLoadFileCommand}" />
+                                </StackPanel>
+                            </controls:SettingsCard>
+                            <controls:SettingsCard Header="状态">
+                                <TextBlock
+                                    Text="{x:Bind ViewModel.AutoLoadValidationMessage, Mode=OneWay}"
+                                    Foreground="{x:Bind ViewModel.AutoLoadStatusColor, Mode=OneWay}" />
+                            </controls:SettingsCard>
+                        </controls:SettingsExpander.Items>
+                    </controls:SettingsExpander>
+                </StackPanel>
 
-            <TextBlock Grid.Column="1"
-                       x:Uid="Settings_Title"
-                       Style="{StaticResource PageTitleStyle}"
-                       VerticalAlignment="Center"/>
-        </Grid>
-        <StackPanel
-            Grid.Row="1"
-            x:Name="ContentArea">
-            <StackPanel Margin="{StaticResource SmallTopBottomMargin}" Spacing="10">
-                <TextBlock x:Uid="Settings_Personalization" Style="{ThemeResource SubtitleTextBlockStyle}" 
-                        Margin="{StaticResource XSmallTopMargin}"/>
-                <controls:SettingsCard
-                       Description="颜色模式选择，选择浅色，深色，或跟随系统"
-                       Header="颜色模式选择"
-                       HeaderIcon="{ui:FontIcon Glyph=&#xE793;}"
-                       Margin="{StaticResource XSmallTopMargin}">
-                    <ComboBox
-                        x:Name="ThemeComboBox"
+                <TextBlock x:Uid="Settings_About" Style="{ThemeResource SubtitleTextBlockStyle}" />
+
+                <StackPanel Margin="{StaticResource XSmallTopMargin}">
+                    <TextBlock Text="{x:Bind ViewModel.VersionDescription, Mode=OneWay}" Style="{ThemeResource BodyTextBlockStyle}" />
+
+                    <TextBlock
+                        x:Uid="Settings_AboutDescription"
                         Margin="{StaticResource XSmallTopMargin}"
-                        SelectionChanged="ThemeComboBox_SelectionChanged"
-                        FontSize="15">
-                        <ComboBoxItem Content="浅色" Tag="Light" />
-                        <ComboBoxItem Content="深色" Tag="Dark" />
-                        <ComboBoxItem Content="系统默认" Tag="Default" />
-                    </ComboBox>
-                </controls:SettingsCard>
-                <parts:BackgroundSettingsSection />
-                <controls:SettingsExpander Header="自动加载配置文件"
-                           Description="启动应用时，自动加载指定的 ExamSchedule JSON 配置文件（此处仅保存与验证，不会立即加载）。"
-                           IsExpanded="True">
-
-                    <ToggleSwitch IsOn="{x:Bind ViewModel.AutoLoadEnabled, Mode=TwoWay}"/>
-                    <controls:SettingsExpander.Items>
-                        <controls:SettingsCard Header="配置文件路径"
-                               Description="选择一个 .json 文件（仅校验格式，不立即加载）"
-                               Visibility="{x:Bind ViewModel.AutoLoadEnabled, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}">
-                            <StackPanel Orientation="Horizontal" Spacing="8">
-                                <TextBox Width="360"
-                         Text="{x:Bind ViewModel.AutoLoadFilePath, Mode=TwoWay}"
-                         PlaceholderText="请选择 JSON 配置文件…" />
-                                <Button Content="浏览..."
-                        Command="{x:Bind ViewModel.BrowseAutoLoadFileCommand}" />
-                            </StackPanel>
-                        </controls:SettingsCard>
-                        <controls:SettingsCard Header="状态">
-                            <TextBlock
-                                Text="{x:Bind ViewModel.AutoLoadValidationMessage, Mode=OneWay}"
-                                Foreground="{x:Bind ViewModel.AutoLoadStatusColor, Mode=OneWay}" />
-                        </controls:SettingsCard>
-                    </controls:SettingsExpander.Items>
-                </controls:SettingsExpander>
+                        Style="{ThemeResource BodyTextBlockStyle}" />
+                    <HyperlinkButton x:Uid="SettingsPage_PrivacyTermsLink" Margin="{StaticResource SettingsPageHyperlinkButtonMargin}" />
+                </StackPanel>
             </StackPanel>
-
-            <TextBlock x:Uid="Settings_About" Style="{ThemeResource SubtitleTextBlockStyle}" />
-
-            <StackPanel Margin="{StaticResource XSmallTopMargin}">
-                <TextBlock Text="{x:Bind ViewModel.VersionDescription, Mode=OneWay}" Style="{ThemeResource BodyTextBlockStyle}" />
-
-                <TextBlock
-                    x:Uid="Settings_AboutDescription"
-                    Margin="{StaticResource XSmallTopMargin}"
-                    Style="{ThemeResource BodyTextBlockStyle}" />
-                <HyperlinkButton x:Uid="SettingsPage_PrivacyTermsLink" Margin="{StaticResource SettingsPageHyperlinkButtonMargin}" />
-            </StackPanel>
-        </StackPanel>
-    </Grid>
+        </Grid>
+    </ScrollViewer>
 </Page>
