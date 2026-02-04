@@ -1,0 +1,116 @@
+name: Build WinUI3 App
+
+on:
+  workflow_call:
+    inputs:
+      version:
+        required: true
+        type: string
+      IfCall:
+        required: false
+        type: string
+    secrets:
+      SIGNING_CERT:
+        required: true
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version (x.x.x.0)'
+        required: true
+        type: string
+
+env:
+  DOTNET_VERSION: '8.0.x'
+
+jobs:
+  build:
+    name: Build and Sign
+    runs-on: windows-2022
+
+    env:
+      Solution_Name: FakExam.sln
+      SigningKey_Path: SigningKey.pfx
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Install .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: Setup MSBuild.exe
+      uses: microsoft/setup-msbuild@v1.1
+
+    - name: Restore the application
+      run: msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration
+      env:
+        Configuration: Release
+
+    - name: Update Manifest Version
+      shell: pwsh
+      run: |
+        $AppxManifestPath = "FakExam/Package.appxmanifest"
+        $newVersion = "${{ inputs.version }}"
+        $versionCode = Get-Date -Format "yyMMdd"
+        Write-Output "Setting new version: $newVersion"
+        Write-Output "Setting new version code: $versionCode"
+        [xml]$xmlMSIX = Get-Content $AppxManifestPath
+        $identityNode = $xmlMSIX.Package.Identity
+        $identityNode.Version = $newVersion
+        $xmlMSIX.Save($AppxManifestPath)
+
+    - name: Create the MSIX Package
+      run: msbuild $env:Solution_Name /p:AppxBundlePlatforms="$env:Appx_Bundle_Platforms" /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:Appx_Package_Build_Mode /p:AppxBundle=$env:Appx_Bundle /p:AppxPackageDir="$env:Appx_Package_Dir" /p:GenerateAppxPackageOnBuild=true /p:AppxPackageSigningEnabled=false
+      env:
+        Appx_Bundle: Always
+        Appx_Bundle_Platforms: x86|x64|ARM64
+        Appx_Package_Build_Mode: SideloadOnly
+        Appx_Package_Dir: AppxPackages\
+        Configuration: Release
+
+    - name: Prepare Packages folder
+      run: |
+        # 创建 Packages 文件夹
+        $PackagesDir = "$env:GITHUB_WORKSPACE\Packages"
+        if (-Not (Test-Path $PackagesDir)) { New-Item -ItemType Directory -Path $PackagesDir }
+
+        # 移动所有生成的 MSIX 文件到 Packages
+        $msixFiles = Get-ChildItem -Path "FakExam/AppxPackages/*/*.msix"
+        foreach ($file in $msixFiles) {
+            Move-Item $file.FullName $PackagesDir
+        }
+
+    - name: Sign .msix
+      run: |
+        # Get signtool.exe
+        $signtool = Get-Item -Path "C:\Program Files (x86)\Windows Kits\10\bin\*\x64\signtool.exe"
+        if ($signtool -is [array]) { $signtool = $signtool[0] }
+
+        # Get File(s) from Packages folder
+        $msixFiles = Get-ChildItem -Path "$env:GITHUB_WORKSPACE\Packages\*.msix"
+        $pfx_cert_byte = [System.Convert]::FromBase64String("${{ secrets.SIGNING_CERT }}")
+        [IO.File]::WriteAllBytes("${{ env.SigningKey_Path }}", $pfx_cert_byte)
+
+        foreach ($msixFile in $msixFiles) {
+            & $signtool sign /f "${{ env.SigningKey_Path }}" /fd SHA256 /td SHA256 $msixFile.FullName
+        }
+
+        # 删除临时 PFX
+        Remove-Item "${{ env.SigningKey_Path }}"
+
+    - name: Upload MSIX artifact with version
+      uses: actions/upload-artifact@v4
+      with:
+        name: msix-${{ inputs.version }}
+        path: Packages/*.msix
+
+    - name: Upload Changelog
+      if: ${{ inputs.IfCall != '' }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: release-readme
+        path: CHANGELOG.md
