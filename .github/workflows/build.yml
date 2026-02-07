@@ -79,19 +79,19 @@ jobs:
         if (-Not (Test-Path $PackagesDir)) { New-Item -ItemType Directory -Path $PackagesDir }
 
         # 移动所有生成的 MSIX 文件到 Packages
-        $msixFiles = Get-ChildItem -Path "FakExam/AppxPackages/*/*.msix"
+        $msixFiles = Get-ChildItem -Path "FakExam/AppxPackages/*/*.msixbundle"
         foreach ($file in $msixFiles) {
             Move-Item $file.FullName $PackagesDir
         }
 
-    - name: Sign .msix
+    - name: Sign .msixbundle
       run: |
         # Get signtool.exe
         $signtool = Get-Item -Path "C:\Program Files (x86)\Windows Kits\10\bin\*\x64\signtool.exe"
         if ($signtool -is [array]) { $signtool = $signtool[0] }
 
         # Get File(s) from Packages folder
-        $msixFiles = Get-ChildItem -Path "$env:GITHUB_WORKSPACE\Packages\*.msix"
+        $msixFiles = Get-ChildItem -Path "$env:GITHUB_WORKSPACE\Packages\*.msixbundle"
         $pfx_cert_byte = [System.Convert]::FromBase64String("${{ secrets.SIGNING_CERT }}")
         [IO.File]::WriteAllBytes("${{ env.SigningKey_Path }}", $pfx_cert_byte)
 
@@ -106,7 +106,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: msix-${{ inputs.version }}
-        path: Packages/*.msix
+        path: Packages/*.msixbundle
 
     - name: Upload Changelog
       if: ${{ inputs.IfCall != '' }}

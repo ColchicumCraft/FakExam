@@ -43,8 +43,8 @@ jobs:
         $response = Invoke-WebRequest "https://store.rg-adguard.net/api/GetFiles" -Method POST -Body $postParams
         $content = $response.Content
 
-        # 匹配所有链接，然后通过显示文本过滤出.msix文件
-        $allLinks = $content | Select-String -Pattern '<a[^>]*href="([^"]*)"[^>]*>([^<]*\.msix[^<]*)</a>' -AllMatches |
+        # 匹配所有链接，然后通过显示文本过滤出.msixbundle文件
+        $allLinks = $content | Select-String -Pattern '<a[^>]*href="([^"]*)"[^>]*>([^<]*\.msixbundle[^<]*)</a>' -AllMatches |
                    ForEach-Object { $_.Matches } | ForEach-Object { @{
                        Url = $_.Groups[1].Value
                        Text = $_.Groups[2].Value
@@ -52,8 +52,8 @@ jobs:
 
         Write-Host "找到所有链接数量: $($allLinks.Count)"
 
-        # 过滤出显示文本中包含.msix的链接
-        $msixLinks = $allLinks | Where-Object { $_.Text -match '\.msix' }
+        # 过滤出显示文本中包含.msixbundle的链接
+        $msixLinks = $allLinks | Where-Object { $_.Text -match '\.msixbundle' }
         Write-Host "找到MSIX链接数量: $($msixLinks.Count)"
 
         # 处理相对链接（补全为完整URL）
@@ -100,7 +100,7 @@ jobs:
 
         Write-Host "选择匹配版本的链接: $downloadUrl"
 
-        Invoke-WebRequest -Uri $downloadUrl -OutFile "temp-package.msix"
+        Invoke-WebRequest -Uri $downloadUrl -OutFile "temp-package.msixbundle"
         Write-Host "✓ 成功下载MSIX包"
 
     - name: Parse MSIX version
@@ -110,8 +110,8 @@ jobs:
         # 解析MSIX包版本
         Add-Type -AssemblyName System.IO.Compression.FileSystem
 
-        $zipPath = "temp-package.msix.zip"
-        Copy-Item "temp-package.msix" $zipPath
+        $zipPath = "temp-package.msixbundle.zip"
+        Copy-Item "temp-package.msixbundle" $zipPath
 
         $tempDir = "msix-extract"
         New-Item -ItemType Directory -Path $tempDir | Out-Null
@@ -133,7 +133,7 @@ jobs:
       shell: pwsh
       run: |
         $tagVersion = "${{ inputs.version }}"
-        $msixVersion = "${{ steps.parse-msix-version.outputs.msix-version }}"
+        $msixVersion = "${{ steps.parse-msix-version.outputs.msixbundle-version }}"
 
         Write-Host "Release tag version: $tagVersion"
         Write-Host "MSIX package version: $msixVersion"
@@ -145,8 +145,8 @@ jobs:
         }
 
         # 生成最终文件名
-        $finalFileName = "mstouk57g.FakExam_${tagVersion}_x64__px9fbtkyzyrzy.msix"
-        Move-Item -Path "temp-package.msix" -Destination $finalFileName -Force
+        $finalFileName = "mstouk57g.FakExam_${tagVersion}_x64__px9fbtkyzyrzy.msixbundle"
+        Move-Item -Path "temp-package.msixbundle" -Destination $finalFileName -Force
 
         Write-Host "Final filename: $finalFileName"
         echo "final-filename=$finalFileName" >> $env:GITHUB_OUTPUT
