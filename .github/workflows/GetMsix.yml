@@ -24,131 +24,203 @@ jobs:
       version: ${{ inputs.version }}
 
     steps:
-    - name: Download MSIX from Microsoft Store
-      id: download-msix
+    - name: Checkout StoreLib
+      uses: actions/checkout@v4
+      with:
+        repository: 'StoreDev/StoreLib'
+        path: 'StoreLib'
+        fetch-depth: 1
+
+    - name: Setup .NET 7.0
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '7.0.x'
+
+    - name: Build StoreLib.Cli
+      shell: pwsh
+      run: |
+        cd StoreLib
+        dotnet build StoreLib.Cli -c Release
+        Write-Host "✓ StoreLib.Cli 编译完成"
+
+    - name: Get MSIX download link via StoreLib
+      id: get-download-link
       shell: pwsh
       run: |
         $appId = "${{ secrets.PRODUCT_ID }}"
         $tagVersion = "${{ inputs.version }}"
-        Write-Host "Downloading MSIX for App ID: $appId"
-        Write-Host "Target version: $tagVersion"
 
-        $postParams = @{
-            type = 'ProductId'
-            url = "$appId"
-            ring = 'RP'
-            lang = 'zh-CN'
-        }
+        Write-Host "正在为 App ID: $appId 获取包信息"
+        Write-Host "目标版本: $tagVersion"
 
-        $response = Invoke-WebRequest "https://store.rg-adguard.net/api/GetFiles" -Method POST -Body $postParams
-        $content = $response.Content
+        # 运行 StoreLib.Cli 获取包信息
+        $storelibPath = "StoreLib/StoreLib.Cli/bin/Release/net7.0/StoreLib.Cli.exe"
+        $output = & $storelibPath packages $appId
 
-        # 匹配所有链接，然后通过显示文本过滤出.msixbundle文件
-        $allLinks = $content | Select-String -Pattern '<a[^>]*href="([^"]*)"[^>]*>([^<]*\.msixbundle[^<]*)</a>' -AllMatches |
-                   ForEach-Object { $_.Matches } | ForEach-Object { @{
-                       Url = $_.Groups[1].Value
-                       Text = $_.Groups[2].Value
-                   } }
+        # 输出完整结果用于调试
+        Write-Host "=== StoreLib 输出 ==="
+        Write-Host $output
+        Write-Host "====================="
 
-        Write-Host "找到所有链接数量: $($allLinks.Count)"
+        # 匹配 .msixbundle 文件的下载链接和文件名
+        $bundleMatches = $output | Select-String -Pattern '(http[^\s]+\.Msixbundle)[^\n]*\):\s+([\d.]+[MG]B)' -AllMatches
 
-        # 过滤出显示文本中包含.msixbundle的链接
-        $msixLinks = $allLinks | Where-Object { $_.Text -match '\.msixbundle' }
-        Write-Host "找到MSIX链接数量: $($msixLinks.Count)"
+        $downloadLinks = @()
+        foreach ($match in $bundleMatches.Matches) {
+            $url = $match.Groups[1].Value
+            $size = $match.Groups[2].Value
 
-        # 处理相对链接（补全为完整URL）
-        $fullLinks = $msixLinks | ForEach-Object {
-            $url = $_.Url
-            if (-not $url -match '^https?://') {
-                $url = "https://store.rg-adguard.net" + $url
-            }
-            @{
+            # 从链接或上下文提取版本信息
+            $versionMatch = $output | Select-String -Pattern "([\d.]+)_.*?$([regex]::Escape($url.Split('/')[-1]))" -AllMatches
+
+            $linkInfo = @{
                 Url = $url
-                Text = $_.Text
+                Size = $size
+                Text = $url.Split('/')[-1]  # 文件名
             }
+
+            # 尝试从文件名提取版本
+            if ($linkInfo.Text -match '_([\d.]+)_') {
+                $linkInfo.Version = $matches[1]
+            }
+
+            $downloadLinks += $linkInfo
         }
 
-        # 过滤出你的应用链接
-        $yourAppLinks = $fullLinks | Where-Object { $_.Text -match 'mstouk57g.*FakExam' }
-        Write-Host "找到你的应用MSIX链接数量: $($yourAppLinks.Count)"
+        Write-Host "找到 $($downloadLinks.Count) 个 .msixbundle 下载链接"
+
+        # 过滤出你的应用（通过文件名匹配）
+        $yourAppLinks = $downloadLinks | Where-Object {
+            $_.Text -match 'mstouk57g.*FakExam'
+        }
+
+        Write-Host "找到你的应用 MSIX 链接数量: $($yourAppLinks.Count)"
 
         if ($yourAppLinks.Count -eq 0) {
-            Write-Error "没有找到你的应用MSIX下载链接"
+            Write-Error "没有找到你的应用 MSIX 下载链接"
+            Write-Host "可用的 .msixbundle 文件:"
+            $downloadLinks | ForEach-Object { Write-Host "  - $($_.Text)" }
             exit 1
         }
 
-        # 根据tag版本选择对应的下载链接
+        # 根据版本号选择对应的下载链接
         $downloadUrl = $null
+        $selectedInfo = $null
+
         foreach ($link in $yourAppLinks) {
             if ($link.Text -match $tagVersion -and -not [string]::IsNullOrEmpty($link.Url)) {
                 $downloadUrl = $link.Url
-                Write-Host "找到匹配链接: $downloadUrl"
+                $selectedInfo = $link
+                Write-Host "找到匹配链接: $($link.Text)"
+                Write-Host "URL: $downloadUrl"
+                Write-Host "大小: $($link.Size)"
                 break
             }
         }
 
         if ([string]::IsNullOrEmpty($downloadUrl)) {
-            Write-Host "没有找到版本 $tagVersion 的MSIX包，可用的版本有:"
+            Write-Host "没有找到版本 $tagVersion 的 MSIX 包，可用的版本有:"
             $yourAppLinks | ForEach-Object {
                 if ($_.Text -match 'FakExam_([\d.]+)_') {
-                    Write-Host "  - $($matches[1])"
+                    Write-Host "  - $($matches[1]) - $($_.Text)"
                 }
             }
-            Write-Error "没有找到匹配版本 $tagVersion 的MSIX下载链接"
+            Write-Error "没有找到匹配版本 $tagVersion 的 MSIX 下载链接"
             exit 1
         }
 
-        Write-Host "选择匹配版本的链接: $downloadUrl"
+        # 保存下载链接供后续步骤使用
+        echo "download-url=$downloadUrl" >> $env:GITHUB_OUTPUT
+        echo "filename=$($selectedInfo.Text)" >> $env:GITHUB_OUTPUT
 
-        Invoke-WebRequest -Uri $downloadUrl -OutFile "temp-package.msixbundle"
-        Write-Host "✓ 成功下载MSIX包"
+        Write-Host "✓ 成功获取下载链接"
+
+    - name: Download MSIX bundle
+      shell: pwsh
+      run: |
+        $downloadUrl = "${{ steps.get-download-link.outputs.download-url }}"
+        Write-Host "正在下载: $downloadUrl"
+
+        # 下载文件
+        Invoke-WebRequest -Uri $downloadUrl -OutFile "temp-package.msixbundle" -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+
+        # 验证下载
+        if (Test-Path "temp-package.msixbundle") {
+            $fileSize = (Get-Item "temp-package.msixbundle").Length
+            Write-Host "✓ 成功下载 MSIX 包，大小: $([math]::Round($fileSize/1MB, 2)) MB"
+        } else {
+            Write-Error "下载失败"
+            exit 1
+        }
 
     - name: Parse MSIX version
       id: parse-msix-version
       shell: pwsh
       run: |
-        # 解析MSIX包版本
+        # 解析 MSIX 包版本
         Add-Type -AssemblyName System.IO.Compression.FileSystem
 
         $zipPath = "temp-package.msixbundle.zip"
         Copy-Item "temp-package.msixbundle" $zipPath
 
         $tempDir = "msix-extract"
-        New-Item -ItemType Directory -Path $tempDir | Out-Null
+        New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
 
-        [System.IO.Compression.ZipFile]::ExtractToDirectory($zipPath, $tempDir)
+        try {
+            [System.IO.Compression.ZipFile]::ExtractToDirectory($zipPath, $tempDir)
 
-        $manifestPath = Join-Path $tempDir 'AppxManifest.xml'
-        [xml]$manifest = Get-Content $manifestPath
-        $msixVersion = $manifest.Package.Identity.Version
-
-        Remove-Item $tempDir -Recurse -Force
-        Remove-Item $zipPath -Force
-
-        Write-Host "MSIX package version: $msixVersion"
-        echo "msix-version=$msixVersion" >> $env:GITHUB_OUTPUT
+            $manifestPath = Join-Path $tempDir 'AppxManifest.xml'
+            if (Test-Path $manifestPath) {
+                [xml]$manifest = Get-Content $manifestPath
+                $msixVersion = $manifest.Package.Identity.Version
+                Write-Host "MSIX package version: $msixVersion"
+                echo "msix-version=$msixVersion" >> $env:GITHUB_OUTPUT
+            } else {
+                Write-Warning "未找到 AppxManifest.xml，使用文件名中的版本"
+                $fileName = "${{ steps.get-download-link.outputs.filename }}"
+                if ($fileName -match '_([\d.]+)_') {
+                    $msixVersion = $matches[1]
+                    Write-Host "从文件名提取版本: $msixVersion"
+                    echo "msix-version=$msixVersion" >> $env:GITHUB_OUTPUT
+                } else {
+                    Write-Error "无法解析版本号"
+                    exit 1
+                }
+            }
+        }
+        finally {
+            # 清理临时文件
+            if (Test-Path $tempDir) { Remove-Item $tempDir -Recurse -Force }
+            if (Test-Path $zipPath) { Remove-Item $zipPath -Force }
+        }
 
     - name: Compare versions and rename file
       id: prepare-file
       shell: pwsh
       run: |
         $tagVersion = "${{ inputs.version }}"
-        $msixVersion = "${{ steps.parse-msix-version.outputs.msixbundle-version }}"
+        $msixVersion = "${{ steps.parse-msix-version.outputs.msix-version }}"
 
         Write-Host "Release tag version: $tagVersion"
         Write-Host "MSIX package version: $msixVersion"
 
         if ($tagVersion -ne $msixVersion) {
-          Write-Warning "Version mismatch! Release: $tagVersion, MSIX: $msixVersion"
+          Write-Warning "版本不匹配! 输入版本: $tagVersion, MSIX 实际版本: $msixVersion"
         } else {
-          Write-Host "✓ Version match confirmed: $tagVersion"
+          Write-Host "✓ 版本匹配确认: $tagVersion"
         }
 
         # 生成最终文件名
         $finalFileName = "mstouk57g.FakExam_${tagVersion}_x64__px9fbtkyzyrzy.msixbundle"
-        Move-Item -Path "temp-package.msixbundle" -Destination $finalFileName -Force
 
-        Write-Host "Final filename: $finalFileName"
+        if (Test-Path "temp-package.msixbundle") {
+            Move-Item -Path "temp-package.msixbundle" -Destination $finalFileName -Force
+            Write-Host "✓ 文件已重命名为: $finalFileName"
+        } else {
+            Write-Error "找不到临时文件 temp-package.msixbundle"
+            exit 1
+        }
+
         echo "final-filename=$finalFileName" >> $env:GITHUB_OUTPUT
 
     - name: Upload MSIX artifact with version
@@ -156,3 +228,4 @@ jobs:
       with:
         name: msix-${{ inputs.version }}
         path: ${{ steps.prepare-file.outputs.final-filename }}
+        if-no-files-found: error
