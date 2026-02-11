@@ -57,81 +57,37 @@ jobs:
         $storelibPath = "StoreLib/StoreLib.Cli/bin/Release/net7.0/StoreLib.Cli.exe"
         $output = & $storelibPath packages $appId
 
-        # 输出完整结果用于调试
-        Write-Host "=== StoreLib 输出 ==="
-        Write-Host $output
-        Write-Host "====================="
+        $pattern = '\[(mstouk57g\.FakExam_[\d.]+_neutral_~_px9fbtkyzyrzy\.Msixbundle)\]\(([^\)]+)\):\s+[\d.]+[MG]B'
+        $match = [regex]::Match($output, $pattern, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
 
-        # 匹配 .msixbundle 文件的下载链接和文件名
-        $bundleMatches = $output | Select-String -Pattern '(http[^\s]+\.Msixbundle)[^\n]*\):\s+([\d.]+[MG]B)' -AllMatches
-
-        $downloadLinks = @()
-        foreach ($match in $bundleMatches.Matches) {
-            $url = $match.Groups[1].Value
-            $size = $match.Groups[2].Value
-
-            # 从链接或上下文提取版本信息
-            $versionMatch = $output | Select-String -Pattern "([\d.]+)_.*?$([regex]::Escape($url.Split('/')[-1]))" -AllMatches
-
-            $linkInfo = @{
-                Url = $url
-                Size = $size
-                Text = $url.Split('/')[-1]  # 文件名
-            }
-
-            # 尝试从文件名提取版本
-            if ($linkInfo.Text -match '_([\d.]+)_') {
-                $linkInfo.Version = $matches[1]
-            }
-
-            $downloadLinks += $linkInfo
-        }
-
-        Write-Host "找到 $($downloadLinks.Count) 个 .msixbundle 下载链接"
-
-        # 过滤出你的应用（通过文件名匹配）
-        $yourAppLinks = $downloadLinks | Where-Object {
-            $_.Text -match 'mstouk57g.*FakExam'
-        }
-
-        Write-Host "找到你的应用 MSIX 链接数量: $($yourAppLinks.Count)"
-
-        if ($yourAppLinks.Count -eq 0) {
-            Write-Error "没有找到你的应用 MSIX 下载链接"
-            Write-Host "可用的 .msixbundle 文件:"
-            $downloadLinks | ForEach-Object { Write-Host "  - $($_.Text)" }
+        if (-not $match.Success) {
+            Write-Error "未找到 MSIX bundle 下载链接"
+            Write-Host "请检查 PRODUCT_ID 是否正确"
             exit 1
         }
 
-        # 根据版本号选择对应的下载链接
-        $downloadUrl = $null
-        $selectedInfo = $null
+        $fileName = $match.Groups[1].Value
+        $downloadUrl = $match.Groups[2].Value
 
-        foreach ($link in $yourAppLinks) {
-            if ($link.Text -match $tagVersion -and -not [string]::IsNullOrEmpty($link.Url)) {
-                $downloadUrl = $link.Url
-                $selectedInfo = $link
-                Write-Host "找到匹配链接: $($link.Text)"
-                Write-Host "URL: $downloadUrl"
-                Write-Host "大小: $($link.Size)"
-                break
-            }
+        # 从文件名提取版本号
+        if ($fileName -match '_([\d.]+)_') {
+            $fileVersion = $matches[1]
+            Write-Host "文件名中的版本: $fileVersion"
         }
 
-        if ([string]::IsNullOrEmpty($downloadUrl)) {
-            Write-Host "没有找到版本 $tagVersion 的 MSIX 包，可用的版本有:"
-            $yourAppLinks | ForEach-Object {
-                if ($_.Text -match 'FakExam_([\d.]+)_') {
-                    Write-Host "  - $($matches[1]) - $($_.Text)"
-                }
-            }
-            Write-Error "没有找到匹配版本 $tagVersion 的 MSIX 下载链接"
+        # 验证版本是否匹配
+        if ($fileVersion -ne $tagVersion) {
+            Write-Error "版本不匹配: 需要 $tagVersion, 但找到的是 $fileVersion"
             exit 1
         }
 
-        # 保存下载链接供后续步骤使用
+        Write-Host "找到 MSIX bundle:"
+        Write-Host "  文件名: $fileName"
+        Write-Host "  下载URL: $downloadUrl"
+
+        # 保存下载链接
         echo "download-url=$downloadUrl" >> $env:GITHUB_OUTPUT
-        echo "filename=$($selectedInfo.Text)" >> $env:GITHUB_OUTPUT
+        echo "filename=$fileName" >> $env:GITHUB_OUTPUT
 
         Write-Host "✓ 成功获取下载链接"
 
