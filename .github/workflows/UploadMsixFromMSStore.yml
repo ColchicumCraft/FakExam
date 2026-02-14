@@ -124,7 +124,7 @@ jobs:
       with:
         name: storelib-cli
         path: StoreLib/
-        
+
     - name: Setup .NET 7.0
       uses: actions/setup-dotnet@v4
       with:
@@ -141,7 +141,7 @@ jobs:
             exit 1
         }
 
-    - name: Get MSIX download link via StoreLib
+    - name: Get MSIX bundle download link via StoreLib
       id: get-download-link
       shell: pwsh
       env:
@@ -157,57 +157,72 @@ jobs:
         $storelibPath = "StoreLib/StoreLib.Cli.exe"
         $output = & $storelibPath packages $appId
 
+        # 匹配 MSIX bundle 文件
         $pattern = '\[(mstouk57g\.FakExam_[\d.]+_neutral_~_px9fbtkyzyrzy\.Msixbundle)\]\(([^\)]+)\):\s+[\d.]+[MG]B'
-        $match = [regex]::Match($output, $pattern, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+        $matches = [regex]::Matches($output, $pattern, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
 
-        if (-not $match.Success) {
-            Write-Error "未找到 MSIX bundle 下载链接"
+        if ($matches.Count -eq 0) {
+            Write-Error "未找到任何 MSIX bundle 下载链接"
             Write-Host "请检查 PRODUCT_ID 是否正确"
             exit 1
         }
 
-        $fileName = $match.Groups[1].Value
-        $downloadUrl = $match.Groups[2].Value
+        Write-Host "找到 $($matches.Count) 个 MSIX bundle 文件"
 
-        # 从文件名提取版本号
-        if ($fileName -match '_([\d.]+)_') {
-            $fileVersion = $matches[1]
-            Write-Host "文件名中的版本: $fileVersion"
+        $foundFile = $null
+        $foundUrl = $null
+        $foundVersion = $null
+
+        # 遍历所有找到的 MSIX bundle 文件
+        foreach ($match in $matches) {
+            $fileName = $match.Groups[1].Value
+            $downloadUrl = $match.Groups[2].Value
+
+            Write-Host "检查文件: $fileName"
+
+            # 从文件名提取版本号
+            if ($fileName -match '_([\d.]+)_') {
+                $fileVersion = $matches[1]
+                Write-Host "  提取到版本: $fileVersion"
+
+                if ($fileVersion -eq $tagVersion) {
+                    Write-Host "  ✓ 找到匹配版本!"
+                    $foundFile = $fileName
+                    $foundUrl = $downloadUrl
+                    $foundVersion = $fileVersion
+                    break
+                } else {
+                    Write-Host "  版本不匹配, 需要: $tagVersion"
+                }
+            } else {
+                Write-Host "  无法从文件名提取版本号"
+            }
         }
 
-        # 验证版本是否匹配
-        if ($fileVersion -ne $tagVersion) {
-            Write-Error "版本不匹配: 需要 $tagVersion, 但找到的是 $fileVersion"
+        # 验证是否找到匹配的版本
+        if (-not $foundFile) {
+            Write-Error "未找到版本 $tagVersion 的 MSIX bundle 下载链接"
+            Write-Host "可用的版本:"
+            foreach ($match in $matches) {
+                $fileName = $match.Groups[1].Value
+                if ($fileName -match '_([\d.]+)_') {
+                    $availableVersion = $matches[1]
+                    Write-Host "  - $availableVersion"
+                }
+            }
             exit 1
         }
 
-        Write-Host "找到 MSIX bundle:"
-        Write-Host "  文件名: $fileName"
-        Write-Host "  下载URL: $downloadUrl"
+        Write-Host "成功找到匹配的 MSIX bundle:"
+        Write-Host "  版本: $foundVersion"
+        Write-Host "  文件名: $foundFile"
+        Write-Host "  下载URL: $foundUrl"
 
-        # 保存下载链接
-        echo "download-url=$downloadUrl" >> $env:GITHUB_OUTPUT
-        echo "filename=$fileName" >> $env:GITHUB_OUTPUT
+        # 保存输出
+        echo "download-url=$foundUrl" >> $env:GITHUB_OUTPUT
+        echo "filename=$foundFile" >> $env:GITHUB_OUTPUT
 
         Write-Host "✓ 成功获取下载链接"
-
-    - name: Download MSIX bundle
-      shell: pwsh
-      run: |
-        $downloadUrl = "${{ steps.get-download-link.outputs.download-url }}"
-        Write-Host "正在下载: $downloadUrl"
-
-        # 下载文件
-        Invoke-WebRequest -Uri $downloadUrl -OutFile "temp-package.msixbundle" -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
-
-        # 验证下载
-        if (Test-Path "temp-package.msixbundle") {
-            $fileSize = (Get-Item "temp-package.msixbundle").Length
-            Write-Host "✓ 成功下载 MSIX 包，大小: $([math]::Round($fileSize/1MB, 2)) MB"
-        } else {
-            Write-Error "下载失败"
-            exit 1
-        }
 
     - name: Parse MSIX version
       id: parse-msix-version

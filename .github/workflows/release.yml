@@ -40,7 +40,7 @@ jobs:
         path: ./packages
 
     # 阶段1：创建 Draft Release 并上传未签名文件
-    - name: Create Draft Release with Placeholder
+    - name: Create Draft Release with Unsigned Msix
       if: ${{ inputs.mode == 'create_draft' || inputs.mode == 'create_and_publish' }}
       uses: softprops/action-gh-release@v2
       with:
@@ -56,7 +56,7 @@ jobs:
 
     # 阶段2：发布
     - name: Publish with Real Files
-      if: ${{ inputs.mode == 'publish_only' || inputs.mode == 'create_and_publish' }}
+      if: ${{ inputs.mode == 'publish_only' }}
       uses: softprops/action-gh-release@v2
       with:
         files: ./packages/*.msixbundle
