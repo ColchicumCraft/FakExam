@@ -224,6 +224,24 @@ jobs:
 
         Write-Host "✓ 成功获取下载链接"
 
+    - name: Download MSIX bundle
+      shell: pwsh
+      run: |
+        $downloadUrl = "${{ steps.get-download-link.outputs.download-url }}"
+        Write-Host "正在下载: $downloadUrl"
+
+        # 下载文件
+        Invoke-WebRequest -Uri $downloadUrl -OutFile "temp-package.msixbundle" -UserAgent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+
+        # 验证下载
+        if (Test-Path "temp-package.msixbundle") {
+            $fileSize = (Get-Item "temp-package.msixbundle").Length
+            Write-Host "✓ 成功下载 MSIX 包，大小: $([math]::Round($fileSize/1MB, 2)) MB"
+        } else {
+            Write-Error "下载失败"
+            exit 1
+        }
+
     - name: Parse MSIX version
       id: parse-msix-version
       shell: pwsh
